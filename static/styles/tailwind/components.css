@@ -1,0 +1,25 @@
+foo {
+    display: block;
+}
+
+.x-drawer {
+    @apply fixed top-0 left-0 h-full bg-white;
+    @apply border-r;
+    @apply x-w-240px;
+}
+
+@screen lt-md {
+    .x-drawer {
+        z-index: 10;
+        left: -240px;
+        &.x-drawer-open {
+            left: 0;
+        }
+    }
+
+    .x-main-area {
+        &.x-drawer-open {
+            @apply x-ml-240px;
+        }
+    }
+}
