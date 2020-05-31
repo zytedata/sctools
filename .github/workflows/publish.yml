@@ -1,0 +1,19 @@
+name: publish
+
+on: [push]
+
+jobs:
+
+  scratch:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Git checkout
+        uses: actions/checkout@v1
+        with:
+          fetch-depth: 1
+          submodules: 'true'
+
+      - name: Scratch
+        run: |
+          echo "Scratch"
+

@@ -1,11 +1,11 @@
 (ns sctools.home
   (:require ["react" :as react]
-            ["react-router-dom" :refer [HashRouter Switch Route Link]]
+            ["react-router-dom" :refer [HashRouter Switch Route Link NavLink]]
             ["@material-ui/core"
              :refer [AppBar Toolbar Typography IconButton Button
                      List ListItem ListItemIcon ListItemText
                      Divider Icon]]
-            ["@material-ui/core/styles" :refer [createMuiTheme ThemeProvider]]
+            ["@material-ui/core/styles" :refer [ThemeProvider]]
             [sctools.theme :refer [theme]]
             [re-frame.core :as rf]
             [helix.core :as hx :refer [defnc $]]
@@ -34,15 +34,16 @@
        ($ Typography {:variant "h6"
                       :className "flex-grow"
                       }
-          "News")
+          "SC Tools")
        ($ Button {:color "inherit"}
           "Login"))))
 
 (defnc list-item-link [{:keys [icon primary to] :as props}]
   (let [memorized-comp (fn [item-props ref]
-                         ($ Link {:to to
-                                  :ref ref
-                                  & item-props}))
+                         ($ NavLink {:to to
+                                     :ref ref
+                                     :activeClassName "x-link-selected"
+                                     & item-props}))
         render-link (hooks/use-memo [to]
                       (react/forwardRef memorized-comp))]
     (d/li
