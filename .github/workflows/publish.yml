@@ -4,16 +4,47 @@ on: [push]
 
 jobs:
 
-  scratch:
+  build:
+    # ubuntu 18.04 comes with lein + java8 installed
     runs-on: ubuntu-18.04
     steps:
+      - name: Store token
+        run: |
+          cat >~/.netrc<<EOF
+          machine github.com
+          login lucywang000
+          password ${{ secrets.GITHUB_TOKEN }}
+          EOF
+
       - name: Git checkout
         uses: actions/checkout@v1
         with:
           fetch-depth: 1
           submodules: 'true'
 
-      - name: Scratch
-        run: |
-          echo "Scratch"
+      - name: Cache node deps
+        uses: actions/cache@v1
+        id: cache-node-deps
+        with:
+          path: ./node_modules
+          key: node-modules-${{ hashFiles('package.json') }}
 
+      - name: Fetch node deps
+        if: steps.cache-node-deps.outputs.cache-hit != 'true'
+        run: |
+          yarn install
+
+      - name: Cache shadow-cljs deps
+        uses: actions/cache@v1
+        id: cache-shadow-cljs-deps
+        with:
+          path: ~/.m2/repository
+          key: maven-${{ hashFiles('shadow-cljs.edn') }}-v2
+
+      - name: Build
+        run: |
+          yarn release
+
+      - name: Deploy to GitHub Pages
+        run:
+          ./scripts/publish.sh

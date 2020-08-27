@@ -1,48 +1,30 @@
-{:source-paths
- ["dev"
-  "src"
-  "test"
-  "resources"
-  "assets"
-  "checkouts/helix/src"
-  "checkouts/devcards/src"]
+{:source-paths ["dev"
+                "src"
+                "test"
+                "resources"
+                "assets"
+                "checkouts/helix/src"
+                "checkouts/devcards/src"]
+ 
+ :dependencies [[thheller/shadow-cljs "2.10.18"]
+                [metosin/malli "0.0.1-SNAPSHOT"]
 
- :jvm-opts     ["-Xmx4g"]
-
- :dependencies [;;;;;;;;;;;;;;;;;;;;;;;;;;;
-                ;; clj core libs
-                ;;;;;;;;;;;;;;;;;;;;;;;;;;;
-                [org.clojure/core.async "1.1.582"]
-
-                ;; Spec
-                [org.clojure/spec.alpha "0.2.187"]
-                [metosin/spec-tools "0.10.1"]
-                [expound                "0.8.1"]
-
-                ;;;;;;;;;;;;;;;;;;;;;;;;;;;
-                ;; reagent & re-frame family
-                ;;;;;;;;;;;;;;;;;;;;;;;;;;;
-                [lilactown/helix "0.0.10" :exclusions [cljs-bean]]
-                [cljs-bean "1.5.0"]
+                [cljs-bean "1.6.0"]
+                [lilactown/helix "0.0.13" :exclusions [cljs-bean]]
+                [emotion-cljs "0.1.2"]
                 [reagent "0.10.0" :exclusions [[cljsjs/react]
                                                [cljsjs/react-dom]
                                                [cljsjs/create-react-class]]]
-                [re-frame "0.12.0" :exclusions [[cljsjs/react]
-                                                [cljsjs/react-dom]
-                                                [cljsjs/create-react-class]]]
-                ;; remember to add node-fetch in package.json when
-                ;; migrating to http-fx-alpha
+                [re-frame "1.1.1" :exclusions [[cljsjs/react]
+                                               [cljsjs/react-dom]
+                                               [cljsjs/create-react-class]]]
                 [day8.re-frame/async-flow-fx "0.1.0"]
-                [day8.re-frame/http-fx "v0.2.0"]
+                [day8.re-frame/http-fx "0.2.1"]
                 [day8.re-frame/test "0.1.5" :exclusions [[re-frame]]]
 
-                ;;;;;;;;;;;;;;;;;;;;;;;;;;;
-                ;; dev tools
-                ;;;;;;;;;;;;;;;;;;;;;;;;;;;
-                [lambdaisland/kaocha "0.0-601"]
-                [binaryage/devtools "1.0.0"]
-                [binaryage/dirac    "1.5.9"]
-                [re-frisk-remote    "0.5.10"]
+                [lambdaisland/kaocha "1.0.672"]
+                [binaryage/devtools "1.0.2"]
+                [re-frisk-remote    "1.3.4"]
                 [bdoc/devcards "0.2.7-SNAPSHOT"
                  :exclusions [[cljsjs/react]
                               [org.clojure/core.async]
@@ -50,64 +32,72 @@
                               [cljsjs/create-react-class]]]
                 ;; [day8.re-frame/tracing "0.5.3"]
                 [bdoc.re-frame/tracing "1.0.0-SNAPSHOT"]
-                [day8.re-frame/re-frame-10x "0.6.4"
+                [day8.re-frame/re-frame-10x "0.7.0"
                  :exclusions [[zprint]
                               [binaryage/devtools]]]
 
                 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
                 ;; util libs
                 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
-                [appliedscience/js-interop "0.2.5"]
+                [applied-science/js-interop "0.2.7"]
                 [binaryage/oops     "0.7.0"]
-                [zprint "0.5.3"]
-                [metosin/reitit "0.4.2"]
-                [bdoc/hashp "0.1.2"]
-                [lambdaisland/uri "1.2.1"]
+                [zprint "1.0.0"]
+                [metosin/reitit "0.5.5"]
+                [hashp "0.2.0"]
+                [philoskim/debux "0.7.5"]
+                [lambdaisland/uri "1.4.54"]
+                [net.cgrand/macrovich "0.2.1"]
+                [postmortem "0.4.0"
+                 :exclusions [net.cgrand/macrovich]]
+                [vvvvalvalval/scope-capture "0.3.2"
+                 :exclusions [org.clojure/clojure]]
+                [datascript "1.0.0"]
 
                 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
                 ;; Logging
                 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
-                [org.clojure/tools.logging "0.6.0"]
-                [org.slf4j/slf4j-api "1.7.29"]
-                [org.apache.logging.log4j/log4j-api "2.12.1"]
-                [org.apache.logging.log4j/log4j-core "2.12.1"]
-                [org.apache.logging.log4j/log4j-slf4j-impl "2.12.1"]
+                [org.clojure/tools.logging "1.1.0"]
+                [org.slf4j/slf4j-api "1.7.30"]
+                [org.apache.logging.log4j/log4j-api "2.13.3"]
+                [org.apache.logging.log4j/log4j-core "2.13.3"]
+                [org.apache.logging.log4j/log4j-slf4j-impl "2.13.3"]
                 ;; cljs logging
-                [lambdaisland/glogi "0.0-25"]
+                [lambdaisland/glogi "1.0.74"]
 
-                [cljc.java-time "0.1.8"]
-                [tick "0.4.23-alpha"]
+                [cljc.java-time "0.1.11"]
+                [tick "0.4.26-alpha"]
                 [thheller/shadow-cljsjs "0.0.21"]
 
                 ;; http server
-                [io.pedestal/pedestal.service  "0.5.7"]
-                [io.pedestal/pedestal.route    "0.5.7"]
-                [io.pedestal/pedestal.jetty    "0.5.7"]
-                [cheshire                      "5.9.0"]
+                [io.pedestal/pedestal.service  "0.5.8"]
+                [io.pedestal/pedestal.route    "0.5.8"]
+                [io.pedestal/pedestal.jetty    "0.5.8"]
+                [cheshire                      "5.10.0"]
 
                 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
                 ;;; Misc
                 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
-                [net.cgrand/macrovich "0.2.1"]
                 [me.raynes/fs                  "1.4.6"]
-                [garden                        "1.3.9"]
+                [garden                        "1.3.10"]
                 [com.rpl/specter    "1.1.3"]
-                [better-cond        "2.1.0"]
-                [funcool/cuerdas    "2.2.1"]
-                [medley             "1.2.0"]
+                [bb-utils "0.1.0-SNAPSHOT"]
+                [com.maitria/packthread "0.1.10"]
+                [funcool/cuerdas    "2020.03.26-3"]
+                [medley             "1.3.0"]
                 [redux              "0.1.4"]
                 [hiccup             "1.0.5"]
 
                 [refactor-nrepl "2.5.0"]
-                [cider/cider-nrepl "0.25.0-SNAPSHOT"]
-                [org.tcrawley/dynapath "1.0.0"]
+                [cider/cider-nrepl "0.25.3"]
+                [org.tcrawley/dynapath "1.1.0"]
                 [com.cemerick/pomegranate "1.1.0"]]
 
- :nrepl        {:port 3344
-                :cider true
-                :init-ns user
-                :middleware [refactor-nrepl.middleware/wrap-refactor
-                             dirac.nrepl/middleware]}
+ :jvm-opts ["-Xmx4g"]
+
+ :nrepl {:port       3344
+         :cider      true
+         :init-ns    user
+         :middleware [refactor-nrepl.middleware/wrap-refactor]}
 
  :builds {:app {:target
                 :browser
@@ -129,6 +119,8 @@
                             ;; These are combined with dev/user.clj to
                             ;; make hashp.
                             hashp.core
+                            debux.common.util
+                            debux.cs.util
 
                             sctools.devcards
                             sctools.devcards.mui
@@ -137,9 +129,9 @@
 
                 :dev
                 {:closure-defines
-                 {"goog.DEBUG" true
-                  "re_frame.trace.trace_enabled_QMARK_" true
-                  "day8.re_frame.tracing.trace_enabled_QMARK_"  true}
+                 {"goog.DEBUG"                                 true
+                  "re_frame.trace.trace_enabled_QMARK_"        true
+                  "day8.re_frame.tracing.trace_enabled_QMARK_" true}
 
                  :output-dir
                  "assets/app/static/dev/js"
@@ -147,7 +139,8 @@
                  :asset-path
                  "/static/dev/js"
 
-                 :compiler-options {:devcards true}}
+                 :compiler-options {:devcards true
+                                    :infer-externs false}}
 
                 :release
                 {:output-dir
@@ -157,13 +150,15 @@
                  "/static/js"
 
                  :build-options
-                  {:ns-aliases
-                   {day8.re-frame.tracing day8.re-frame.tracing-stubs}}
+                 {:ns-aliases
+                  {day8.re-frame.tracing day8.re-frame.tracing-stubs}}
 
                  :compiler-options
-                 {:optimizations :advanced
-                  :infer-externs true
-                  :source-map true
+                 {:optimizations           :advanced
+                  :infer-externs           true
+                  :source-map              true
+                  :pretty-print            true
+                  :pseudo-names            true
                   :source-map-detail-level :all}}
 
                 :modules
@@ -189,10 +184,10 @@
                   :http-root
                   "resources/app/static/dev/jstest"
 
-                 :preloads [devtools.preload
-                            hashp.core]}}
+                  :preloads [devtools.preload
+                             hashp.core]}}
 
           :ci
-          {:target :karma
-           :output-to  "test-assets/karma/ci.js"
-           :ns-regexp  "-test$"}}}
+          {:target    :karma
+           :output-to "test-assets/karma/ci.js"
+           :ns-regexp "-test$"}}}

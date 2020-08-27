@@ -1,9 +1,3 @@
-/* custom utility class use the same prefix with builtin class names */
-/* like w- / text- etc., but with a x -prefix, e.g. w- becomes x-w-. */
-
-/*****************/
-/* Utility classes */
-/*****************/
 @variants first, focus, hover, responsive {
 
 .x-h-48px {

@@ -6,6 +6,7 @@
            nubank.workspaces.core/defcard clojure.core/def
            day8.re-frame.tracing/fn-traced clojure.core/fn
            day8.re-frame.tracing/defn-traced clojure.core/defn
+           emotion.core/defstyled clojure.core/def
            reagent.core/with-let clojure.core/let}
  :linters {:unresolved-symbol {:exclude [goog.DEBUG
                                          (sctools.utils/prog1 [<>])

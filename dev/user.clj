@@ -1,6 +1,11 @@
 (ns user
   (:require [shadow.cljs.devtools.api :as shadow]
-            [sctools.server :as server]))
+            [sctools.server :as server]
+            [hashp.core]
+            [debux.dbg]
+            [debux.cs.clog]
+            [debux.cs.clogn]
+            [debux.cs.util]))
 
 (defn watch! []
   (shadow/watch :app)

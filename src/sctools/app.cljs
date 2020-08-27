@@ -1,14 +1,16 @@
 (ns sctools.app
   (:require [sctools.app.fixes]
-            [sctools.home :refer [home-view]]
+            [sctools.home :refer [bootstrap-view home-view]]
             [hashp.core]
             [sctools.app.error-boundary :refer [error-capturer inc-epoch]]
             [clojure.string :as str]
             ;; for side effects
             [day8.re-frame.http-fx]
-            [sctools.app.events]
-            [sctools.app.subs]
+            [day8.re-frame.async-flow-fx]
+            [sctools.app.core]
             [sctools.app.layout]
+            [sctools.app.auth]
+            [sctools.theme :refer [theme-provider]]
             [oops.core :refer [oget]]
             [re-frame.core :as rf]
             [reagent.dom :as dom]))
@@ -18,7 +20,10 @@
      "/static/devcards.html"))
 
 (defn app-ui []
-  [home-view])
+  [:> theme-provider
+   (if @(rf/subscribe [:app/booted])
+     [home-view]
+     [bootstrap-view])])
 
 (defn protected-app-ui []
   [error-capturer [app-ui]])
@@ -38,5 +43,5 @@
 
 (defn main []
   (when-not on-devcards-page?
-    (rf/dispatch-sync [:initialize])
+    (rf/dispatch-sync [:app/boot])
     (render!)))
