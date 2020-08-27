@@ -41,10 +41,16 @@ jobs:
           path: ~/.m2/repository
           key: maven-${{ hashFiles('shadow-cljs.edn') }}-v2
 
+      - name: Run CLJS Tests
+        run: |
+          yarn ci-build
+          yarn ci-test
+
       - name: Build
         run: |
           yarn release
 
       - name: Deploy to GitHub Pages
+        if: github.ref == 'refs/heads/master'
         run:
           ./scripts/publish.sh
