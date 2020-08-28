@@ -13,5 +13,6 @@ module.exports = {
     backgroundColor: ['responsive', 'hover', 'focus', 'active'],
     fontSize: ['responsive', 'hover', 'focus'],
     display: ['responsive', 'hover', 'group-hover'],
+    padding: ['responsive', 'hover', 'focus'],
   }
 }

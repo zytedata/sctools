@@ -27,9 +27,20 @@ html {
 }
 
 .x-link-selected {
-    /* @apply bg-red-500 !important; */
+    @apply bg-gray-300 !important;
 }
 
 /* .MuiToolbar-gutters { */
 /*     @apply px-8 !important; */
 /* } */
+
+#leftbar-mask-container {
+    @apply absolute top-0 left-0 h-full;
+    z-index: 1;
+    #leftbar-mask {
+        @apply h-full border-r;
+        width: 240px;
+        /* border: 1px solid red; */
+        background-color: white;
+    }
+}

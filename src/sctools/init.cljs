@@ -1,5 +1,8 @@
 (ns sctools.init
   (:require ["react" :as react]
+            ["react-dom" :as ReactDOM]
+            [applied-science.js-interop :as j]
+            [sctools.app.layout :as layout]
             [clojure.string :as str]
             [oops.core :refer [oget]]
             ["react-router-dom"
@@ -19,16 +22,11 @@
              :as rfu
              :refer [db-sub quick-sub]]
             [helix.core :as hx :refer [defnc $]]
-            [helix.hooks :as hooks]
+            [helix.hooks :as hooks :refer [use-effect use-memo]]
             [helix.dom :as d]))
 
 (def api-key-name "sctools.api-key")
 
-;; TODO: we can simply use namespaced keywords, e.g. subscribe ::submit?
-;; - No, other modules may still need to refer to init/foo
-(def dispatch (rfu/make-dispatcher :init))
-(def dispatch-sync (rfu/make-sync-dispatcher :init))
-(def subscribe (rfu/make-subscriber :init))
 (def init-path [(rf/path :init)])
 
 (db-sub :init)
@@ -55,11 +53,14 @@
 (defn local-storage-set [k v]
   (.setItem js/window.localStorage k v))
 
+(defn local-storage-delete [k]
+  (.removeItem js/window.localStorage k))
+
 (rf/reg-event-db
  :init/load-api-key
  init-path
  (fn [init]
-   (dispatch :loaded)
+   (rf/dispatch [:init/loaded])
    (if-let [api-key (local-storage-get api-key-name)]
      (do
        (-> init
@@ -112,50 +113,76 @@
 
 (def security-tooltip
   (d/div
-   {:class "text-sm"}
-"The api key is only stored in your local browser.
-It's never sent to any third-party service"))
+   {:class "text-base p-2 leading-normal"}
+"The API key is only stored in your local browser.
+It would never be sent to any third-party service."))
+
+(def leftbar-mask-id "leftbar-mask-container")
+
+(defn leftbar-mask-impl []
+  (d/div {:id "leftbar-mask"}))
+
+(defnc leftbar-mask []
+  (let [el (use-memo :once
+             (if-let [mask-div (js/document.getElementById leftbar-mask-id)]
+               mask-div
+               (let [mask-div (js/document.createElement "div")]
+                 (j/assoc! mask-div :id leftbar-mask-id)
+                 (j/call js/document.body :append mask-div)
+                 mask-div)))]
+    (ReactDOM/createPortal ($ leftbar-mask-impl) el)))
 
 (defnc init-view-impl [{:keys [api-key checking error]}]
-  (d/form {:class '[h-full w-full mx-auto mt-32 w-full
-                   flex flex-col items-start justify-start space-y-4]
-           :style {:width "400px"}}
-    (d/div {:class '[text-xl w-full]}
-           "Please set your Scrapy Cloud API Key:")
-    ($ Tooltip {:title security-tooltip}
-       (d/div
-        {:class '[text-sm underline cursor-pointer pb-4]}
-        #_(d/i {:class '[fa fa-question pr-1 text-gray-600]})
-        (d/i "security tip")))
-    (d/div
-     {:class '[flex flex-row space-x-2 w-full]}
-     ($ TextField {:className "flex-grow"
-                   :variant "outlined"
-                   :autoComplete "off"
-                   :type "password"
-                   :value (or api-key "")
-                   :disabled checking
-                   :onChange (fn [event]
-                               (dispatch-sync :set-api-key
-                                              (oget event "target.value"))
-                               (r/flush))
-                   :label "API Key"})
-     ($ Button {:className "flex-none"
-                :color "primary"
-                :onClick #(dispatch :submit)
-                :variant "contained"
-                :disabled (str/blank? api-key)}
-        (d/div {:class '[normal-case text-lg]}
-               (if checking
-                 ($ CircularProgress {:size "1.5em"
-                                      :color "inherit"})
-                 "Test"))))
-    (when error
-      ($ Alert {:severity "warning"}
-         error))))
+  (layout/set-title "Setup")
+  (d/div
+    ($ leftbar-mask)
+    (d/form {:class '[h-full w-full mx-auto mt-32 w-full
+                      flex flex-col items-start justify-start space-y-3]
+             :style {:width "400px"}}
+            (d/div {:class '[text-xl w-full]}
+                   "Please set your Scrapy Cloud API Key:")
+            (d/div {:class '[pb-2]}
+             ($ Tooltip {:title security-tooltip}
+                (d/div
+                 {:class '[text-sm cursor-pointer px-1 rounded text-gray-700
+                           border-b hover:shadow]}
+                 (d/i {:class '[fa fa-info-circle pr-1 text-gray-600]})
+                 "security tip")))
+            (d/div
+             {:class '[flex flex-row space-x-2 w-full]}
+             ($ TextField {:className "flex-grow"
+                           :variant "outlined"
+                           :autoComplete "off"
+                           :type "password"
+                           :value (or api-key "")
+                           :disabled checking
+                           :onChange (fn [event]
+                                       (rf/dispatch-sync [:init/set-api-key
+                                                          (j/get-in event [:target :value])])
+                                       (r/flush))
+                           :label "API Key"})
+             ($ Button {:className "flex-none"
+                        :color "primary"
+                        :onClick #(rf/dispatch [:init/submit])
+                        :variant "contained"
+                        :disabled (str/blank? api-key)}
+                (d/div {:class '[normal-case text-lg]}
+                       (if checking
+                         ($ CircularProgress {:size "1.5em"
+                                              :color "inherit"})
+                         "Test"))))
+            (when error
+              ($ Alert {:severity "warning"}
+                 error)))))
 
 (defn init-view []
   (let [{:keys [api-key checking error]} @(rf/subscribe [:init])]
     ($ init-view-impl {:api-key api-key
                        :error error
                        :checking checking})))
+
+(comment
+  (local-storage-get api-key-name)
+  (local-storage-delete api-key-name)
+
+  ())

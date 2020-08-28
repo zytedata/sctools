@@ -13,7 +13,7 @@
             ["@material-ui/core/CircularProgress" :default CircularProgress]
             ["react" :as react]
             ["react-router-dom" :refer [HashRouter NavLink Redirect Route Switch]]
-            [helix.core :as hx :refer [$ defnc]]
+            [helix.core :as hx :refer [$ defnc <>]]
             [emotion.core :refer [defstyled]]
             [helix.dom :as d]
             [helix.hooks :as hooks]
@@ -22,7 +22,8 @@
             [sctools.routes :refer [AuthRoute PrivateRoute
                                     list-item-link is-auth-done]]
             [sctools.init :refer [init-view]]
-            [sctools.theme :refer [theme]]))
+            [sctools.theme :refer [theme]]
+            [sctools.studio.views :refer [jobs-studio-view]]))
 
 (defstyled Div :div
   {:background-color :inherit})
@@ -41,7 +42,7 @@
      {:class '[h-full w-full flex flex-col items-center justify-start]}
      "Hello Settings")))
 
-(defnc top-bar []
+(defnc top-bar [{:keys [title]}]
   ($ AppBar {:position "static"}
     ($ Toolbar
        (d/div {:className "md:hidden"}
@@ -52,9 +53,18 @@
            ($ Icon {:className "fa fa-bars mr-2"})))
        ($ Typography {:variant "h6"
                       :className "flex-grow"}
-          "SC Tools")
+          (d/div {:id "title-anchor"
+                  :class '[whitespace-pre-wrap space-x-4]}
+                 (d/span "SC Tools")
+                 (when title
+                   (<>
+                    (d/span {:class '[align-text-bottom text-xl]}
+                            (d/i {:class '[fas fa-caret-right]}))
+                    (d/span title)))))
        ($ Button {:color "inherit"}
-          "About"))))
+          (d/a {:href "https://github.com/lucywang000/sctools"
+                :target "_blank"}
+               "About")))))
 
 (defnc drawer [{:keys [open children] :as props}]
   (d/div {:class (cond-> '[x-drawer]
@@ -70,44 +80,42 @@
 (defnc side-bar [{:keys [drawer-open]}]
   ($ drawer {:open drawer-open}
     ($ List
-       ($ list-item-link {:to "/"
-                          :primary "Home"
+       ($ list-item-link {:to "/studio"
+                          :primary "Jobs Studio"
                           :icon "fa-home-alt"})
        ($ list-item-link {:to "/settings"
                           :primary "Settings"
-                          :icon "fa-cog"})
-       ($ list-item-link {:to "/settings/1"
-                          :primary "Settings 1"
-                          :icon "fa-cog"})
-       ($ list-item-link {:to "/init"
-                          :primary "API Key"
-                          :icon "fa-key"}))))
+                          :icon "fa-cog"}))))
 
-(defnc main-area [{:keys [drawer-open children] :as props}]
+(defnc main-area [{:keys [title drawer-open children] :as props}]
   (d/div {:class (cond-> '[x-main-area md:x-ml-240px]
                    drawer-open
                    (conj 'x-drawer-open))}
-    ($ top-bar)
+    ($ top-bar {:title title})
     children))
 
-(defnc home-view-impl [{:keys [drawer-open auth-done]}]
+(defnc home-view-impl [{:keys [drawer-open auth-done title]}]
   ($ HashRouter
     (d/div {:class '[flex-grow]}
-           ($ main-area {:drawer-open drawer-open}
+           ($ main-area {:drawer-open drawer-open :title title}
               ($ Switch
                  ($ AuthRoute {:path "/init"}
                     (r/as-element [init-view]))
                  ($ PrivateRoute {:path "/"}
                     ($ Route {:path "/settings"}
                        ($ settings-view))
+                    ($ Route {:path "/studio"}
+                       ($ jobs-studio-view))
                     ($ Route {:path "/"}
                        ($ index-view)))))
            ($ side-bar {:drawer-open drawer-open}))))
 
 (defn home-view []
   (let [drawer-open @(rf/subscribe [:layout/drawer-open])
+        title @(rf/subscribe [:app/title])
         auth-done (is-auth-done)]
     ($ home-view-impl {:drawer-open drawer-open
+                       :title title
                        :auth-done auth-done})))
 
 (defn bootstrap-view []

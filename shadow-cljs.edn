@@ -193,12 +193,12 @@
 
           :test-kaocha {:target    :browser-test
                         :runner-ns kaocha.cljs2.shadow-runner
-                        :test-dir  "resources/app/static/dev/test-kaocha"
+                        :test-dir "assets/app/static/dev/test-kaocha"
                         :ns-regexp ".*-test$"
 
                         :devtools {:http-port 3347
 
-                                   :http-root "resources/app/static/dev/test-kaocha"
+                                   :http-root "assets/app/static/dev/test-kaocha"
 
                                    :preloads [devtools.preload
                                               debux.common.util

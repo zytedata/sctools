@@ -3,6 +3,7 @@
             [sctools.server :as server]
             [hashp.core]
             [debux.dbg]
+            [debux.cs.core]
             [debux.cs.clog]
             [debux.cs.clogn]
             [debux.cs.util]))
