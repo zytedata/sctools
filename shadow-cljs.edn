@@ -3,11 +3,14 @@
                 "test"
                 "resources"
                 "assets"
-                "checkouts/helix/src"
-                "checkouts/devcards/src"]
+                "checkouts/chui-core/src"
+                "checkouts/chui-remote/src"
+                "checkouts/chui-ui/src"
+                "checkouts/kaocha-cljs2/src"
+                #_"checkouts/helix/src"
+                #_"checkouts/devcards/src"]
  
- :dependencies [[thheller/shadow-cljs "2.10.18"]
-                [metosin/malli "0.0.1-SNAPSHOT"]
+ :dependencies [[metosin/malli "0.0.1-SNAPSHOT"]
 
                 [cljs-bean "1.6.0"]
                 [lilactown/helix "0.0.13" :exclusions [cljs-bean]]
@@ -23,6 +26,7 @@
                 [day8.re-frame/test "0.1.5" :exclusions [[re-frame]]]
 
                 [lambdaisland/kaocha "1.0.672"]
+                [lambdaisland/kaocha-cljs2 "0.0.28"]
                 [binaryage/devtools "1.0.2"]
                 [re-frisk-remote    "1.3.4"]
                 [bdoc/devcards "0.2.7-SNAPSHOT"
@@ -186,6 +190,20 @@
 
                   :preloads [devtools.preload
                              hashp.core]}}
+
+          :test-kaocha {:target    :browser-test
+                        :runner-ns kaocha.cljs2.shadow-runner
+                        :test-dir  "resources/app/static/dev/test-kaocha"
+                        :ns-regexp ".*-test$"
+
+                        :devtools {:http-port 3347
+
+                                   :http-root "resources/app/static/dev/test-kaocha"
+
+                                   :preloads [devtools.preload
+                                              debux.common.util
+                                              debux.cs.util
+                                              hashp.core]}}
 
           :ci
           {:target    :karma

@@ -1,2 +1,2 @@
 css: yarn watch-css
-js: yarn shadow-cljs watch --debug :app :test
+js: yarn shadow-cljs watch --debug :app :test-kaocha

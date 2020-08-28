@@ -1,18 +1,9 @@
 (defproject sctools "0.1.0"
   :description "sctools"
-  :source-paths
-  ["dev"
-   "src"
-   "test"
-   "resources"
-   "assets"
-   "checkouts/helix/src"
-   "checkouts/devcards/src"]
 
   :aliases {"test" ["version"]}
 
-  :dependencies [[thheller/shadow-cljs "2.10.18"]
-                 [metosin/malli "0.0.1-SNAPSHOT"]
+  :dependencies [[metosin/malli "0.0.1-SNAPSHOT"]
 
                  [cljs-bean "1.6.0"]
                  [lilactown/helix "0.0.13" :exclusions [cljs-bean]]
