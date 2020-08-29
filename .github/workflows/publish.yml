@@ -46,6 +46,7 @@ jobs:
           mkdir -p checkouts
           pushd checkouts
             git clone https://github.com/metosin/malli.git
+            cd malli
             git reset --hard a5bd5806d25fadb2f0025361189a641f50988df9
           popd
 
