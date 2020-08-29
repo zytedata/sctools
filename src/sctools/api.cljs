@@ -1,73 +1,25 @@
 (ns sctools.api
-  (:require [ajax.core :as ajax]))
+  (:require [sctools.http :as http]))
 
-(def json-formats
-  {:format (ajax/transit-request-format)
-   :response-format (ajax/transit-response-format)})
+(def dash-url "https://app.scrapinghub.com")
+(def hs-url "https://storage.scrapinghub.com")
 
-(defn wrap-vector-value
-  "Wrap the value of k in m to be a vector because rf/dispatch wants
-  that."
-  [m k]
-  (if (and (contains? m k)
-           (not (vector? (get m k))))
-    (update m k vector)
-    m))
+(defn load-api-key []
+  (get-in @re-frame.db/app-db [:init :api-key]))
 
-(defn wrap-callbacks-vector [opts]
-  (-> opts
-      (wrap-vector-value :on-success)
-      (wrap-vector-value :on-failure)))
+(defn api-key-request
+  [{:keys [api-key on-success on-failure] :as opts}]
+  (http/get-request
+   (str dash-url "/http/users/get.json")
+   {:params {:apikey api-key}
+    :on-success on-success
+    :on-failure on-failure}))
 
-(defn post-request
-  [url opts]
-  (let [opts (-> opts
-                 wrap-callbacks-vector)
-        ajax-spec (merge {:method :post
-                          :uri url}
-                         json-formats
-                         opts)]
-    {:http-xhrio ajax-spec}))
-
-(defn get-request
-  [url opts]
-  (let [opts (-> opts
-                 wrap-callbacks-vector)
-        ajax-spec (merge {:method :get
-                          :uri url}
-                         json-formats
-                         opts)]
-    {:http-xhrio ajax-spec}))
-
-(defn delete-request
-  [url opts]
-  (let [opts (-> opts
-                 wrap-callbacks-vector)
-        ajax-spec (merge {:method :delete
-                          :uri url}
-                         json-formats
-                         opts)]
-    {:http-xhrio ajax-spec}))
-
-(defonce epochs (atom nil))
-(def increment (fnil inc 0))
-(defn next-epoch [kind]
-  (-> epochs
-      (swap! update kind increment)
-      kind))
-
-(defn current-epoch [kind]
-  (kind @epochs))
-
-(defn add-epoch-vector [x epoch]
-  (let [x (if (vector? x) x [x])]
-    (into [(first x) epoch] (rest x))))
-
-(defn wrap-epoch [name params]
-  (let [epoch (next-epoch name)]
-      (-> params
-       (update :on-success add-epoch-vector epoch)
-       (update :on-failure add-epoch-vector epoch))))
-
-(defn same-epoch [name v]
-  (= (current-epoch name) v))
+(defn job-info-request
+  [{:keys [job on-success on-failure] :as opts}]
+  (http/get-request
+   (str hs-url "/jobs/" job)
+   {:params {:apikey (load-api-key)
+             :add_summary 1}
+    :on-success on-success
+    :on-failure on-failure}))

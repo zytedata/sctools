@@ -12,7 +12,9 @@
             ["@material-ui/core/Typography" :default Typography]
             ["@material-ui/core/CircularProgress" :default CircularProgress]
             ["react" :as react]
-            ["react-router-dom" :refer [HashRouter NavLink Redirect Route Switch]]
+            ["react-router-dom" :refer [HashRouter NavLink Redirect
+                                        Route Switch useParams useHistory]]
+            [applied-science.js-interop :as j]
             [helix.core :as hx :refer [$ defnc <>]]
             [emotion.core :refer [defstyled]]
             [helix.dom :as d]
@@ -25,24 +27,30 @@
             [sctools.theme :refer [theme]]
             [sctools.studio.views :refer [jobs-studio-view]]))
 
-(defstyled Div :div
+(defstyled HomeDiv :div
   {:background-color :inherit})
 
 (defnc index-view []
-  ($ Div
-    {:className "h-full w-full flex flex-col items-center justify-start"}
-    "Hello SCTools"))
+  ($ HomeDiv
+    {:className "h-full w-full pt-12 flex flex-col items-center justify-start"}
+    ($ Button {:color "primary" :variant "contained"}
+       ($ NavLink {:to "/studio"}
+          "Go to the Jobs Studio"))))
+
+(defnc settings-child []
+  (let [id (j/get (useParams) :id)]
+    (d/div "Hello Nested Route " id)))
 
 (defnc settings-view []
   (d/div
     ($ Switch
-       ($ Route {:path "/settings/1"}
-        (d/div "Hello Nested Route 2")))
+       ($ Route {:path "/settings/:id"}
+          ($ settings-child)))
     (d/div
      {:class '[h-full w-full flex flex-col items-center justify-start]}
      "Hello Settings")))
 
-(defnc top-bar [{:keys [title]}]
+(defnc top-bar-impl [{:keys [title]}]
   ($ AppBar {:position "static"}
     ($ Toolbar
        (d/div {:className "md:hidden"}
@@ -66,6 +74,10 @@
                 :target "_blank"}
                "About")))))
 
+(defn top-bar []
+  (let [title @(rf/subscribe [:app/title])]
+    ($ top-bar-impl {:title title})))
+
 (defnc drawer [{:keys [open children] :as props}]
   (d/div {:class (cond-> '[x-drawer]
                    open
@@ -87,17 +99,20 @@
                           :primary "Settings"
                           :icon "fa-cog"}))))
 
-(defnc main-area [{:keys [title drawer-open children] :as props}]
+(defnc main-area [{:keys [drawer-open children] :as props}]
+  ;; Capture the history object into the db so we can call
+  ;; push/replace state later.
+  (rf/dispatch [:app/set-history (useHistory)])
   (d/div {:class (cond-> '[x-main-area md:x-ml-240px]
                    drawer-open
                    (conj 'x-drawer-open))}
-    ($ top-bar {:title title})
+    (r/as-element [top-bar])
     children))
 
-(defnc home-view-impl [{:keys [drawer-open auth-done title]}]
+(defnc home-view-impl [{:keys [drawer-open auth-done]}]
   ($ HashRouter
     (d/div {:class '[flex-grow]}
-           ($ main-area {:drawer-open drawer-open :title title}
+           ($ main-area {:drawer-open drawer-open}
               ($ Switch
                  ($ AuthRoute {:path "/init"}
                     (r/as-element [init-view]))
@@ -112,10 +127,8 @@
 
 (defn home-view []
   (let [drawer-open @(rf/subscribe [:layout/drawer-open])
-        title @(rf/subscribe [:app/title])
         auth-done (is-auth-done)]
     ($ home-view-impl {:drawer-open drawer-open
-                       :title title
                        :auth-done auth-done})))
 
 (defn bootstrap-view []

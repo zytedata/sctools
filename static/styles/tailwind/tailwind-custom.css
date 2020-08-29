@@ -44,3 +44,9 @@ html {
         background-color: white;
     }
 }
+
+/* #studio-main { */
+/*     @apply justify-start items-start mx-auto pt-20; */
+/*     /\* border: 1px solid red; *\/ */
+/*     max-width: 400px; */
+/* } */

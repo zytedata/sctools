@@ -5,6 +5,7 @@
            devcards.core/defcard-rg clojure.core/def
            nubank.workspaces.core/defcard clojure.core/def
            day8.re-frame.tracing/fn-traced clojure.core/fn
+           applied-science.js-interop/let clojure.core/let
            day8.re-frame.tracing/defn-traced clojure.core/defn
            emotion.core/defstyled clojure.core/def
            reagent.core/with-let clojure.core/let}

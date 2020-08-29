@@ -1,5 +1,6 @@
 (ns sctools.app.core
   (:require [re-frame.core :as rf]
+            [applied-science.js-interop :as j]
             [reagent.core :as r]
             [sctools.utils.rf-utils
              :as rfu
@@ -32,3 +33,23 @@
   (fn []
     {:db default-db
      :async-flow (boot-flow)}))
+
+(rf/reg-event-db
+ :app/set-history
+ app-path
+ (fn [app [_ history]]
+   (assoc app :history history)))
+
+(rf/reg-event-db
+ :app/push-state
+ app-path
+ (fn [{:keys [history] :as app}  [_ path]]
+   #p (j/call history :push path)
+   app))
+
+(rf/reg-event-db
+ :app/replace-state
+ app-path
+ (fn [{:keys [history] :as app}  [_ path]]
+   (j/call history :replace path)
+   app))

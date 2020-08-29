@@ -12,12 +12,16 @@
             ["@material-ui/core/TextField" :default TextField]
             ["@material-ui/core/Button" :default Button]
             ["@material-ui/core/Tooltip" :default Tooltip]
+            #_["@material-ui/core/Accordion" :default Accordion]
+            #_["@material-ui/core/AccordionSummary" :default AccordionSummary]
+            #_["@material-ui/core/AccordionDetails" :default AccordionDetails]
             ["@material-ui/core/CircularProgress" :default CircularProgress]
             ["@material-ui/lab/Alert" :default Alert]
+            #_["@material-ui/icons/ExpandMore" :default ExpandMoreIcon]
             [sctools.theme :refer [theme]]
             [reagent.core :as r]
             [re-frame.core :as rf]
-            [sctools.requests :as api]
+            [sctools.api :as api]
             [sctools.utils.rf-utils
              :as rfu
              :refer [db-sub quick-sub]]
@@ -173,7 +177,13 @@ It would never be sent to any third-party service."))
                          "Test"))))
             (when error
               ($ Alert {:severity "warning"}
-                 error)))))
+                 error))
+            #_($ Accordion {:className "w-full"}
+               ($ AccordionSummary
+                  {:expandIcon (d/i {:class '[fas fa-caret-down]})}
+                  (d/div {:class '[text-sm]}
+                         "Security Tips"))
+               ($ AccordionDetails security-tooltip)))))
 
 (defn init-view []
   (let [{:keys [api-key checking error]} @(rf/subscribe [:init])]

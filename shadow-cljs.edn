@@ -7,11 +7,14 @@
                 "checkouts/chui-remote/src"
                 "checkouts/chui-ui/src"
                 "checkouts/kaocha-cljs2/src"
+                "checkouts/clj-statecharts/src"
+                "checkouts/clj-statecharts/test"
+                "checkouts/malli/src"
                 #_"checkouts/helix/src"
                 #_"checkouts/devcards/src"]
  
- :dependencies [[metosin/malli "0.0.1-SNAPSHOT"]
-
+ :dependencies [[borkdude/dynaload "0.1.0"]
+                [metosin/malli "0.0.1-SNAPSHOT"]
                 [cljs-bean "1.6.0"]
                 [lilactown/helix "0.0.13" :exclusions [cljs-bean]]
                 [emotion-cljs "0.1.2"]
@@ -24,6 +27,7 @@
                 [day8.re-frame/async-flow-fx "0.1.0"]
                 [day8.re-frame/http-fx "0.2.1"]
                 [day8.re-frame/test "0.1.5" :exclusions [[re-frame]]]
+                [clj-statecharts "0.0.1-SNAPSHOT"]
 
                 [lambdaisland/kaocha "1.0.672"]
                 [lambdaisland/kaocha-cljs2 "0.0.28"]
