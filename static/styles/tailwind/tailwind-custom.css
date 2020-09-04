@@ -1,7 +1,8 @@
 @import "utils.css";
 
-html {
-    overflow: hidden;
+html, body {
+    overscroll-behavior: none;
+    /* overflow: hidden; */
 }
 
 .x-drawer {

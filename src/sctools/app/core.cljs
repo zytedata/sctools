@@ -44,7 +44,7 @@
  :app/push-state
  app-path
  (fn [{:keys [history] :as app}  [_ path]]
-   #p (j/call history :push path)
+   (j/call history :push path)
    app))
 
 (rf/reg-event-db

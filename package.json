@@ -60,6 +60,12 @@
     "react-transition-group": "^4.4.1",
     "stack-trace": "0.0.10",
     "stacktrace-js": "2.0.2",
+    "vega-tooltip": "^0.23.2",
+    "vega": "^5.15.0",
+    "vega-lite": "^4.14.1",
+    "vega-embed": "^6.11.1",
+    "react-vega": "^7.4.1",
+    "material-table": "^1.69.0",
     "xregexp": "^4.2.4"
   }
 }

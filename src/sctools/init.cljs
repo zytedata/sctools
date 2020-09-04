@@ -1,35 +1,36 @@
 (ns sctools.init
-  (:require ["react" :as react]
+  (:require ["@material-ui/core/Button" :default Button]
+            ["@material-ui/core/CircularProgress" :default CircularProgress]
+            ["@material-ui/core/TextField" :default TextField]
+            ["@material-ui/core/Tooltip" :default Tooltip]
+            ["@material-ui/lab/Alert" :default Alert]
+            ["react" :as react]
             ["react-dom" :as ReactDOM]
-            [applied-science.js-interop :as j]
-            [sctools.app.layout :as layout]
-            [clojure.string :as str]
-            [oops.core :refer [oget]]
             ["react-router-dom"
              :refer [HashRouter Switch Route
                      Redirect Link NavLink
                      useHistory useLocation]]
-            ["@material-ui/core/TextField" :default TextField]
-            ["@material-ui/core/Button" :default Button]
-            ["@material-ui/core/Tooltip" :default Tooltip]
             #_["@material-ui/core/Accordion" :default Accordion]
             #_["@material-ui/core/AccordionSummary" :default AccordionSummary]
             #_["@material-ui/core/AccordionDetails" :default AccordionDetails]
-            ["@material-ui/core/CircularProgress" :default CircularProgress]
-            ["@material-ui/lab/Alert" :default Alert]
             #_["@material-ui/icons/ExpandMore" :default ExpandMoreIcon]
-            [sctools.theme :refer [theme]]
-            [reagent.core :as r]
+            [applied-science.js-interop :as j]
+            [clojure.string :as str]
+            [helix.core :as hx :refer [defnc $]]
+            [helix.dom :as d]
+            [helix.hooks :as hooks :refer [use-effect use-memo]]
+            [oops.core :refer [oget]]
             [re-frame.core :as rf]
+            [reagent.core :as r]
             [sctools.api :as api]
+            [sctools.app.layout :as layout]
+            [sctools.theme :refer [theme]]
+            [sctools.utils.local-storage :as local-storage]
             [sctools.utils.rf-utils
              :as rfu
-             :refer [db-sub quick-sub]]
-            [helix.core :as hx :refer [defnc $]]
-            [helix.hooks :as hooks :refer [use-effect use-memo]]
-            [helix.dom :as d]))
+             :refer [db-sub quick-sub]]))
 
-(def api-key-name "sctools.api-key")
+(def api-key-name :sctools/api-key)
 
 (def init-path [(rf/path :init)])
 
@@ -51,21 +52,12 @@
  (fn [init [_ api-key]]
    (assoc init :api-key api-key)))
 
-(defn local-storage-get [k]
-  (.getItem js/window.localStorage k))
-
-(defn local-storage-set [k v]
-  (.setItem js/window.localStorage k v))
-
-(defn local-storage-delete [k]
-  (.removeItem js/window.localStorage k))
-
 (rf/reg-event-db
  :init/load-api-key
  init-path
  (fn [init]
    (rf/dispatch [:init/loaded])
-   (if-let [api-key (local-storage-get api-key-name)]
+   (if-let [api-key (local-storage/get-item api-key-name)]
      (do
        (-> init
            (assoc :api-key api-key)
@@ -95,7 +87,7 @@
  init-path
  (fn [init [_ doc]]
    ;; #p doc
-   (local-storage-set api-key-name (:api-key init))
+   (local-storage/set-item api-key-name (:api-key init))
    (-> init
        (set-checking false)
        (assoc :user-info doc)
@@ -192,7 +184,5 @@ It would never be sent to any third-party service."))
                        :checking checking})))
 
 (comment
-  (local-storage-get api-key-name)
-  (local-storage-delete api-key-name)
 
   ())

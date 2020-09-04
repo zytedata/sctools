@@ -18,7 +18,7 @@
             [helix.core :as hx :refer [$ defnc <>]]
             [emotion.core :refer [defstyled]]
             [helix.dom :as d]
-            [helix.hooks :as hooks]
+            [helix.hooks :refer [use-effect]]
             [re-frame.core :as rf]
             [reagent.core :as r]
             [sctools.routes :refer [AuthRoute PrivateRoute
@@ -29,6 +29,7 @@
 
 (defstyled HomeDiv :div
   {:background-color :inherit})
+
 
 (defnc index-view []
   ($ HomeDiv
@@ -54,11 +55,11 @@
   ($ AppBar {:position "static"}
     ($ Toolbar
        (d/div {:className "md:hidden"}
-        ($ IconButton {:edge "start"
-                       :color "inherit"
-                       :aria-label "menu"
-                       :onClick #(rf/dispatch [:layout/toggle-drawer])}
-           ($ Icon {:className "fa fa-bars mr-2"})))
+              ($ IconButton {:edge "start"
+                             :color "inherit"
+                             :aria-label "menu"
+                             :onClick #(rf/dispatch [:layout/toggle-drawer])}
+                 ($ Icon {:className "fa fa-bars mr-2"})))
        ($ Typography {:variant "h6"
                       :className "flex-grow"}
           (d/div {:id "title-anchor"
@@ -100,10 +101,12 @@
                           :icon "fa-cog"}))))
 
 (defnc main-area [{:keys [drawer-open children] :as props}]
-  ;; Capture the history object into the db so we can call
-  ;; push/replace state later.
-  (rf/dispatch [:app/set-history (useHistory)])
-  (d/div {:class (cond-> '[x-main-area md:x-ml-240px]
+  (let [history (useHistory)]
+    (use-effect :once
+     ;; Capture the history object into the db so we can call
+     ;; push/replace state later.
+      (rf/dispatch [:app/set-history history])))
+  (d/div {:class (cond-> '[x-main-area md:x-ml-240px relative]
                    drawer-open
                    (conj 'x-drawer-open))}
     (r/as-element [top-bar])

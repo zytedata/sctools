@@ -17,5 +17,6 @@ module.exports = {
     fontSize: ['responsive', 'hover', 'focus'],
     display: ['responsive', 'hover', 'group-hover'],
     padding: ['responsive', 'hover', 'focus'],
+    visibility: ['responsive', 'hover', 'focus', 'group-hover'],
   }
 }
