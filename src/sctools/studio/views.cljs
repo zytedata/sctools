@@ -115,10 +115,7 @@
                    (when error
                      ($ Alert {:severity "warning"}
                         error))))
-     (when-let [recents (->> recents
-                            reverse
-                            (drop 1)
-                            seq)]
+     (when-let [recents (seq recents)]
        (d/div
         {:class '[flex flex-col justify-start items-start space-x-4]}
         (d/div {:class '[text-2xl]} "Recently Used")

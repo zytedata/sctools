@@ -70,11 +70,12 @@
    (assoc studio :to job)))
 
 (defn add-recent [recents record]
-  (let [recents (conj (or recents (linked/set)) record)]
+  (let [recents (->> recents
+                     (remove #(= % record))
+                     (#(conj % record)))]
     (if (> (count recents) 5)
       (->> recents
-           (take-last 5)
-           (into (linked/set)))
+           (take 5))
       recents)))
 
 (rf/reg-event-db

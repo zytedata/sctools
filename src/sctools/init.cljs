@@ -6,14 +6,6 @@
             ["@material-ui/lab/Alert" :default Alert]
             ["react" :as react]
             ["react-dom" :as ReactDOM]
-            ["react-router-dom"
-             :refer [HashRouter Switch Route
-                     Redirect Link NavLink
-                     useHistory useLocation]]
-            #_["@material-ui/core/Accordion" :default Accordion]
-            #_["@material-ui/core/AccordionSummary" :default AccordionSummary]
-            #_["@material-ui/core/AccordionDetails" :default AccordionDetails]
-            #_["@material-ui/icons/ExpandMore" :default ExpandMoreIcon]
             [applied-science.js-interop :as j]
             [clojure.string :as str]
             [helix.core :as hx :refer [defnc $]]
@@ -39,6 +31,7 @@
 (quick-sub :init/api-key)
 (quick-sub :init/checking)
 (quick-sub :init/error)
+(quick-sub :init/auth-back-path :default "/")
 
 (defn set-checking [init v]
   (assoc init :checking v))
@@ -51,6 +44,12 @@
  init-path
  (fn [init [_ api-key]]
    (assoc init :api-key api-key)))
+
+(rf/reg-event-db
+ :init/set-auth-back-path
+ init-path
+ (fn [init [_ auth-back-path]]
+   (assoc init :auth-back-path auth-back-path)))
 
 (rf/reg-event-db
  :init/load-api-key
@@ -72,7 +71,7 @@
                   (set-error nil))]
      (merge
       {:db init}
-      (api/api-key-request
+      (api/api-key-request-workaround
        {:api-key (:api-key init)
         :on-success :init/success-check
         :on-failure :init/fail-check})))))
@@ -86,7 +85,6 @@
  :init/success-check
  init-path
  (fn [init [_ doc]]
-   ;; #p doc
    (local-storage/set-item api-key-name (:api-key init))
    (-> init
        (set-checking false)
@@ -101,11 +99,15 @@
  :init/fail-check
  init-path
  (fn [init [_ {status :status :as response}]]
-   ;; (def vresp1 response)
    ;; #p response
-   (-> init
-       (set-checking false)
-       (set-error (error-from-response response)))))
+   ;; (def vresp1 response)
+   (if (= status 400)
+     (-> init
+         (set-checking false)
+         (assoc :authed true))
+     (-> init
+         (set-checking false)
+         (set-error (error-from-response response))))))
 
 (def security-tooltip
   (d/div
@@ -128,7 +130,7 @@ It would never be sent to any third-party service."))
                  mask-div)))]
     (ReactDOM/createPortal ($ leftbar-mask-impl) el)))
 
-(defnc init-view-impl [{:keys [api-key checking error]}]
+(defnc init-view-impl [{:keys [api-key checking error back]}]
   (layout/set-title "Setup")
   (d/div
     ($ leftbar-mask)
@@ -177,16 +179,25 @@ It would never be sent to any third-party service."))
                          "Security Tips"))
                ($ AccordionDetails security-tooltip)))))
 
-(defn init-view []
-  (let [{:keys [api-key checking error]} @(rf/subscribe [:init])]
+(defn init-view-reagent []
+  (let [this (r/current-component)
+        back (j/get-in (r/props this) [:location :back])
+        {:keys [api-key checking error]} @(rf/subscribe [:init])]
     ($ init-view-impl {:api-key api-key
                        :error error
+                       :back back
                        :checking checking})))
+
+(defnc init-view [{:keys [location] :as props}]
+  (j/let [^:js {:keys [back]} location]
+    (use-effect :once
+      (rf/dispatch [:init/set-auth-back-path back])))
+  (r/as-element [init-view-reagent props]))
 
 (comment
 
   (local-storage/get-item api-key-name)
   (local-storage/delete-item api-key-name)
-  (local-storage/set-item api-key-name (test-key))
+  (local-storage/set-item api-key-name user/test-key)
 
   ())

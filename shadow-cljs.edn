@@ -145,6 +145,7 @@
 
                             ;; These are combined with dev/user.clj to
                             ;; make hashp.
+                            user
                             hashp.core
                             debux.common.util
                             debux.cs.util

@@ -2,6 +2,7 @@
   (:require [sctools.http :as http]))
 
 (def dash-url "https://app.scrapinghub.com")
+(def jobq-url "https://jobq.scrapinghub.com")
 (def hs-url "https://storage.scrapinghub.com")
 
 (defn load-api-key []
@@ -11,6 +12,14 @@
   [{:keys [api-key on-success on-failure] :as opts}]
   (http/get-request
    (str dash-url "/http/users/get.json")
+   {:params {:apikey api-key}
+    :on-success on-success
+    :on-failure on-failure}))
+
+(defn api-key-request-workaround
+  [{:keys [api-key on-success on-failure] :as opts}]
+  (http/get-request
+   jobq-url
    {:params {:apikey api-key}
     :on-success on-success
     :on-failure on-failure}))

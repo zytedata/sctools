@@ -117,8 +117,8 @@
     (d/div {:class '[flex-grow]}
            ($ main-area {:drawer-open drawer-open}
               ($ Switch
-                 ($ AuthRoute {:path "/init"}
-                    (r/as-element [init-view]))
+                 ($ AuthRoute {:path "/init"
+                               :component init-view})
                  ($ PrivateRoute {:path "/"}
                     ($ Route {:path "/settings"}
                        ($ settings-view))

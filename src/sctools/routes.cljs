@@ -4,11 +4,14 @@
             ["@material-ui/core/ListItemIcon" :default ListItemIcon]
             ["@material-ui/core/ListItemText" :default ListItemText]
             ["react" :as react]
+            [applied-science.js-interop :as j]
             [sc.api]
             [postmortem.core :as pm]
             [postmortem.instrument :as pi]
             [postmortem.xforms :as xf]
-            ["react-router-dom" :refer [NavLink Redirect Route Switch]]
+            ["react-router-dom"
+             :refer [NavLink Redirect Route Switch
+                     useRouteMatch useParams useHistory]]
             [helix.core :as hx :refer [$ defnc]]
             [helix.dom :as d]
             [helix.hooks :as hooks]
@@ -33,18 +36,23 @@
 (defn is-auth-done []
   @(rf/subscribe [:init/authed]))
 
+(defn get-auth-back-path []
+  @(rf/subscribe [:init/auth-back-path]))
+
 (defnc PrivateRoute [{:keys [children] :as props}]
-  (let [render (fn []
+  (let [loc (j/get-in (useHistory) [:location :pathname])
+        render (fn []
                  (if (is-auth-done)
                    ($ Switch
                       children)
-                   ($ Redirect {:to "/init"})))]
+                   ($ Redirect {:to (j/lit {:pathname "/init"
+                                            :back loc})})))]
     ($ Route {:render render & (dissoc props :children)})))
 
 (defnc AuthRoute [props]
   (if-not (is-auth-done)
     ($ Route {& props})
-    ($ Redirect {:to "/"})))
+    ($ Redirect {:to (get-auth-back-path)})))
 
 #_(defn sc-foo [a b]
   (sc.api/spy
