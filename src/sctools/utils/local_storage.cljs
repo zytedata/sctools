@@ -31,7 +31,8 @@
   (check-key k)
   (set-item k (write-transit v)))
 
-(defn delete [k]
+(defn delete-item [k]
+  (check-key k)
   (.removeItem js/localStorage (str k)))
 
 (comment
@@ -40,8 +41,8 @@
   (get-item :a)
   (set-transit :b ["a" "b"])
   (get-transit :b)
-  (delete :a)
-  (delete :b)
+  (delete-item :a)
+  (delete-item :b)
   (get-transit :sctools.studio/recents)
 
   ())

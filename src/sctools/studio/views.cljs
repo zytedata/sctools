@@ -31,6 +31,7 @@
             [reagent.core :as r]
             [sctools.app.layout :as layout]
             sctools.studio.events
+            sctools.studio.machine
             sctools.studio.subs
             [sctools.studio.utils
              :refer
