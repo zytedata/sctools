@@ -121,7 +121,7 @@
                             seq)]
        (d/div
         {:class '[flex flex-col justify-start items-start space-x-4]}
-        (d/div {:class '[text-2xl]} "Recent Used")
+        (d/div {:class '[text-2xl]} "Recently Used")
         (d/ul
          {:class '[list-disc]}
          (for [{:keys [from to spider-name] :as k} recents]
@@ -260,6 +260,7 @@
                                ($ column-header-title {:title title}))]]
          ($ header-cell
             {:id id
+             :key id
              :stat? stat?
              :sorting sorting
              :title title})))))

@@ -1,4 +1,6 @@
-{:source-paths ["dev"
+{:source-paths ["dev/src"
+                "local/src"
+                "local/resources"
                 "src"
                 "test"
                 "resources"

@@ -187,6 +187,6 @@ It would never be sent to any third-party service."))
 
   (local-storage/get-item api-key-name)
   (local-storage/delete-item api-key-name)
-  (local-storage/set-item api-key-name "")
+  (local-storage/set-item api-key-name (test-key))
 
   ())

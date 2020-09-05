@@ -1,7 +1,6 @@
 (ns sctools.app
   (:require [sctools.app.fixes]
             [sctools.home :refer [bootstrap-view home-view]]
-            [hashp.core]
             [sctools.app.logging :refer [start-logging]]
             [sctools.app.error-boundary :refer [error-capturer inc-epoch]]
             ;; for side effects

@@ -61,13 +61,13 @@
                              :onClick #(rf/dispatch [:layout/toggle-drawer])}
                  ($ Icon {:className "fa fa-bars mr-2"})))
        ($ Typography {:variant "h6"
-                      :className "flex-grow"}
+                      :className "flex flex-row flex-grow items-center"}
           (d/div {:id "title-anchor"
                   :class '[whitespace-pre-wrap space-x-4]}
                  (d/span "SC Tools")
                  (when title
                    (<>
-                    (d/span {:class '[align-text-bottom text-xl]}
+                    (d/span {:class '[text-xl]}
                             (d/i {:class '[fas fa-caret-right]}))
                     (d/span title)))))
        ($ Button {:color "inherit"}

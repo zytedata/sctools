@@ -25,3 +25,5 @@ pom.xml.asc
 /resources/*/static/styles-dev/
 /resources/*/static/styles/
 /test-assets/
+/local/src
+/local/resources
