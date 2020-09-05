@@ -1,5 +1,7 @@
 (ns sctools.app
-  (:require [sctools.app.fixes]
+  (:require ["moment" :as moment]
+            [applied-science.js-interop :as j]
+            [sctools.app.fixes]
             [sctools.home :refer [bootstrap-view home-view]]
             [sctools.app.logging :refer [start-logging]]
             [sctools.app.error-boundary :refer [error-capturer inc-epoch]]
@@ -41,6 +43,12 @@
     (render!)))
 
 (defn main []
+  #_(set! js/sctools_build_ts 1590000000000)
+  (when-let [build-ts (j/get js/window :sctools_build_ts)]
+    (js/console.log "SCTools Build TS: "
+                    (-> (j/call moment :utc build-ts)
+                        (j/call :fromNow))
+                    "[" (js/Date. build-ts) "]"))
   (start-logging)
   (when-not on-devcards-page?
     (rf/dispatch-sync [:app/boot])

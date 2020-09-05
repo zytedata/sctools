@@ -31,7 +31,7 @@
 (quick-sub :init/api-key)
 (quick-sub :init/checking)
 (quick-sub :init/error)
-(quick-sub :init/auth-back-path :default "/")
+(quick-sub :init/auth-back-path)
 
 (defn set-checking [init v]
   (assoc init :checking v))
@@ -102,9 +102,11 @@
    ;; #p response
    ;; (def vresp1 response)
    (if (= status 400)
-     (-> init
-         (set-checking false)
-         (assoc :authed true))
+     (do
+       (local-storage/set-item api-key-name (:api-key init))
+       (-> init
+           (set-checking false)
+           (assoc :authed true)))
      (-> init
          (set-checking false)
          (set-error (error-from-response response))))))

@@ -14,7 +14,7 @@
   (let [methods
         {:constructor
          (fn [this]
-           (js/console.log "react error boundary: constructor called")
+           ;; (js/console.log "react error boundary: constructor called")
            (set! (.-state this) #js {:hasError false}))
 
          :getDerivedStateFromError

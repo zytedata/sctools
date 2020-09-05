@@ -9,6 +9,9 @@
            day8.re-frame.tracing/defn-traced clojure.core/defn
            bb-utils.clojure/cond* clojure.core/def
            emotion.core/defstyled clojure.core/def
+           kitchen-async.promise/-> clojure.core/->
+           kitchen-async.promise/->> clojure.core/->>
+           kitchen-async.promise/let clojure.core/let}
            reagent.core/with-let clojure.core/let}
  :linters {:unresolved-symbol {:exclude [goog.DEBUG
                                          (bb-utils.clojure/cond*)

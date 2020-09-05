@@ -19,6 +19,10 @@ cp -rpvf resources/app/static /tmp/sctools
 cp -pvf resources/app/static/index-gh-pages.html /tmp/sctools/index.html
 
 cd /tmp/sctools
+
+build_ts=$(python -c "import sys, time; print(int(time.time()*1000))")
+sed -i -e "s/SCTOOLS_BUILD_TS/$build_ts/g" index.html
+
 git add -f .
 git reset --soft origin/master
 

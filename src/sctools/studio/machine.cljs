@@ -2,9 +2,10 @@
   (:require [statecharts.core :as fsm :refer [assign]]
             [statecharts.rf :as fsm.rf]
             [re-frame.core :as rf]
-            [cljs.cache :as cache]
+            [kitchen-async.promise :as p]
             [lambdaisland.glogi :as log]
             [sctools.api :as api]
+            [sctools.studio.cache :refer [get-cached-info cache-job-info]]
             [sctools.studio.utils :refer [spider-name-from-results]]))
 
 (def studio-path [(rf/path :studio)])
@@ -30,23 +31,22 @@
                                  (:state studio)
                                  {:type etype :data data}))))
 
-(declare cache-job-info get-cached-info)
-
 (defn fetch-one
   [{:keys [spider current from results] :as context}]
     (let [current (or current from)
          job (str spider "/" current)]
-      (if-let [info (get-cached-info job)]
-        (do
-          (log/debug :msg (str "using cached info for job " job))
-          (js/setTimeout #(rf/dispatch [:studio/fsm-event :success-fetch info])
-                         0))
-        (let [fx (api/job-info-request
-                  {:job job
-                   :on-success [:studio/fsm-event :success-fetch]
-                   :on-failure [:studio/fsm-event :fail-fetch]})]
-          (log/debug :msg (str "fetching job " job))
-          (rf/dispatch [::fsm.rf/call-fx fx])))
+      (p/let [info (get-cached-info job)]
+        (if info
+          (do
+            (log/debug :msg (str "using cached info for job " job))
+            (js/setTimeout #(rf/dispatch [:studio/fsm-event :success-fetch info])
+                           0))
+          (let [fx (api/job-info-request
+                    {:job job
+                     :on-success [:studio/fsm-event :success-fetch]
+                     :on-failure [:studio/fsm-event :fail-fetch]})]
+            (log/debug :msg (str "fetching job " job))
+            (rf/dispatch [::fsm.rf/call-fx fx]))))
       (assoc context :current current)))
 
 (defn all-jobs-fetched?
@@ -100,27 +100,7 @@
                                                    (assign handle-next)]}]}}
      :fetched  {:entry add-to-recent}}}))
 
-(defonce infos-cache
-  (atom (cache/lru-cache-factory {} :threshold 200)))
-
-(defn get-cached-info [job]
-  (let [cache @infos-cache]
-    (when (cache/has? cache job)
-      (swap! infos-cache cache/hit cache job)
-      (cache/lookup cache job))))
-
-(defn cache-job-info [job info]
-  (swap! infos-cache cache/miss job info))
-
 (comment
   (rf/dispatch [:studio/fsm-start {:spider "1887/861" :from 136449 :to 136451}])
-
-  (def C (cache/lru-cache-factory {:a 1, :b 2} :threshold 2))
-  (cache/lookup C :a)
-  (cache/lookup C :b)
-  (cache/lookup C :c)
-  (cache/miss C :c 2)
-
-
 
   ())

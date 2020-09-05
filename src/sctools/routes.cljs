@@ -37,7 +37,7 @@
   @(rf/subscribe [:init/authed]))
 
 (defn get-auth-back-path []
-  @(rf/subscribe [:init/auth-back-path]))
+  (or @(rf/subscribe [:init/auth-back-path]) "/"))
 
 (defnc PrivateRoute [{:keys [children] :as props}]
   (let [loc (j/get-in (useHistory) [:location :pathname])
