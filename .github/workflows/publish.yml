@@ -59,6 +59,10 @@ jobs:
         run: |
           yarn release
 
+      - name: Run Cypress Test
+        run: |
+          yarn cypress run
+
       - name: Deploy to GitHub Pages
         if: github.ref == 'refs/heads/master'
         run:

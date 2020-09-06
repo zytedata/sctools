@@ -117,11 +117,18 @@
   #p (useParams)
   "Hello foo")
 
+(defnc debug-view [props]
+  #p props
+  #p (useParams)
+  "Hello debug")
+
 (defnc home-view-impl [{:keys [drawer-open auth-done]}]
   ($ HashRouter
     (d/div {:class '[flex-grow]}
            ($ main-area {:drawer-open drawer-open}
               ($ Switch
+                 ($ Route {:path "/debug"}
+                    ($ debug-view))
                  ($ AuthRoute {:path "/init"
                                :component init-view})
                  ($ PrivateRoute {:path "/"}

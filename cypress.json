@@ -1,5 +1,6 @@
 {
   "baseUrl": "http://127.0.0.1:3345/static",
   "testFiles": "**/*_spec.js",
-  "watchForFileChanges": false
+  "watchForFileChanges": false,
+  "projectId": "4hv8zp"
 }

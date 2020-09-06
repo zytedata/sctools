@@ -8,6 +8,10 @@
 (def vrun (parent-val :vrun))
 (def cy (parent-val :cy))
 
+(defn reload []
+  (.reload cy)
+  (vrun))
+
 (defn click-by-text
   ([text]
    (click-by-text text (j/lit {})))
@@ -21,6 +25,10 @@
   (prog1 (-> cy
              (.get "body")
              (.type text))
+    (vrun)))
+
+(defn visit [url]
+  (prog1 (.visit cy url)
     (vrun)))
 
 ;; (describe
@@ -50,5 +58,10 @@
   (click-by-text "go" (j/lit {:matchCase false}))
   (click-by-text "go to")
   (type-text "{ctrl}h")
+
+  (reload)
+  (visit "/index-dev.html")
+  (visit "/index-dev.html#/settings")
+  (visit "/index-dev.html#/debug")
 
   ())
