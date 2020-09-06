@@ -1,0 +1,91 @@
+.x-h-48px {
+  min-height: 48px;
+}
+
+.x-h-64px {
+  min-height: 64px;
+}
+
+.x-ml-240px {
+  margin-left: 240px;
+}
+
+html, body {
+  -ms-scroll-chaining: none;
+      overscroll-behavior: none;
+  /* overflow: hidden; */
+}
+
+.x-drawer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  --bg-opacity: 1;
+  background-color: #fff;
+  background-color: rgba(255, 255, 255, var(--bg-opacity));
+  border-right-width: 1px;
+  width: 240px;
+}
+
+@media (max-width: 767px) {
+  .x-drawer {
+    z-index: 10;
+    left: -240px;
+  }
+    .x-drawer.x-drawer-open {
+      left: 0;
+    }
+    .x-main-area.x-drawer-open {
+      margin-left: 240px;
+    }
+}
+
+.x-link-selected {
+  --bg-opacity: 1 !important;
+  background-color: #e2e8f0 !important;
+  background-color: rgba(226, 232, 240, var(--bg-opacity)) !important;
+}
+
+/* .MuiToolbar-gutters { */
+
+/*     @apply px-8 !important; */
+
+/* } */
+
+#leftbar-mask-container {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  z-index: 1;
+}
+
+#leftbar-mask-container #leftbar-mask {
+    height: 100%;
+    border-right-width: 1px;
+    width: 240px;
+    /* border: 1px solid red; */
+    background-color: white;
+  }
+
+/* #studio-main { */
+
+/*     @apply justify-start items-start mx-auto pt-20; */
+
+/*     /\* border: 1px solid red; *\/ */
+
+/*     max-width: 400px; */
+
+/* } */
+
+@media (min-width: 768px) {
+
+  .md\:x-h-64px {
+    min-height: 64px;
+  }
+
+  .md\:x-ml-240px {
+    margin-left: 240px;
+  }
+}

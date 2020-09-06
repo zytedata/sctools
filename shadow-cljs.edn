@@ -126,7 +126,11 @@
          :init-ns    user
          :middleware [refactor-nrepl.middleware/wrap-refactor]}
 
- :dev-http {13344 "release"}
+ :dev-http {
+            ;; serve dev files
+            3345 ["classpath:app"]
+            ;; service release files
+            13345 "release"}
 
  :builds {:app {:target
                 :browser
@@ -139,9 +143,9 @@
                  sctools.app/after-reload
 
                  :watch-dir
-                 "assets/app/static/dev/styles"
+                 "assets/app/sctools/static/dev/styles"
                  :watch-path
-                 "/static/dev/styles"
+                 "/sctools/static/dev/styles"
 
                  :preloads [#_react-preloads
 
@@ -164,20 +168,20 @@
                   "day8.re_frame.tracing.trace_enabled_QMARK_" true}
 
                  :output-dir
-                 "assets/app/static/dev/js"
+                 "assets/app/sctools/static/dev/js"
 
                  :asset-path
-                 "/static/dev/js"
+                 "/sctools/static/dev/js"
 
                  :compiler-options {:devcards true
                                     :infer-externs false}}
 
                 :release
                 {:output-dir
-                 "resources/app/static/js"
+                 "resources/app/sctools/static/js"
 
                  :asset-path
-                 "/static/js"
+                 "/sctools/static/js"
 
                  :build-options
                  {:ns-aliases
@@ -196,40 +200,20 @@
                  {:init-fn
                   sctools.app/main}}}
 
-          :test {:target
-                 :browser-test
-
-                 :ns-regexp "dialog-test$"
-
-                 :test-dir
-                 "resources/app/static/dev/jstest"
-
-                 :autorun
-                 false
-
-                 :devtools
-                 {:http-port
-                  3346
-
-                  :http-root
-                  "resources/app/static/dev/jstest"
-
-                  :preloads [devtools.preload
-                             hashp.core]}}
-
           :test-kaocha {:target    :browser-test
                         :runner-ns kaocha.cljs2.shadow-runner
-                        :test-dir "assets/app/static/dev/test-kaocha"
+                        :test-dir "assets/app/sctools/static/dev/test-kaocha"
                         :ns-regexp ".*-test$"
 
-                        :devtools {:http-port 3347
+                        :devtools
+                        {:http-port 3347
 
-                                   :http-root "assets/app/static/dev/test-kaocha"
+                         :http-root "assets/app/sctools/static/dev/test-kaocha"
 
-                                   :preloads [devtools.preload
-                                              debux.common.util
-                                              debux.cs.util
-                                              hashp.core]}}
+                         :preloads [devtools.preload
+                                    debux.common.util
+                                    debux.cs.util
+                                    hashp.core]}}
 
           :ci
           {:target    :karma

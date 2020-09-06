@@ -1,7 +1,7 @@
 const API_KEY = 'ffffffffffffffffffffffffffffffff';
 
 beforeEach(() => {
-  cy.visit('/index-dev.html')
+  cy.visit('/')
   // cy.window().then((win) => {
   //   win.localStorage.setItem("day8.re-frame-10x.show-panel", "false")
   // });
@@ -41,7 +41,7 @@ describe('set api key', () => {
   })
 
   it.only('redirects back', () => {
-    cy.visit('/index-dev.html#/settings')
+    cy.visit('/#/settings')
     cy.hash().should('eq', '#/init')
 
     stubAPIKeyRequest(400)

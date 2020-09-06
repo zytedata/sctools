@@ -3,11 +3,15 @@
 set -e
 set -x
 
-sctools_dir=$(echo "${BASH_SOURCE[0]}" | xargs dirname |xargs dirname)
+sctools_dir=$(echo "${BASH_SOURCE[0]}" \
+                  | xargs readlink -f \
+                  | xargs dirname \
+                  | xargs dirname)
 
-cd ${sctools_dir}/release
+mkdir -p ${sctools_dir}/docs
+cd ${sctools_dir}/docs
 
-static_src=${sctools_dir}/resources/app/static/
+static_src=${sctools_dir}/resources/app/sctools/static/
 static_dst=./sctools/static
 
 mkdir -p $static_dst
@@ -26,7 +30,11 @@ rsync -av --delete \
       '--exclude=*' \
       $static_src $static_dst
 
-rsync -av ${static_src}/index-gh-pages.html index.html
+rsync -av ${sctools_dir}/resources/app/index-gh-pages.html index.html
 
 build_ts=$(python -c "import sys, time; print(int(time.time()*1000))")
 sed -i -e "s/SCTOOLS_BUILD_TS/$build_ts/g" index.html
+
+# So that we have both docs/sctools/static (for local dev) and
+# docs/static (for gh pages)
+ln -sf sctools/static .

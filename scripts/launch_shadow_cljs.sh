@@ -53,7 +53,7 @@ check_shadow_cljs() {
 }
 
 wait_for_shadow_cljs_server() {
-    wait_with_timeout "shadow-cljs server" 120 check_shadow_cljs
+    wait_with_timeout "shadow-cljs server" 180 check_shadow_cljs
 }
 
 

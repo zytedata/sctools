@@ -30,7 +30,7 @@
 
 ;; This ns is set as the :init-ns of shadow-cljs.edn, this way we'll
 ;; start the dev server immediately when shadow-cljs is started.
-(defonce setup-on-init (server/start!))
+;; (defonce setup-on-init (server/start!))
 
 
 (comment

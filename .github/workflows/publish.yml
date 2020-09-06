@@ -8,14 +8,6 @@ jobs:
     # ubuntu 18.04 comes with lein + java8 installed
     runs-on: ubuntu-18.04
     steps:
-      - name: Store token
-        run: |
-          cat >~/.netrc<<EOF
-          machine github.com
-          login lucywang000
-          password ${{ secrets.GITHUB_TOKEN }}
-          EOF
-
       - name: Git checkout
         uses: actions/checkout@v1
         with:
@@ -62,6 +54,7 @@ jobs:
       - name: Build
         run: |
           yarn release
+          scripts/copy_release_files.sh
 
       - name: Cache cypress binary
         uses: actions/cache@v1
@@ -77,9 +70,17 @@ jobs:
 
       - name: Run Cypress Test
         run: |
-          yarn cypress run
+          CYPRESS_BASE_URL=http://127.0.0.1:13345 yarn cypress run
+
+      - name: Store token
+        run: |
+          cat >~/.netrc<<EOF
+          machine github.com
+          login lucywang000
+          password ${{ secrets.GITHUB_TOKEN }}
+          EOF
 
       - name: Deploy to GitHub Pages
         if: github.ref == 'refs/heads/master'
-        run:
+        run: |
           ./scripts/publish.sh
