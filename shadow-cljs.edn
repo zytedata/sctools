@@ -130,7 +130,7 @@
             ;; serve dev files
             3345 ["classpath:app"]
             ;; service release files
-            13345 "release"}
+            13345 "docs"}
 
  :builds {:app {:target
                 :browser
