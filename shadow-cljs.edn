@@ -126,7 +126,7 @@
          :init-ns    user
          :middleware [refactor-nrepl.middleware/wrap-refactor]}
 
- :http {:port 13344}
+ :dev-http {13344 "release"}
 
  :builds {:app {:target
                 :browser

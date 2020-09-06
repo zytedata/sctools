@@ -29,3 +29,4 @@ pom.xml.asc
 /local/resources
 cypress/videos
 cypress/integration/cljs/
+/release

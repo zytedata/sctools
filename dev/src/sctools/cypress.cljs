@@ -63,5 +63,6 @@
   (visit "/index-dev.html")
   (visit "/index-dev.html#/settings")
   (visit "/index-dev.html#/debug")
+  (visit "file:///opt/data/github/bd/lucy-sctools-gh-pages/index.html")
 
   ())

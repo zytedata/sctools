@@ -50,14 +50,30 @@ jobs:
             git reset --hard a5bd5806d25fadb2f0025361189a641f50988df9
           popd
 
-      - name: Run CLJS Tests
+      - name: Launch shadow-cljs
         run: |
-          yarn ci-build
-          yarn ci-test
+          scripts/launch_shadow_cljs.sh
+
+      # - name: Run CLJS Tests
+      #   run: |
+      #     yarn ci-build
+      #     yarn ci-test
 
       - name: Build
         run: |
           yarn release
+
+      - name: Cache cypress binary
+        uses: actions/cache@v1
+        id: cache-cypress-binary
+        with:
+          path: /home/runner/.cache/Cypress
+          key: cypress-5.1.0
+
+      - name: Install cypress binary
+        if: steps.cache-cypress-binary.outputs.cache-hit != 'true'
+        run: |
+          yarn cypress install
 
       - name: Run Cypress Test
         run: |
