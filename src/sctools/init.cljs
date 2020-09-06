@@ -132,7 +132,7 @@ It would never be sent to any third-party service."))
                  mask-div)))]
     (ReactDOM/createPortal ($ leftbar-mask-impl) el)))
 
-(defnc init-view-impl [{:keys [api-key checking error back]}]
+(defnc init-view-impl [{:keys [api-key checking error]}]
   (layout/set-title "Setup")
   (d/div
     ($ leftbar-mask)
@@ -182,12 +182,9 @@ It would never be sent to any third-party service."))
                ($ AccordionDetails security-tooltip)))))
 
 (defn init-view-reagent []
-  (let [this (r/current-component)
-        back (j/get-in (r/props this) [:location :back])
-        {:keys [api-key checking error]} @(rf/subscribe [:init])]
+  (let [{:keys [api-key checking error]} @(rf/subscribe [:init])]
     ($ init-view-impl {:api-key api-key
                        :error error
-                       :back back
                        :checking checking})))
 
 (defnc init-view [{:keys [location] :as props}]

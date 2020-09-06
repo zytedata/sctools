@@ -1,5 +1,6 @@
 (ns sctools.studio.machine
   (:require [statecharts.core :as fsm :refer [assign]]
+            [applied-science.js-interop :as j]
             [statecharts.rf :as fsm.rf]
             [re-frame.core :as rf]
             [kitchen-async.promise :as p]
@@ -60,7 +61,8 @@
   (let [job (current-job context)
         info {:success true :info data}]
     (log/debug :msg (str "fetched " job))
-    (cache-job-info job data)
+    (when (= (get data "state") "finished")
+      (cache-job-info job data))
     (-> context
         (assoc-in [:results job] info)
         (assoc :spider-name (get data "spider")))))

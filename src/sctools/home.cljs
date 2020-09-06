@@ -112,6 +112,11 @@
     (r/as-element [top-bar])
     children))
 
+(defnc foo-view [props]
+  #p props
+  #p (useParams)
+  "Hello foo")
+
 (defnc home-view-impl [{:keys [drawer-open auth-done]}]
   ($ HashRouter
     (d/div {:class '[flex-grow]}
@@ -124,6 +129,9 @@
                        ($ settings-view))
                     ($ Route {:path "/studio"}
                        ($ jobs-studio-view))
+                    (when ^boolean goog.DEBUG
+                      ($ Route {:path "/:foo+"}
+                         ($ foo-view)))
                     ($ Route {:path "/"}
                        ($ index-view)))))
            ($ side-bar {:drawer-open drawer-open}))))
