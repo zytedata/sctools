@@ -151,6 +151,7 @@ It would never be sent to any third-party service."))
             (d/div
              {:class '[flex flex-row space-x-2 w-full]}
              ($ TextField {:className "flex-grow"
+                           :inputProps (j/lit {:name "api-key"})
                            :variant "outlined"
                            :autoComplete "off"
                            :type "password"
@@ -196,7 +197,14 @@ It would never be sent to any third-party service."))
 (comment
 
   (local-storage/get-item api-key-name)
+  (println 1)
   (local-storage/delete-item api-key-name)
   (local-storage/set-item api-key-name user/test-key)
+
+  (-> (.get js/cy "input[name=api-key]") .click)
+  (-> (.contains js/cy "security") .click)
+  (js/vrun)
+  (.. js/window -parent -cy)
+  (.. js/window -parent -vrun)
 
   ())

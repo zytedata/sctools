@@ -130,6 +130,9 @@
                     ($ Route {:path "/studio"}
                        ($ jobs-studio-view))
                     (when ^boolean goog.DEBUG
+                      ($ Route {:path "/init2"}
+                         ($ init-view)))
+                    (when ^boolean goog.DEBUG
                       ($ Route {:path "/:foo+"}
                          ($ foo-view)))
                     ($ Route {:path "/"}

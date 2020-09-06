@@ -126,6 +126,8 @@
          :init-ns    user
          :middleware [refactor-nrepl.middleware/wrap-refactor]}
 
+ :http {:port 13344}
+
  :builds {:app {:target
                 :browser
 
@@ -214,6 +216,23 @@
 
                   :preloads [devtools.preload
                              hashp.core]}}
+
+          :cypress {:target :npm-module
+                    :entries [sctools.cypress.basic-spec]
+                    ;; :entries [sctools.foo]
+                    :devtools
+                    {:http-port
+                     3348
+
+                     :http-root
+                     "cypress/integration/cljs"
+
+                     :preloads [devtools.preload
+                                debux.common.util
+                                debux.cs.util
+                                hashp.core
+                                ]}
+                    :output-dir "cypress/integration/cljs"}
 
           :test-kaocha {:target    :browser-test
                         :runner-ns kaocha.cljs2.shadow-runner
