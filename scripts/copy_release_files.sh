@@ -22,6 +22,7 @@ rsync -av --delete \
       '--include=styles/*' \
       '--include=js' \
       '--include=js/main.js' \
+      '--include=js/main.js.map' \
       '--include=fontawesome' \
       '--include=fontawesome/webfonts' \
       '--include=fontawesome/webfonts/*' \
