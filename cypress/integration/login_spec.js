@@ -40,7 +40,7 @@ describe('set api key', () => {
     cy.contains('API Key check failed')
   })
 
-  it.only('redirects back', () => {
+  it('redirects back', () => {
     cy.visit('/#/settings')
     cy.hash().should('eq', '#/init')
 
