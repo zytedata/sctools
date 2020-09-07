@@ -21,8 +21,8 @@ module.exports = function (config) {
       basePath: 'test-assets/karma/',
       files: [
         'ci.js',
-        {pattern: '../../resources/app/static/styles/tailwind**.css'},
-        {pattern: '../../resources/app/static/fontawesome/css/fa.purged.css'},
+        {pattern: '../../resources/app/sctools/static/styles/tailwind**.css'},
+        {pattern: '../../resources/app/sctools/static/fontawesome/css/fa.purged.css'},
       ],
       frameworks: ['cljs-test'],
       plugins: ['karma-cljs-test', 'karma-chrome-launcher'],

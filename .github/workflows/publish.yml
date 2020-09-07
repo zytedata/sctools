@@ -49,10 +49,10 @@ jobs:
         run: |
           scripts/launch_shadow_cljs.sh
 
-      # - name: Run CLJS Tests
-      #   run: |
-      #     yarn ci-build
-      #     yarn ci-test
+      - name: Run CLJS Tests
+        run: |
+          yarn ci-build
+          yarn ci-test
 
       - name: Build
         run: |
@@ -75,15 +75,12 @@ jobs:
         run: |
           CYPRESS_BASE_URL=http://127.0.0.1:13345 yarn cypress run
 
-      - name: Store token
+      - name: Deploy to GitHub Pages
+        if: github.ref == 'refs/heads/master'
         run: |
           cat >~/.netrc<<EOF
           machine github.com
           login lucywang000
           password ${{ secrets.GITHUB_TOKEN }}
           EOF
-
-      - name: Deploy to GitHub Pages
-        if: github.ref == 'refs/heads/master'
-        run: |
           ./scripts/publish.sh

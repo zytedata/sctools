@@ -40,8 +40,8 @@
             [sctools.widgets.common :refer [error-msg tooltip]]
             [statecharts.core :as fsm]))
 
-(defnc job-input [{:keys [job cb-event label]}]
-  ($ TextField {:name "job-id"
+(defnc job-input [{:keys [job cb-event input-name label]}]
+  ($ TextField {:name input-name
                 :variant "outlined"
                 :autoComplete "off"
                 :type "text"
@@ -95,11 +95,13 @@
 
             (d/div {:class '[text-2xl]} "From Job:")
             ($ job-input {:job from
+                          :input-name "from-job"
                           :cb-event :studio/update-from
                           :label "From Job"})
 
             (d/div {:class '[text-2xl]} "To Job:")
             ($ job-input {:job to
+                          :input-name "to-job"
                           :cb-event :studio/update-to
                           :label "To Job"})
             (d/div {:class '[w-full flex flex-row space-x-4 items-start]}
@@ -176,7 +178,7 @@
       (str "..." (j/call s :slice (- len n 3))))))
 
 (defnc job-row [{:keys [job info]}]
-  ($ TableRow
+  ($ TableRow {:data-cy "infos-row"}
     ($ TableCell {:align "left"}
        ($ Link {:href (job-url job)
                 :key "job"
@@ -267,6 +269,7 @@
     {:class '[w-full h-full overflow-y-auto]}
     ($ Paper
        ($ Table {:stickyHeader true
+                 :data-cy "infos-table"
                  :size "small"}
           ($ jobs-table-header {:headers headers
                                 :sorts sorts

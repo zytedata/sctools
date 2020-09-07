@@ -33,7 +33,7 @@
 
 (defn sync-job-ids [{:keys [from to] :as studio} old-from]
   (if (or (str/blank? to)
-          (str/starts-with? old-from to))
+          (and old-from (str/starts-with? old-from to)))
     (assoc studio :to from)
     studio))
 

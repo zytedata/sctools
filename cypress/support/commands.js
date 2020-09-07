@@ -23,3 +23,33 @@
 //
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
+
+Cypress.Commands.add('clearJobInfoCache', () => {
+  // visit an empty page so we can release the indexed db;
+  return new Cypress.Promise(async (resolve, reject) => {
+    let dbs = await indexedDB.databases();
+    let found = false;
+
+    for (let i = 0; i < dbs.length; i++) {
+      let db = dbs[i];
+      if (db.name == 'jobs') {
+        found = true;
+        const req = indexedDB.deleteDatabase('jobs');
+
+        req.onsuccess = function() {
+          // console.log('req.onsuccess');
+          resolve();
+        };
+        req.onerror = function(e) {
+          // console.log('req.onerror');
+          console.warn(e);
+          reject(new Error('clearJobInfoCache failed'));
+        };
+      }
+    }
+
+    if (!found) {
+      resolve();
+    }
+  });
+});

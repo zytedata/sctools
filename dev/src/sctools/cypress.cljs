@@ -1,35 +1,13 @@
 (ns sctools.cypress
   (:require [applied-science.js-interop :as j]
-            [bb-utils.clojure :refer [prog1]]))
+            [bb-utils.clojure :refer [prog1]]
+            ["./cy_utils"
+             :as cy
+             :refer [clickByText fillInput clearInput wait
+                     reload forward back]]))
 
 (defn parent-val [k]
   (j/get-in js/window [:parent k]))
-
-(def vrun (parent-val :vrun))
-(def cy (parent-val :cy))
-
-(defn reload []
-  (.reload cy)
-  (vrun))
-
-(defn click-by-text
-  ([text]
-   (click-by-text text (j/lit {})))
-  ([text opts]
-   (prog1 (-> cy
-              (.contains text opts)
-              (.click))
-     (vrun))))
-
-(defn type-text [text]
-  (prog1 (-> cy
-             (.get "body")
-             (.type text))
-    (vrun)))
-
-(defn visit [url]
-  (prog1 (.visit cy url)
-    (vrun)))
 
 ;; (describe
 ;;  "The Home page"
@@ -53,16 +31,30 @@
 ;;       ))))
 
 (comment
-  (click-by-text "security")
-  (click-by-text "go to" (j/lit {:matchCase false}))
-  (click-by-text "go" (j/lit {:matchCase false}))
-  (click-by-text "go to")
-  (type-text "{ctrl}h")
+  (clickByText "button" "Go")
+  (clickByText "span" "go to the jobs studio")
+  (clickByText "security")
+  (clickByText "go")
+  (clickByText "go to")
+  (clickByText "filter")
+  (clickByText "go!")
+
+  (fillInput "from-job" "1/1/1")
+  (fillInput "to-job" "1/1/2")
+  (clearInput "to-job")
+
+  (wait "@jobs/3")
+  (wait 100)
+  (cy/get "table[data-cy=infos-table]")
+  (cy/get "tr[data-cy=infos-row]")
+
 
   (reload)
-  (visit "/index-dev.html")
-  (visit "/index-dev.html#/settings")
-  (visit "/index-dev.html#/debug")
-  (visit "file:///opt/data/github/bd/lucy-sctools-gh-pages/index.html")
+  (visit "/")
+  (visit "/#/settings")
+  (visit "/#/debug")
+  (cy/stubJobsInfoResponse)
+
+  (back)
 
   ())
