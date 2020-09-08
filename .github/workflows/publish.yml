@@ -73,7 +73,11 @@ jobs:
 
       - name: Run Cypress Test
         run: |
-          CYPRESS_BASE_URL=http://127.0.0.1:13345 yarn cypress run
+          branch=${{ github.ref }}
+          if [[ $branch == "refs/heads/debug-test" ]]; then
+              run_args="--record --key ${{ secrets.CYPRESS_KEY }}"
+          fi
+          CYPRESS_BASE_URL=http://127.0.0.1:13345 yarn cypress run $run_args
 
       - name: Deploy to GitHub Pages
         if: github.ref == 'refs/heads/master'
