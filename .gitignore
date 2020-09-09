@@ -30,3 +30,4 @@ cypress/videos
 cypress/integration/cljs/
 /release
 /docs
+.clj-kondo/hooks

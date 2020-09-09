@@ -1,4 +1,5 @@
-{:lint-as {sctools.utils/deftimer clojure.core/def
+{:hooks {:analyze-call {bb-utils.clojure/cond* hooks.bb-utils/cond*}}
+ :lint-as {sctools.utils/deftimer clojure.core/def
            sctools.utils.rf-utils/defev clojure.core/fn
            helix.core/defnc clojure.core/defn
            devcards.core/defcard clojure.core/def
@@ -7,14 +8,12 @@
            day8.re-frame.tracing/fn-traced clojure.core/fn
            applied-science.js-interop/let clojure.core/let
            day8.re-frame.tracing/defn-traced clojure.core/defn
-           bb-utils.clojure/cond* clojure.core/def
            emotion.core/defstyled clojure.core/def
            kitchen-async.promise/-> clojure.core/->
            kitchen-async.promise/->> clojure.core/->>
-           kitchen-async.promise/let clojure.core/let}
+           kitchen-async.promise/let clojure.core/let
            reagent.core/with-let clojure.core/let}
  :linters {:unresolved-symbol {:exclude [goog.DEBUG
-                                         (bb-utils.clojure/cond*)
                                          (bb-utils.clojure/prog1 [<>])
                                          (sctools.test.utils/mock-event-handler [called])
                                          (sctools.test.utils/mock-effect-handler [called])]},
