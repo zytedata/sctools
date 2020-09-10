@@ -100,7 +100,7 @@
   },
   "units": 3,
   "running_time": 1577008074600,
-  "items": 1604,
+  "items": 3000,
   "version": "1c1d54053a-foo.co.uk_products-CUSTOMER-5845",
   "_shub_worker": "k01-prod-02",
   "spider_type": "manual",

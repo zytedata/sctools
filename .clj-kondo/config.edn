@@ -1,4 +1,9 @@
-{:hooks {:analyze-call {bb-utils.clojure/cond* hooks.bb-utils/cond*}}
+{:hooks {:analyze-call
+         {bb-utils.clojure/cond* hooks.bb-utils/auto
+          bb-utils.clojure/if-let hooks.bb-utils/auto
+          bb-utils.clojure/when-let hooks.bb-utils/auto
+          bb-utils.clojure/if-some hooks.bb-utils/auto
+          bb-utils.clojure/when-some hooks.bb-utils/auto}}
  :lint-as {sctools.utils/deftimer clojure.core/def
            sctools.utils.rf-utils/defev clojure.core/fn
            helix.core/defnc clojure.core/defn

@@ -17,6 +17,8 @@
 
  :dependencies [[borkdude/dynaload "0.1.0"]
                 [metosin/malli "0.0.1-SNAPSHOT"]
+               [clj-kondo "2020.07.26"
+                 :exclusions [org.clojure/clojure]]
                 [cljs-bean "1.6.0"]
                 [lilactown/helix "0.0.13" :exclusions [cljs-bean]]
                 [emotion-cljs "0.1.2"]

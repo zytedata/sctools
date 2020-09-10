@@ -83,8 +83,7 @@
 (defnc job-range-input-view-impl [{:keys [jobs recents]}]
   (layout/set-title "Jobs Studio")
   (let [{:keys [from to]} jobs
-        [error set-error] (use-state nil)
-        [anim set-anim] (use-state false)]
+        [error set-error] (use-state nil)]
     (d/div
      {:class '[h-full max-w-sm lg:max-w-lg
                mx-auto space-x-8
@@ -108,7 +107,7 @@
                    ($ Button {:className "flex-none"
                               :color "primary"
                               :onClick
-                              (fn [event]
+                              (fn []
                                 (if-some [error (get-valdiation-error from to)]
                                   (set-error error)
                                   (rf/dispatch [:studio/submit])))
@@ -129,7 +128,6 @@
             ($ Button
                {:color "secondary"
                 :onClick (fn []
-                           (set-anim true)
                            (rf/dispatch [:studio/update-jobs [from to]]))}
                (d/span
                 {:class '[normal-case]}
@@ -179,7 +177,8 @@
 
 (defnc job-row [{:keys [job info]}]
   ($ TableRow {:data-cy "infos-row"}
-    ($ TableCell {:align "left"}
+    ($ TableCell {:align "left"
+                  }
        ($ Link {:href (job-url job)
                 :key "job"
                 :rel "noreferrer"
@@ -188,17 +187,20 @@
       ($ TableCell {:key k
                     :align "left"
                     :className (when (= k :spider_args)
-                                 "whitespace-pre-line")}
+                                 "whitespace-pre-line")
+                    & (when (keyword? k)
+                        {:data-cy (str "job-" (name k))})}
          (str v)))))
 
-(defnc header-cell [{:keys [title id stat? sorting]}]
+(defnc header-cell [{:keys [title id stat? sorting cell-attrs]}]
   (let [on-hide (if stat?
                     #(rf/dispatch [:studio/prefs.remove-stat id])
                     #(rf/dispatch [:studio/prefs.toggle-column id]))
         on-sort #(rf/dispatch [:studio/sorts.enable {:id id :stat? stat?}])
         on-reverse-sort #(rf/dispatch [:studio/sorts.reverse])
         on-clear-sort #(rf/dispatch [:studio/sorts.clear])]
-    ($ TableCell {:align "left"}
+    ($ TableCell {:align "left"
+                  & cell-attrs}
        (d/div {:class '[group
                         flex flex-row justify-between items-center]}
               (d/div {:class '[flex flex-row justify-start items-center
@@ -241,7 +243,7 @@
     ($ Typography {:variant "subtitle1"}
        (truncate-left title 10))))
 
-(defnc jobs-table-header [{:keys [headers sorts job-count]}]
+(defnc jobs-table-header [{:keys [headers job-count]}]
   ($ TableHead
     ($ TableRow
        ($ TableCell {:align "left"
@@ -262,7 +264,9 @@
              :key id
              :stat? stat?
              :sorting sorting
-             :title title})))))
+             :title title
+             :cell-attrs (when (keyword? id)
+                           {:data-cy (str "title-" (name id))})})))))
 
 (defnc job-infos-table-impl [{:keys [sorts headers infos]}]
   (d/div

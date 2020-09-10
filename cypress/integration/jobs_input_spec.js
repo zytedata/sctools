@@ -43,10 +43,13 @@ describe('load jobs', () => {
     cy.get("tr[data-cy=infos-row]").should('has.length', 3)
   })
 
-  it('go to the page directly', () => {
+  it.only('go to the page directly', () => {
     cy.visit(JOBS_URL)
     cy.wait(['@jobs/1', '@jobs/2', '@jobs/3'])
     cy.get("tr[data-cy=infos-row]").should('has.length', 3)
+    for (let k of [1000, 2000, 3000]) {
+      cy.get("td[data-cy=job-items]").contains(String(k))
+    }
   })
 
   it('cache job status', (done) => {
