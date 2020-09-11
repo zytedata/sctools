@@ -76,7 +76,7 @@
 ;; Return [:enum [:ascending :descending nil]]
 (defn get-sorting [{:keys [col]} current-id stat?]
   (when-some [{:keys [id descending?]} col]
-    (if (and (= current-id id)
+    (when (and (= current-id id)
              (= (boolean stat?) (boolean (:stat? col))))
       (if descending?
         :descending

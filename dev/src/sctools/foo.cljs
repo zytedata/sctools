@@ -8,7 +8,7 @@
     1)
 
   (if-let [a "foo"]
-    (+ a 0)
+    (+ a 1)
     #_(+ b 2))
 
   #_(when-let [a "foo"]

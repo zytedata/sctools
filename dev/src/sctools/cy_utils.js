@@ -63,7 +63,7 @@ function _stubJobsInfoResponse() {
   // "last-match wins" for mutiple routes.
   cy.route({
     method: 'GET',
-    url: `https://storage.scrapinghub.com/**`,
+    url: 'https://storage.scrapinghub.com/**',
     status: 500,
     response: {},
   });
@@ -74,7 +74,7 @@ function _stubJobsInfoResponse() {
     // Use cy.readFile instead of cy.fixture because the latter caches
     // the file content.
     // https://github.com/cypress-io/cypress/issues/4716#issuecomment-518528101
-    cy.readFile(`cypress/fixtures/${k}.json`).then((info) => {
+    cy.readFile(`cypress/fixtures/${k}.json`).then(info => {
       let url = 'https://storage.scrapinghub.com/jobs/1/1/' +
                 `${id}?**`;
       console.log('url =>', url);
@@ -85,6 +85,16 @@ function _stubJobsInfoResponse() {
         response: info,
         delay: 100,
       }).as(k);
+
+      if (id == 3) {
+        cy.route({
+          method: 'GET',
+          url: /https:\/\/storage.scrapinghub.com\/jobs\/1\/1\/([4-9]|[0-9]{2,}.*)/,
+          status: 200,
+          response: info,
+          delay: 100,
+        }).as('jobs/more');
+      }
     })
   }
 }
@@ -103,7 +113,7 @@ function _attachFns(root, child) {
 function _populateCy() {
   const root = window.parent;
 
-  root.document.querySelectorAll('iframe').forEach((iframe) => {
+  root.document.querySelectorAll('iframe').forEach(iframe => {
     if (/Your App/.exec(iframe.id)) {
       iframe.onload = () => {
         _attachFns(root, iframe.contentWindow);

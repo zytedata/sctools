@@ -2,9 +2,6 @@ const API_KEY = 'ffffffffffffffffffffffffffffffff';
 
 beforeEach(() => {
   cy.visit('/')
-  // cy.window().then((win) => {
-  //   win.localStorage.setItem("day8.re-frame-10x.show-panel", "false")
-  // });
   cy.get('body').type('{ctrl}h')
   cy.server()
 })

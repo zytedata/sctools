@@ -177,10 +177,10 @@
 
 (defnc job-row [{:keys [job info]}]
   ($ TableRow {:data-cy "infos-row"}
-    ($ TableCell {:align "left"
-                  }
+    ($ TableCell {:align "left"}
        ($ Link {:href (job-url job)
                 :key "job"
+                :data-cy "job"
                 :rel "noreferrer"
                 :target "_blank"} (truncate-left job 15)))
     (for [[k [_ v]] info]

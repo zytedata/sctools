@@ -5,13 +5,17 @@ import { clickByText, fillInput, clearInput, stubJobsInfoResponse} from './utils
 // import debug from 'debug'
 // debug.disable('cypress:*')
 
+let range = (x, start = 0) => {
+  return Array.from({length: x}, (_, i) => i + start);
+}
+
 function setupTest() {
-  cy.window().then((win) => {
+  cy.window().then(win => {
     win.localStorage.setItem(":sctools/api-key", API_KEY)
     win.localStorage.setItem("day8.re-frame-10x.show-panel", '"false"')
   })
 
-  // cy.on('command:start', (cmd) => console.warn('cmd:', cmd))
+  // cy.on('command:start', cmd => console.warn('cmd:', cmd))
 
   // Visit the home page empty page so we can release the indexed db
   cy.visit('/')
@@ -43,7 +47,7 @@ describe('load jobs', () => {
     cy.get("tr[data-cy=infos-row]").should('has.length', 3)
   })
 
-  it.only('go to the page directly', () => {
+  it('go to the page directly', () => {
     cy.visit(JOBS_URL)
     cy.wait(['@jobs/1', '@jobs/2', '@jobs/3'])
     cy.get("tr[data-cy=infos-row]").should('has.length', 3)
@@ -52,7 +56,7 @@ describe('load jobs', () => {
     }
   })
 
-  it('cache job status', (done) => {
+  it('cache job status', done => {
     cy.visit('/#/studio/job/1/1/1/_/3')
     cy.wait(['@jobs/1', '@jobs/2', '@jobs/3'])
     cy.get("tr[data-cy=infos-row]").should('has.length', 3)
@@ -62,10 +66,19 @@ describe('load jobs', () => {
     cy.wait(['@jobs/1', '@jobs/2', '@jobs/3'], {timeout: 1000})
     cy.get("tr[data-cy=infos-row]").should('has.length', 3)
 
-    cy.on('fail', (err) => {
+    cy.on('fail', err => {
       // console.log('errxxx:', err);
       expect(err.message).to.contain('No request ever occurred')
       done()
+    })
+  })
+
+  it.only('sorts by job id by default', () => {
+    cy.visit('#/studio/job/1/1/1/_/10')
+    cy.wait(['@jobs/1', '@jobs/2', '@jobs/3', '@jobs/more'])
+    cy.get("a[data-cy=job]").then(links => {
+      const jobs = Array.from(links).map(link => Cypress.$(link).text())
+      assert.deepEqual(jobs, range(10, 1).map(i => `1/1/${i}`))
     })
   })
 

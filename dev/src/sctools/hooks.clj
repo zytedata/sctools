@@ -12,31 +12,11 @@
 
 (def nil-token (api/token-node 'nil))
 
-(defn nil-token? [x]
-  (= (api/sexpr x) nil))
-
 (defn ->token [x]
   (api/token-node x))
 
 (defn wrap-do [body]
   (conj body (api/token-node 'do)))
-
-(defn remove-last-nil [xs]
-  (cond
-    (empty? xs)
-    xs
-
-    (nil? (last xs))
-    (if (vector? xs)
-      (subvec xs 0 (dec (count xs)))
-      (drop-last xs))
-
-    :else
-    xs))
-
-
-;; (remove-last-nil '(1 2 nil))
-;; (remove-last-nil [1 2 nil])
 
 (defrecord Splice [items])
 
@@ -207,6 +187,7 @@
           (->list 'if test-node expr (transform-cond* more-clauses))
           (->list 'when test-node expr)))
       test-node)))
+
 
 (defn cond* [{:keys [node]}]
   {:node (transform-cond* (-> node :children rest))})

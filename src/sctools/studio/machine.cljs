@@ -6,6 +6,7 @@
             [kitchen-async.promise :as p]
             [lambdaisland.glogi :as log]
             [sctools.api :as api]
+            [linked.core :as linked]
             [sctools.studio.cache :refer [get-cached-info cache-job-info]]
             [sctools.studio.utils :refer [spider-name-from-results]]))
 
@@ -21,7 +22,10 @@
  (fn [studio [_ {:keys [spider from to]}]]
    (assoc studio :state
           (fsm/initialize studio-machine
-                          {:context {:spider spider :from from :to to}}))))
+                          {:context {:spider spider
+                                     :from from
+                                     :to to
+                                     :results (linked/map)}}))))
 
 (rf/reg-event-db
  :studio/fsm-event
