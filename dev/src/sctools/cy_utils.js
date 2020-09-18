@@ -45,6 +45,7 @@ export const get = _simpleCmd('get');
 export const reload = _simpleCmd('reload');
 export const back = _simpleCmd('go', 'back');
 export const forward = _simpleCmd('go', 'forward');
+export const visit = _simpleCmd('visit');
 
 function _inputSel(name) {
   return `input[name="${name}"]`;

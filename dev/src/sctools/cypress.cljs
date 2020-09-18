@@ -4,10 +4,13 @@
             ["./cy_utils"
              :as cy
              :refer [clickByText fillInput clearInput wait
-                     reload forward back]]))
+                     visit reload forward back]]))
 
 (defn parent-val [k]
   (j/get-in js/window [:parent k]))
+
+(defn park-page []
+  (visit "sctools/static/dev/styles/tailwind-custom.css"))
 
 ;; (describe
 ;;  "The Home page"
@@ -56,5 +59,6 @@
   (cy/stubJobsInfoResponse)
 
   (back)
+  (park-page)
 
   ())

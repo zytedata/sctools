@@ -18,6 +18,8 @@
 
 (defonce id (volatile! 0))
 
+(def concurrent-fetches 5)
+
 (rf/reg-event-db
  :studio/fsm-start
  studio-path
@@ -41,44 +43,73 @@
 (rf/reg-event-db
  :studio/fsm-event
  studio-path
- (fn [studio [_ etype epoch data]]
-   (if (= (current-epoch studio) epoch)
+ (fn [studio [_ etype meta data]]
+   (if (= (current-epoch studio) (:epoch meta))
      (assoc studio
             :state (fsm/transition studio-machine
                                    (:state studio)
-                                   {:type etype :data data}))
+                                   {:type etype
+                                    :meta (dissoc meta :epoch)
+                                    :data data}))
      (do
        (log/info :msg "event for an stale machine" :etype etype)
        studio))))
 
-(defn fetch-one
+(defn handle-next
+  [current from]
+  (cond
+    (nil? current)
+    from
+
+    :else
+    (inc current)))
+
+(defn fetch-one-impl
   [{:keys [spider current from results epoch] :as context}]
-  (let [current (or current from)
-        job (str spider "/" current)]
+  (let [current (handle-next current from)
+        job (str spider "/" current)
+        meta {:epoch epoch :job job}]
     (p/let [info (get-cached-info job)]
       (if info
         (do
           (log/debug :msg (str "using cached info for job " job))
           (js/setTimeout
-           #(rf/dispatch [:studio/fsm-event :success-fetch epoch info])
+           #(rf/dispatch [:studio/fsm-event :success-fetch meta info])
            0))
         (let [fx (api/job-info-request
                   {:job job
-                   :on-success [:studio/fsm-event :success-fetch epoch]
-                   :on-failure [:studio/fsm-event :fail-fetch epoch]})]
+                   :on-success [:studio/fsm-event :success-fetch meta]
+                   :on-failure [:studio/fsm-event :fail-fetch meta]})]
           (log/debug :msg (str "fetching job " job))
           (rf/dispatch [::fsm.rf/call-fx fx]))))
     (assoc context :current current)))
 
+(defn fetch-one
+  [{:keys [current from to] :as context}]
+  (cond
+    (nil? current)
+    ;; On the first call, kick start multiple fetching threads
+    (let [concurrency (min concurrent-fetches
+                           (inc (- to from)))]
+      (reduce fetch-one-impl context (range concurrency)))
+
+    :else
+    (fetch-one-impl context)))
+
 (defn all-jobs-fetched?
-  [{:keys [from to current]}]
+  [{:keys [from to results]}]
+  (= (count results)
+     (- to from)))
+
+(defn all-jobs-requested?
+  [{:keys [current from to]}]
   (= current to))
 
 (defn current-job [{:keys [spider current] :as context}]
   (str spider "/" current))
 
-(defn on-fetched [context {:keys [data]}]
-  (let [job (current-job context)
+(defn on-fetched [context {:keys [data meta]}]
+  (let [job (:job meta)
         info {:success true :info data}]
     (log/debug :msg (str "fetched " job))
     (when (= (get data "state") "finished")
@@ -87,14 +118,11 @@
         (assoc-in [:results job] info)
         (assoc :spider-name (get data "spider")))))
 
-(defn on-fetch-failed [context {:keys [data]}]
-  (let [job (current-job context)
+(defn on-fetch-failed [context {:keys [data meta]}]
+  (let [job (:job meta)
         info {:success false :error data}]
     (log/debug :msg (str "failed to fetch " job) :error data)
     (assoc-in context [:results job] info)))
-
-(defn handle-next [context]
-  (update context :current inc))
 
 (defn add-to-recent [{:keys [spider from to spider-name]}]
   (rf/dispatch [:studio/add-recent {:from (str spider "/" from)
@@ -111,15 +139,27 @@
                 :on    {:success-fetch [{:guard   all-jobs-fetched?
                                          :actions (assign on-fetched)
                                          :target  :fetched}
+
+                                        ;; When this request is not
+                                        ;; the last one but there is
+                                        ;; no more request to send, do
+                                        ;; an internal
+                                        ;; self-transition.
+                                        {:guard   all-jobs-requested?
+                                         :actions (assign on-fetched)}
+
                                         {:target  :fetching
-                                         :actions [(assign on-fetched)
-                                                   (assign handle-next)]}]
+                                         :actions (assign on-fetched)}]
+
                         :fail-fetch    [{:guard   all-jobs-fetched?
                                          :target  :fetched
                                          :actions (assign on-fetch-failed)}
+
+                                        {:guard   all-jobs-requested?
+                                         :actions (assign on-fetched)}
+
                                         {:target  :fetching
-                                         :actions [(assign on-fetch-failed)
-                                                   (assign handle-next)]}]}}
+                                         :actions (assign on-fetch-failed)}]}}
      :fetched  {:entry add-to-recent}}}))
 
 (comment
