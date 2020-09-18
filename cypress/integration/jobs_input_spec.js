@@ -1,37 +1,9 @@
-const API_KEY = 'ffffffffffffffffffffffffffffffff'
-
 import { clickByText, fillInput, clearInput, stubJobsInfoResponse} from './utils.js'
+import { setupStudioTest, range, JOBS_URL } from './test_utils.js'
 
-// import debug from 'debug'
-// debug.disable('cypress:*')
-
-let range = (x, start = 0) => {
-  return Array.from({length: x}, (_, i) => i + start);
-}
-
-function setupTest() {
-  cy.window().then(win => {
-    win.localStorage.setItem(":sctools/api-key", API_KEY)
-    win.localStorage.setItem("day8.re-frame-10x.show-panel", '"false"')
-  })
-
-  // cy.on('command:start', cmd => console.warn('cmd:', cmd))
-
-  // Visit the home page empty page so we can release the indexed db
-  cy.visit('/')
-  cy.clearJobInfoCache()
-
-  // cy.visit('/')
-  // cy.get('body').type('{ctrl}h')
-
-  cy.server()
-  stubJobsInfoResponse()
-}
-
-const JOBS_URL = '#/studio/job/1/1/1/_/3'
+beforeEach(setupStudioTest)
 
 describe('load jobs', () => {
-  beforeEach(setupTest)
 
   it('fill the jobs manually', () => {
     cy.visit('/')
@@ -56,6 +28,8 @@ describe('load jobs', () => {
     }
   })
 
+  // This case must be the last one in the whole file, otherise any
+  // test case comes after it would fail for no good reason.
   it('cache job status', done => {
     cy.visit('/#/studio/job/1/1/1/_/3')
     cy.wait(['@jobs/1', '@jobs/2', '@jobs/3'])
@@ -66,26 +40,11 @@ describe('load jobs', () => {
     cy.wait(['@jobs/1', '@jobs/2', '@jobs/3'], {timeout: 1000})
     cy.get("tr[data-cy=infos-row]").should('has.length', 3)
 
-    cy.on('fail', err => {
+    cy.once('fail', err => {
       // console.log('errxxx:', err);
       expect(err.message).to.contain('No request ever occurred')
       done()
     })
   })
 
-  it.only('sorts by job id by default', () => {
-    cy.visit('#/studio/job/1/1/1/_/10')
-    cy.wait(['@jobs/1', '@jobs/2', '@jobs/3', '@jobs/more'])
-    cy.get("a[data-cy=job]").then(links => {
-      const jobs = Array.from(links).map(link => Cypress.$(link).text())
-      assert.deepEqual(jobs, range(10, 1).map(i => `1/1/${i}`))
-    })
-  })
-
 })
-
-// describe('placeholder', () => {
-//   it('placeholder', () => {
-//     cy.wait(100)
-//   })
-// })

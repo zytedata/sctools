@@ -82,7 +82,7 @@
     "response/images-na.ssl-images-foo.com/response_count": 23,
     "crawlera/max_bans": 0,
     "sessions/requests/total": 7495,
-    "crawlera/response/status/200": 6689,
+    "crawlera/response/status/200": 3000,
     "item_stats/in_stock/False": 75
   },
   "logs": 19629,
@@ -100,7 +100,7 @@
   },
   "units": 3,
   "running_time": 1577008074600,
-  "items": 2000,
+  "items": 500,
   "version": "1c1d54053a-foo.co.uk_products-CUSTOMER-5845",
   "_shub_worker": "k01-prod-02",
   "spider_type": "manual",

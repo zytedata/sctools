@@ -209,7 +209,8 @@
                      (if sorting
                        (hx/<>
                         ($ tooltip {:title "Click to reverse sort"}
-                           (d/i {:class (conj '[fas cursor-pointer p-1 border-2
+                           (d/i {:data-cy "sorted-col"
+                                 :class (conj '[fas cursor-pointer p-1 border-2
                                                 text-xs
                                                 border-gray-700 shadow]
                                             (if (= sorting :descending)
@@ -217,13 +218,15 @@
                                               'fa-sort-amount-up))
                                :on-click on-reverse-sort}))
                         ($ tooltip {:title "Clear sorting"}
-                           (d/i {:class '[invisible group-hover:visible
+                           (d/i {:data-cy "clear-sorting"
+                                 :class '[invisible group-hover:visible
                                           pl-2
                                           fal fa-times-circle
                                           cursor-pointer]
                                  :on-click on-clear-sort})))
                        ($ tooltip {:title "Sort with this column"}
-                          (d/i {:class '[invisible group-hover:visible
+                          (d/i {:data-cy "sort-col"
+                                :class '[invisible group-hover:visible
                                          fas fa-sort-amount-up
                                          cursor-pointer]
                                 :on-click on-sort})))
@@ -253,7 +256,8 @@
                  (d/span (str "Job (" job-count " rows)"))
                  ($ tooltip {:title "Click to configure which columns to display"}
                     (d/i
-                     {:class '[fas fa-cog cursor-pointer]
+                     {:data-cy "show-studio-preference"
+                      :class '[fas fa-cog cursor-pointer]
                       :on-click toggle-prefs-dialog}))))
        (for [{:keys [sorting id title stat?]} headers
              :let [title (if stat?
@@ -265,8 +269,9 @@
              :stat? stat?
              :sorting sorting
              :title title
-             :cell-attrs (when (keyword? id)
-                           {:data-cy (str "title-" (name id))})})))))
+             :cell-attrs {:data-cy (if (keyword? id)
+                                     (str "col-" (name id))
+                                     "col-stat")}})))))
 
 (defnc job-infos-table-impl [{:keys [sorts headers infos]}]
   (d/div
@@ -426,9 +431,11 @@
         (for [k selected-stats
               :let [_ (type selected-stats)]]
           (d/div {:key k
+                  :data-cy "hide-stat"
                   :class '[w-full space-x-2
                            flex flex-row justify-start items-center]}
-                 (d/i {:class '[far fa-times cursor-pointer]
+                 (d/i {:data-cy "hide-stat-button"
+                       :class '[far fa-times cursor-pointer]
                        :on-click #(rf/dispatch [:studio/prefs.remove-stat k])})
                  ($ Typography {:variant "subtitle1"}
                     k))))))))
@@ -445,7 +452,8 @@
                   ($ Typography {:variant "h5"
                                  :color "primary"}
                      "Jobs Studio Preferences")
-                  (d/i {:class '[text-2xl fas fa-times-circle cursor-pointer]
+                  (d/i {:data-cy "close-preference-dialog"
+                        :class '[text-2xl fas fa-times-circle cursor-pointer]
                         :on-click toggle-prefs-dialog}))
            (d/div
             {:class '[w-full h-full overflow-hidden
@@ -472,6 +480,7 @@
 
 (defnc prefs-dialog [props]
   ($ Dialog {:onClose toggle-prefs-dialog
+             :data-cy "studio-preference-dialog"
              :fullWidth true
              :maxWidth "sm"
              :open true}

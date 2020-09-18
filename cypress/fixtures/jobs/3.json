@@ -82,7 +82,7 @@
     "response/images-na.ssl-images-foo.com/response_count": 23,
     "crawlera/max_bans": 0,
     "sessions/requests/total": 7495,
-    "crawlera/response/status/200": 6689,
+    "crawlera/response/status/200": 500,
     "item_stats/in_stock/False": 75
   },
   "logs": 19629,
