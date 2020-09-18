@@ -6,7 +6,6 @@
             [kitchen-async.promise :as p]
             [lambdaisland.glogi :as log]
             [sctools.api :as api]
-            [linked.core :as linked]
             [sctools.studio.cache :refer [get-cached-info cache-job-info]]
             [sctools.studio.utils :refer [spider-name-from-results]]))
 
@@ -24,6 +23,10 @@
  :studio/fsm-start
  studio-path
  (fn [studio [_ {:keys [spider from to]}]]
+   (assert (and (pos? from)
+                (pos? to)
+                (> to from))
+     (str "FROM and TO must be positive numbers, and FROM must be greater than TO"))
    (assoc studio :state
           (fsm/initialize studio-machine
                           {:context {:spider spider
@@ -35,7 +38,7 @@
                                      :epoch (vswap! id inc)
                                      :from from
                                      :to to
-                                     :results (linked/map)}}))))
+                                     :results (sorted-map)}}))))
 
 (defn current-epoch [studio]
   (get-in studio [:state :context :epoch]))
