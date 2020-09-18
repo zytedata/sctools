@@ -84,55 +84,51 @@
   (layout/set-title "Jobs Studio")
   (let [{:keys [from to]} jobs
         [error set-error] (use-state nil)]
-    (d/div
-     {:class '[h-full max-w-sm lg:max-w-lg
-               mx-auto space-x-8
-               pt-20 flex flex-row justify-start items-start]}
-     (d/div {:onChange #(set-error nil)
-             :class '[w-full h-full
-                      flex flex-col justify-start items-start space-y-5]}
+    (d/div {:class '[h-full max-w-sm lg:max-w-lg
+                     mx-auto space-x-8
+                     pt-20 flex flex-row justify-start items-start]}
+      (d/div {:onChange #(set-error nil)
+              :class '[w-full h-full
+                       flex flex-col justify-start items-start space-y-5]}
 
-            (d/div {:class '[text-2xl]} "From Job:")
-            ($ job-input {:job from
-                          :input-name "from-job"
-                          :cb-event :studio/update-from
-                          :label "From Job"})
+        (d/div {:class '[text-2xl]} "From Job:")
+        ($ job-input {:job from
+                      :input-name "from-job"
+                      :cb-event :studio/update-from
+                      :label "From Job"})
 
-            (d/div {:class '[text-2xl]} "To Job:")
-            ($ job-input {:job to
-                          :input-name "to-job"
-                          :cb-event :studio/update-to
-                          :label "To Job"})
-            (d/div {:class '[w-full flex flex-row space-x-4 items-start]}
-                   ($ Button {:className "flex-none"
-                              :color "primary"
-                              :onClick
-                              (fn []
-                                (if-some [error (get-valdiation-error from to)]
-                                  (set-error error)
-                                  (rf/dispatch [:studio/submit])))
-                              :variant "contained"}
-                      "Go!")
-                   (when error
-                     ($ Alert {:severity "warning"}
-                        error))))
-     (when-let [recents (seq recents)]
-       (d/div
-        {:class '[flex flex-col justify-start items-start space-x-4]}
-        (d/div {:class '[text-2xl]} "Recently Used")
-        (d/ul
-         {:class '[list-disc]}
-         (for [{:keys [from to spider-name] :as k} recents]
-           (d/li
-            {:key k}
-            ($ Button
-               {:color "secondary"
-                :onClick (fn []
-                           (rf/dispatch [:studio/update-jobs [from to]]))}
-               (d/span
-                {:class '[normal-case]}
-                (str spider-name " " from " ~ " to))))))
-        )))))
+        (d/div {:class '[text-2xl]} "To Job:")
+        ($ job-input {:job to
+                      :input-name "to-job"
+                      :cb-event :studio/update-to
+                      :label "To Job"})
+        (d/div {:class '[w-full flex flex-row space-x-4 items-start]}
+          ($ Button {:className "flex-none"
+                     :color "primary"
+                     :onClick
+                     (fn []
+                       (if-some [error (get-valdiation-error from to)]
+                         (set-error error)
+                         (rf/dispatch [:studio/submit])))
+                     :variant "contained"}
+             "Go!")
+          (when error
+            ($ Alert {:severity "warning"}
+               error))))
+      (when-let [recents (seq recents)]
+        (d/div {:class '[flex flex-col justify-start items-start space-x-4]}
+          (d/div {:class '[text-2xl]} "Recently Used")
+          (d/ul {:class '[list-disc]}
+            (for [{:keys [from to spider-name] :as k} recents]
+              (d/li
+                  {:key k}
+                ($ Button
+                  {:color "secondary"
+                   :onClick (fn []
+                              (rf/dispatch [:studio/update-jobs [from to]]))}
+                  (d/span {:class '[normal-case]}
+                    (str spider-name " " from " ~ " to))))))
+          )))))
 
 (defn job-input-view []
   (let [jobs @(rf/subscribe [:studio/jobs])
@@ -143,21 +139,20 @@
   (let [total (inc (- to from))
         finished (- current from)
         current-job (str spider "/" current)]
-    (d/div
-     {:class '[h-full w-full pt-16 px-4
-               flex flex-col items-center justify-start space-y-8]}
-     (when spider-name
-       (d/div spider-name))
-     (d/div {:class '[w-64 mx-auto
-                      flex flex-col items-center justify-center space-y-2]}
+    (d/div {:class '[h-full w-full pt-16 px-4
+                     flex flex-col items-center justify-start space-y-8]}
+      (when spider-name
+        (d/div spider-name))
+      (d/div {:class '[w-64 mx-auto
+                       flex flex-col items-center justify-center space-y-2]}
+        (d/div
+            (str "Loading " finished " / " total))
+        ($ LinearProgress {:variant "determinate"
+                           :value (* 100 (/ finished total))
+                           :className " w-full px-4"
+                           :color "primary"}))
       (d/div
-       (str "Loading " finished " / " total))
-      ($ LinearProgress {:variant "determinate"
-                         :value (* 100 (/ finished total))
-                         :className " w-full px-4"
-                         :color "primary"}))
-     (d/div
-      (str "Fetching " current-job)))))
+          (str "Fetching " current-job)))))
 
 (defnc error-view []
   (r/as-element [error-msg {:msg "Error happed" :center? true}]))
@@ -177,25 +172,25 @@
 
 (defnc job-row [{:keys [job info]}]
   ($ TableRow {:data-cy "infos-row"}
-    ($ TableCell {:align "left"}
-       ($ Link {:href (job-url job)
-                :key "job"
-                :data-cy "job"
-                :rel "noreferrer"
-                :target "_blank"} (truncate-left job 15)))
-    (for [[k [_ v]] info]
-      ($ TableCell {:key k
-                    :align "left"
-                    :className (when (= k :spider_args)
-                                 "whitespace-pre-line")
-                    & (when (keyword? k)
-                        {:data-cy (str "job-" (name k))})}
-         (str v)))))
+     ($ TableCell {:align "left"}
+        ($ Link {:href (job-url job)
+                 :key "job"
+                 :data-cy "job"
+                 :rel "noreferrer"
+                 :target "_blank"} (truncate-left job 15)))
+     (for [[k [_ v]] info]
+       ($ TableCell {:key k
+                     :align "left"
+                     :className (when (= k :spider_args)
+                                  "whitespace-pre-line")
+                     & (when (keyword? k)
+                         {:data-cy (str "job-" (name k))})}
+          (str v)))))
 
 (defnc header-cell [{:keys [title id stat? sorting cell-attrs]}]
   (let [on-hide (if stat?
-                    #(rf/dispatch [:studio/prefs.remove-stat id])
-                    #(rf/dispatch [:studio/prefs.toggle-column id]))
+                  #(rf/dispatch [:studio/prefs.remove-stat id])
+                  #(rf/dispatch [:studio/prefs.toggle-column id]))
         on-sort #(rf/dispatch [:studio/sorts.enable {:id id :stat? stat?}])
         on-reverse-sort #(rf/dispatch [:studio/sorts.reverse])
         on-clear-sort #(rf/dispatch [:studio/sorts.clear])]
@@ -203,42 +198,42 @@
                   & cell-attrs}
        (d/div {:class '[group
                         flex flex-row justify-between items-center]}
-              (d/div {:class '[flex flex-row justify-start items-center
-                               space-x-1]}
-                     title
-                     (if sorting
-                       (hx/<>
-                        ($ tooltip {:title "Click to reverse sort"}
-                           (d/i {:data-cy "sorted-col"
-                                 :class (conj '[fas cursor-pointer p-1 border-2
-                                                text-xs
-                                                border-gray-700 shadow]
-                                            (if (= sorting :descending)
-                                              'fa-sort-amount-down
-                                              'fa-sort-amount-up))
-                               :on-click on-reverse-sort}))
-                        ($ tooltip {:title "Clear sorting"}
-                           (d/i {:data-cy "clear-sorting"
-                                 :class '[invisible group-hover:visible
-                                          pl-2
-                                          fal fa-times-circle
-                                          cursor-pointer]
-                                 :on-click on-clear-sort})))
-                       ($ tooltip {:title "Sort with this column"}
-                          (d/i {:data-cy "sort-col"
-                                :class '[invisible group-hover:visible
-                                         fas fa-sort-amount-up
-                                         cursor-pointer]
-                                :on-click on-sort})))
-                     #_($ tooltip {:title "Hide this column"}
-                        (d/i {:class '[invisible group-hover:visible
-                                       fal fa-times-circle
-                                       cursor-pointer]
-                              :on-click on-hide})))))))
+         (d/div {:class '[flex flex-row justify-start items-center
+                          space-x-1]}
+           title
+           (if sorting
+             (hx/<>
+              ($ tooltip {:title "Click to reverse sort"}
+                 (d/i {:data-cy "sorted-col"
+                       :class (conj '[fas cursor-pointer p-1 border-2
+                                      text-xs
+                                      border-gray-700 shadow]
+                                    (if (= sorting :descending)
+                                      'fa-sort-amount-down
+                                      'fa-sort-amount-up))
+                       :on-click on-reverse-sort}))
+              ($ tooltip {:title "Clear sorting"}
+                 (d/i {:data-cy "clear-sorting"
+                       :class '[invisible group-hover:visible
+                                pl-2
+                                fal fa-times-circle
+                                cursor-pointer]
+                       :on-click on-clear-sort})))
+             ($ tooltip {:title "Sort with this column"}
+                (d/i {:data-cy "sort-col"
+                      :class '[invisible group-hover:visible
+                               fas fa-sort-amount-up
+                               cursor-pointer]
+                      :on-click on-sort})))
+           #_($ tooltip {:title "Hide this column"}
+                (d/i {:class '[invisible group-hover:visible
+                               fal fa-times-circle
+                               cursor-pointer]
+                      :on-click on-hide})))))))
 
 (defnc column-header-title [{:keys [title]}]
   ($ Typography {:variant "subtitle1"}
-    title))
+     title))
 
 (defnc stat-header-title [{:keys [title]}]
   ($ tooltip
@@ -249,45 +244,44 @@
 (defnc jobs-table-header [{:keys [headers job-count]}]
   ($ TableHead
     ($ TableRow
-       ($ TableCell {:align "left"
-                         :key "job"}
-          (d/div {:class '[flex flex-row items-center
-                           space-x-4]}
-                 (d/span (str "Job (" job-count " rows)"))
-                 ($ tooltip {:title "Click to configure which columns to display"}
-                    (d/i
-                     {:data-cy "show-studio-preference"
-                      :class '[fas fa-cog cursor-pointer]
-                      :on-click toggle-prefs-dialog}))))
-       (for [{:keys [sorting id title stat?]} headers
-             :let [title (if stat?
-                               ($ stat-header-title {:title title})
-                               ($ column-header-title {:title title}))]]
-         ($ header-cell
-            {:id id
-             :key id
-             :stat? stat?
-             :sorting sorting
-             :title title
-             :cell-attrs {:data-cy (if (keyword? id)
-                                     (str "col-" (name id))
-                                     "col-stat")}})))))
+      ($ TableCell {:align "left"
+                    :key "job"}
+         (d/div {:class '[flex flex-row items-center
+                          space-x-4]}
+           (d/span (str "Job (" job-count " rows)"))
+           ($ tooltip {:title "Click to configure which columns to display"}
+              (d/i
+                  {:data-cy "show-studio-preference"
+                   :class '[fas fa-cog cursor-pointer]
+                   :on-click toggle-prefs-dialog}))))
+      (for [{:keys [sorting id title stat?]} headers
+            :let [title (if stat?
+                          ($ stat-header-title {:title title})
+                          ($ column-header-title {:title title}))]]
+        ($ header-cell
+          {:id id
+           :key id
+           :stat? stat?
+           :sorting sorting
+           :title title
+           :cell-attrs {:data-cy (if (keyword? id)
+                                   (str "col-" (name id))
+                                   "col-stat")}})))))
 
 (defnc job-infos-table-impl [{:keys [sorts headers infos]}]
-  (d/div
-    {:class '[w-full h-full overflow-y-auto]}
+  (d/div {:class '[w-full h-full overflow-y-auto]}
     ($ Paper
-       ($ Table {:stickyHeader true
-                 :data-cy "infos-table"
-                 :size "small"}
-          ($ jobs-table-header {:headers headers
-                                :sorts sorts
-                                :job-count (count infos)})
-          ($ TableBody
-             (for [[job info] infos]
-               ($ job-row {:job job
-                           :key job
-                           :info info})))))))
+      ($ Table {:stickyHeader true
+                :data-cy "infos-table"
+                :size "small"}
+         ($ jobs-table-header {:headers headers
+                               :sorts sorts
+                               :job-count (count infos)})
+         ($ TableBody
+           (for [[job info] infos]
+             ($ job-row {:job job
+                         :key job
+                         :info info})))))))
 
 (defn job-infos-table []
   (let [headers @(rf/subscribe [:studio/table.headers])
@@ -300,9 +294,9 @@
 (defn render-input-func [label & [auto-focus]]
   (fn [params]
     ($ TextField
-       {:label label
-        :autoFocus auto-focus
-        :variant "outlined" & params})))
+      {:label label
+       :autoFocus auto-focus
+       :variant "outlined" & params})))
 
 (def render-k-input
   (render-input-func "arg"))
@@ -314,13 +308,12 @@
   (render-input-func "stats" true))
 
 (defnc filters-edit-view [{:keys [args k v]}]
-  (d/div
-    {:class '[w-full px-2 flex
-              flex-col md:flex-row
-              justify-start
-              items-center
-              space-x-0 space-y-2
-              md:space-x-4 md:space-y-0]}
+  (d/div {:class '[w-full px-2 flex
+                   flex-col md:flex-row
+                   justify-start
+                   items-center
+                   space-x-0 space-y-2
+                   md:space-x-4 md:space-y-0]}
     ($ Autocomplete {:id "job-args-k"
                      :options (into-array (keys args))
                      :className "w-full flex-grow"
@@ -355,17 +348,17 @@
 (defnc filter-header-view [{:keys [args filters]}]
   (let [{:keys [filtering]} filters]
     (d/div {:class '[w-full pl-1]}
-           (cond
-             filtering
-             ($ filters-edit-view {:args args & (select-keys filters [:k :v])})
+      (cond
+        filtering
+        ($ filters-edit-view {:args args & (select-keys filters [:k :v])})
 
-             :else
-             ($ Button {:color "primary"
-                        :onClick #(rf/dispatch [:studio/filters.begin-filter])
-                        :variant "contained"}
-                (d/div {:class '[space-x-2]}
-                       (d/i {:class '[fal fa-filter]})
-                       (d/span "Filter jobs by argument")))))))
+        :else
+        ($ Button {:color "primary"
+                   :onClick #(rf/dispatch [:studio/filters.begin-filter])
+                   :variant "contained"}
+           (d/div {:class '[space-x-2]}
+             (d/i {:class '[fal fa-filter]})
+             (d/span "Filter jobs by argument")))))))
 
 (defn collect-args [results]
   (->> results
@@ -393,52 +386,50 @@
              :variant "contained"
              :color "primary"
              :onClick #(rf/dispatch [:studio/prefs.reset])}
-    "Reset to defaults"))
+     "Reset to defaults"))
 
 (defnc column-checkboxes [{:keys [columns]}]
   ($ FormGroup {:row false}
-    (for [[k label] (map vector info-keys info-titles)
-          :let [visible (get columns k)]]
-      (let [checkbox
-            ($ Checkbox
+     (for [[k label] (map vector info-keys info-titles)
+           :let [visible (get columns k)]]
+       (let [checkbox
+             ($ Checkbox
                {:checked (js/Boolean visible)
                 :onChange #(rf/dispatch [:studio/prefs.toggle-column k])})]
-        ($ FormControlLabel {:control checkbox
-                             :key label
-                             :label label})))))
+         ($ FormControlLabel {:control checkbox
+                              :key label
+                              :label label})))))
 
 (defnc stats-display-tab [{:keys [selected-stats results]}]
   (let [stats (use-memo [results]
                 (collect-stats results))]
-    (d/div
-     {:class '[pt-2 w-full h-full
-               flex flex-col justify-start
-               space-y-4]}
-     ($ Autocomplete {:id "stats"
-                      :options (-> stats
-                                   #_(clojure.set/difference selected-stats)
-                                   sort
-                                   into-array)
-                      :className "w-full flex-grow"
-                      :onChange
-                      (fn [_ value]
-                        (when value
-                          (rf/dispatch [:studio/prefs.add-stat value])))
-                      :renderInput render-stats-input})
-     (when selected-stats
-       (d/div
-        {:class '[w-full h-full flex flex-col justify-start space-y-2]}
-        (for [k selected-stats
-              :let [_ (type selected-stats)]]
-          (d/div {:key k
-                  :data-cy "hide-stat"
-                  :class '[w-full space-x-2
-                           flex flex-row justify-start items-center]}
-                 (d/i {:data-cy "hide-stat-button"
-                       :class '[far fa-times cursor-pointer]
-                       :on-click #(rf/dispatch [:studio/prefs.remove-stat k])})
-                 ($ Typography {:variant "subtitle1"}
-                    k))))))))
+    (d/div {:class '[pt-2 w-full h-full
+                     flex flex-col justify-start
+                     space-y-4]}
+      ($ Autocomplete {:id "stats"
+                       :options (-> stats
+                                    #_(clojure.set/difference selected-stats)
+                                    sort
+                                    into-array)
+                       :className "w-full flex-grow"
+                       :onChange
+                       (fn [_ value]
+                         (when value
+                           (rf/dispatch [:studio/prefs.add-stat value])))
+                       :renderInput render-stats-input})
+      (when selected-stats
+        (d/div {:class '[w-full h-full flex flex-col justify-start space-y-2]}
+          (for [k selected-stats
+                :let [_ (type selected-stats)]]
+            (d/div {:key k
+                    :data-cy "hide-stat"
+                    :class '[w-full space-x-2
+                             flex flex-row justify-start items-center]}
+              (d/i {:data-cy "hide-stat-button"
+                    :class '[far fa-times cursor-pointer]
+                    :on-click #(rf/dispatch [:studio/prefs.remove-stat k])})
+              ($ Typography {:variant "subtitle1"}
+                 k))))))))
 
 (defonce current-tab (atom 0))
 
@@ -448,35 +439,33 @@
                      flex flex-col items-start justify-start
                      space-y-4]
             :style {:height "500px"}}
-           (d/div {:class '[w-full flex flex-row justify-between items-center]}
-                  ($ Typography {:variant "h5"
-                                 :color "primary"}
-                     "Jobs Studio Preferences")
-                  (d/i {:data-cy "close-preference-dialog"
-                        :class '[text-2xl fas fa-times-circle cursor-pointer]
-                        :on-click toggle-prefs-dialog}))
-           (d/div
-            {:class '[w-full h-full overflow-hidden
-                      flex flex-col]}
-            ($ Tabs {:orientation "horizontal"
-                     :value tab
-                     :className "flex-none"
-                     :onChange (fn [_ index]
-                                 (set-tab index))}
-               ($ Tab {:label "Columns to display"})
-               ($ Tab {:label "Stats to display"}))
-            (d/div
-             {:class '[w-full h-full px-4 flex-grow overflow-y-auto]}
-             (cond
-               (= tab 0)
-               (hx/<>
-                ($ column-checkboxes {:columns (:columns prefs)})
-                ($ reset-columns-button))
+      (d/div {:class '[w-full flex flex-row justify-between items-center]}
+        ($ Typography {:variant "h5"
+                       :color "primary"}
+           "Jobs Studio Preferences")
+        (d/i {:data-cy "close-preference-dialog"
+              :class '[text-2xl fas fa-times-circle cursor-pointer]
+              :on-click toggle-prefs-dialog}))
+      (d/div {:class '[w-full h-full overflow-hidden
+                       flex flex-col]}
+        ($ Tabs {:orientation "horizontal"
+                 :value tab
+                 :className "flex-none"
+                 :onChange (fn [_ index]
+                             (set-tab index))}
+           ($ Tab {:label "Columns to display"})
+           ($ Tab {:label "Stats to display"}))
+        (d/div {:class '[w-full h-full px-4 flex-grow overflow-y-auto]}
+          (cond
+            (= tab 0)
+            (hx/<>
+             ($ column-checkboxes {:columns (:columns prefs)})
+             ($ reset-columns-button))
 
-               :else
-               ($ stats-display-tab {:selected-stats (:stats prefs)
-                                     :results results})
-               ))))))
+            :else
+            ($ stats-display-tab {:selected-stats (:stats prefs)
+                                  :results results})
+            ))))))
 
 (defnc prefs-dialog [props]
   ($ Dialog {:onClose toggle-prefs-dialog
@@ -484,7 +473,7 @@
              :fullWidth true
              :maxWidth "sm"
              :open true}
-    ($ prefs-dialog-content {& props})))
+     ($ prefs-dialog-content {& props})))
 
 (defnc job-infos-view [{:keys [context filters prefs]}]
   ;; (def vctx context)
@@ -541,13 +530,13 @@
     (rf/dispatch-sync [:studio/init]))
   (j/let [^:js {:keys [path]} (useRouteMatch)]
     ($ Switch
-       ($ Route
-          {:path
-           (str path
-                "/job/:project/:spider/:from_id/_/:to_id")}
-          (r/as-element [job-detail-view]))
-       ($ Route {:path path}
-          (r/as-element [job-input-view])))))
+      ($ Route
+        {:path
+         (str path
+              "/job/:project/:spider/:from_id/_/:to_id")}
+        (r/as-element [job-detail-view]))
+      ($ Route {:path path}
+         (r/as-element [job-input-view])))))
 
 
 (comment

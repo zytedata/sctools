@@ -112,9 +112,8 @@
          (set-error (error-from-response response))))))
 
 (def security-tooltip
-  (d/div
-   {:class "text-base p-2 leading-normal"}
-"The API key is only stored in your local browser.
+  (d/div {:class "text-base p-2 leading-normal"}
+    "The API key is only stored in your local browser.
 It would never be sent to any third-party service."))
 
 (def leftbar-mask-id "leftbar-mask-container")
@@ -135,52 +134,50 @@ It would never be sent to any third-party service."))
 (defnc init-view-impl [{:keys [api-key checking error]}]
   (layout/set-title "Setup")
   (d/div
-    ($ leftbar-mask)
+      ($ leftbar-mask)
     (d/form {:class '[h-full w-full mx-auto mt-32 w-full
                       flex flex-col items-start justify-start space-y-3]
              :style {:width "400px"}}
-            (d/div {:class '[text-xl w-full]}
-                   "Please set your Scrapy Cloud API Key:")
-            (d/div {:class '[pb-2]}
-             ($ Tooltip {:title security-tooltip}
-                (d/div
-                 {:class '[text-sm cursor-pointer px-1 rounded text-gray-700
-                           border-b hover:shadow]}
-                 (d/i {:class '[fa fa-info-circle pr-1 text-gray-600]})
-                 "security tip")))
-            (d/div
-             {:class '[flex flex-row space-x-2 w-full]}
-             ($ TextField {:className "flex-grow"
-                           :inputProps (j/lit {:name "api-key"})
-                           :variant "outlined"
-                           :autoComplete "off"
-                           :type "password"
-                           :value (or api-key "")
-                           :disabled checking
-                           :onChange (fn [event]
-                                       (rf/dispatch-sync [:init/set-api-key
-                                                          (j/get-in event [:target :value])])
-                                       (r/flush))
-                           :label "API Key"})
-             ($ Button {:className "flex-none"
-                        :color "primary"
-                        :onClick #(rf/dispatch [:init/submit])
-                        :variant "contained"
-                        :disabled (str/blank? api-key)}
-                (d/div {:class '[normal-case text-lg]}
-                       (if checking
-                         ($ CircularProgress {:size "1.5em"
-                                              :color "inherit"})
-                         "Test"))))
-            (when error
-              ($ Alert {:severity "warning"}
-                 error))
-            #_($ Accordion {:className "w-full"}
-               ($ AccordionSummary
-                  {:expandIcon (d/i {:class '[fas fa-caret-down]})}
-                  (d/div {:class '[text-sm]}
-                         "Security Tips"))
-               ($ AccordionDetails security-tooltip)))))
+      (d/div {:class '[text-xl w-full]}
+        "Please set your Scrapy Cloud API Key:")
+      (d/div {:class '[pb-2]}
+        ($ Tooltip {:title security-tooltip}
+           (d/div {:class '[text-sm cursor-pointer px-1 rounded text-gray-700
+                            border-b hover:shadow]}
+             (d/i {:class '[fa fa-info-circle pr-1 text-gray-600]})
+             "security tip")))
+      (d/div {:class '[flex flex-row space-x-2 w-full]}
+        ($ TextField {:className "flex-grow"
+                      :inputProps (j/lit {:name "api-key"})
+                      :variant "outlined"
+                      :autoComplete "off"
+                      :type "password"
+                      :value (or api-key "")
+                      :disabled checking
+                      :onChange (fn [event]
+                                  (rf/dispatch-sync [:init/set-api-key
+                                                     (j/get-in event [:target :value])])
+                                  (r/flush))
+                      :label "API Key"})
+        ($ Button {:className "flex-none"
+                   :color "primary"
+                   :onClick #(rf/dispatch [:init/submit])
+                   :variant "contained"
+                   :disabled (str/blank? api-key)}
+           (d/div {:class '[normal-case text-lg]}
+             (if checking
+               ($ CircularProgress {:size "1.5em"
+                                    :color "inherit"})
+               "Test"))))
+      (when error
+        ($ Alert {:severity "warning"}
+           error))
+      #_($ Accordion {:className "w-full"}
+           ($ AccordionSummary
+             {:expandIcon (d/i {:class '[fas fa-caret-down]})}
+             (d/div {:class '[text-sm]}
+               "Security Tips"))
+           ($ AccordionDetails security-tooltip)))))
 
 (defn init-view-reagent []
   (let [{:keys [api-key checking error]} @(rf/subscribe [:init])]
