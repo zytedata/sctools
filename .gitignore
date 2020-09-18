@@ -26,8 +26,8 @@ pom.xml.asc
 /test-assets/
 /local/src
 /local/resources
-cypress/videos
-cypress/integration/cljs/
+/cypress/videos
+/cypress/screenshots
 /release
 /docs
 .clj-kondo/hooks

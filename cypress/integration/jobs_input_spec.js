@@ -23,7 +23,7 @@ describe('load jobs', () => {
     cy.visit(JOBS_URL)
     cy.wait(['@jobs/1', '@jobs/2', '@jobs/3'])
     cy.get("tr[data-cy=infos-row]").should('has.length', 3)
-    for (let k of [1000, 2000, 3000]) {
+    for (let k of [1000, 500, 3000]) {
       cy.get("td[data-cy=job-items]").contains(String(k))
     }
   })
