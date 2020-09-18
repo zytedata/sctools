@@ -2,7 +2,7 @@ const utils = {}
 export default utils;
 
 // For REPL interactive dev with cypress
-function _wrapForceRun(fn, name) {
+export function _wrapForceRun(fn, name) {
   name = name || /_(.*)/.exec(fn.name)[1];
   utils[name] = fn;
   const newFn = function (... args) {
@@ -15,6 +15,8 @@ function _wrapForceRun(fn, name) {
   //   newFn.name = name;
   return newFn;
 }
+
+utils._wrapForceRun = _wrapForceRun;
 
 function _clickByText() {
   let sel, text;
