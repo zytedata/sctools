@@ -150,6 +150,8 @@
     :context nil
     :states
     {:fetching {:entry (assign #'fetch-one)
+                ;; TODO: merge these two events into one: their
+                ;; transitions are 99% the same.
                 :on    {:success-fetch [{:guard   all-jobs-fetched?
                                          :actions (assign on-fetched)
                                          :target  :fetched}
