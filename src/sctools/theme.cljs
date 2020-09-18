@@ -1,5 +1,8 @@
 (ns sctools.theme
-  (:require ["@material-ui/core/styles" :refer [createMuiTheme ThemeProvider]]
+  (:require ["@material-ui/core/styles"
+             :refer [createMuiTheme ThemeProvider StylesProvider]]
+            [applied-science.js-interop :as j]
+            [clojure.string :as str]
             [helix.core :as hx :refer [defnc $]]))
 
 ;; tailwind breakpoints
@@ -9,13 +12,37 @@
                            :lg 1024
                            :xl 1280}})
 
+(def fonts
+  (str/join "," ["system-ui"
+    "-apple-system"
+    "Segoe UI"
+    "Roboto"
+    "Ubuntu"
+    "Cantarell"
+    "Noto Sans"
+    "sans-serif"
+    "BlinkMacSystemFont"
+    "\"Segoe UI\""
+    "Roboto"
+    "\"Helvetica Neue\""
+    "Arial"
+    "\"Noto Sans\""
+    "sans-serif"
+    "\"Apple Color Emoji\""
+    "\"Segoe UI Emoji\""
+    "\"Segoe UI Symbol\""
+    "\"Noto Color Emoji\""]))
+
 (def theme
   (createMuiTheme
-   #_(clj->js {})
-   (clj->js {:palette {:primary {:main "rgba(63, 81, 181, 0.8)"
-                                 :contrastText "white"}}
-             :breakpoints breakpoints})))
+   (j/lit {:palette {:primary {:main "rgba(63, 81, 181, 0.8)"
+                               :contrastText "white"}}
+           :breakpoints breakpoints
+           :typography {:fontFamily fonts}})))
 
 (defnc theme-provider [{:keys [children]}]
-  ($ ThemeProvider {:theme theme}
-    children))
+  ;; Make sure tailwindcss rules comes later than mui's runtime styles
+  ;; so it could have higher specificity.
+  ($ StylesProvider {:injectFirst true}
+    ($ ThemeProvider {:theme theme}
+       children)))
