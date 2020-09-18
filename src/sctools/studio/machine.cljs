@@ -6,8 +6,9 @@
             [kitchen-async.promise :as p]
             [lambdaisland.glogi :as log]
             [sctools.api :as api]
+            [linked.core :as linked]
             [sctools.studio.cache :refer [get-cached-info cache-job-info]]
-            [sctools.studio.utils :refer [spider-name-from-results]]))
+            [sctools.studio.utils :refer [spider-name-from-results get-job-number]]))
 
 (def studio-path [(rf/path :studio)])
 
@@ -38,7 +39,7 @@
                                      :epoch (vswap! id inc)
                                      :from from
                                      :to to
-                                     :results (sorted-map)}}))))
+                                     :results {}}}))))
 
 (defn current-epoch [studio]
   (get-in studio [:state :context :epoch]))
@@ -132,6 +133,16 @@
                                     :to (str spider "/" to)
                                     :spider-name spider-name}]))
 
+(defn compare-job-id [j1 j2]
+  (compare (get-job-number j1) (get-job-number j2)))
+
+(defn sort-results [{:keys [results] :as context}]
+  (assoc context :results
+         (->> results
+              (sort (fn [[j1 _] [j2 _]]
+                      (compare-job-id j1 j2)))
+              (into (linked/map)))))
+
 (def studio-machine
   (fsm/machine
    {:id      :fetch-job-stats
@@ -163,7 +174,8 @@
 
                                         {:target  :fetching
                                          :actions (assign on-fetch-failed)}]}}
-     :fetched  {:entry add-to-recent}}}))
+     :fetched  {:entry [add-to-recent
+                        (assign #'sort-results)]}}}))
 
 (comment
   (rf/dispatch [:studio/fsm-start {:spider "1887/861" :from 136449 :to 136451}])

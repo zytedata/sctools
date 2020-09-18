@@ -16,7 +16,7 @@ let assertJobs = jobs => {
 }
 
 describe('sort jobs', () => {
-  it('sorts by job id by default', () => {
+  it.only('sorts by job id by default', () => {
     cy.visit('#/studio/job/1/1/1/_/20')
     cy.reload()
     cy.wait('@jobs/more')
