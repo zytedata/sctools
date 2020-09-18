@@ -196,8 +196,8 @@
                  {:optimizations           :advanced
                   :infer-externs           true
                   :source-map              true
-                  ;; :pretty-print            true
-                  ;; :pseudo-names            true
+                  :pretty-print            true
+                  :pseudo-names            true
                   :source-map-detail-level :all}}
 
                 :modules
