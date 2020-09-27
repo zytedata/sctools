@@ -1,6 +1,8 @@
 (ns sctools.studio.subs
   (:require [re-frame.core :as rf]
             [linked.core :as linked]
+            [meander.epsilon :as me]
+            [com.rpl.specter :as sp]
             [sctools.studio.utils :refer [info-keys info-titles format-info-field]]
             [sctools.utils.rf-utils :as rfu :refer [db-sub quick-sub]]))
 
@@ -32,6 +34,9 @@
 
 ;; return a map of k => [orig value, display value]
 (defn format-info [info {:keys [columns stats]}]
+  ;; (def info columns)
+  ;; (def columns columns)
+  ;; (def stats columns)
   (->> (concat (for [k     info-keys
                      :when (get columns k)
                      :let  [[v display-v] (format-info-field info k)]]
@@ -40,6 +45,10 @@
                      :let [v (get-in info ["scrapystats" k])]]
                  [k [v (or v "N/A")]]))
        (into (linked/map))))
+
+
+#_(s/transform [s/ALL (s/pred vcolumns)]
+               #(vector % (format-info-field vinfo %)) info-keys)
 
 (defn safe-compare [x y]
   (try
@@ -66,18 +75,19 @@
  :<- [:studio/prefs]
  :<- [:studio/sorts]
  (fn [[results filters prefs sorts]]
-   (->> (keep (fn [[job {:keys [success info]}]]
-            (when (and success
-                       (matches-filter? filters info))
-              [job (format-info info prefs)]))
-              results)
-        (sort-infos sorts))))
+   (let [filterfn (partial matches-filter? filters)]
+     (->> (me/search results
+            {?job {:success true
+                   :info (me/pred filterfn ?info)}}
+
+            [?job (format-info ?info prefs)])
+          (sort-infos sorts)))))
 
 ;; Return [:enum [:ascending :descending nil]]
 (defn get-sorting [{:keys [col]} current-id stat?]
   (when-some [{:keys [id descending?]} col]
     (when (and (= current-id id)
-             (= (boolean stat?) (boolean (:stat? col))))
+               (= (boolean stat?) (boolean (:stat? col))))
       (if descending?
         :descending
         :ascending))))
