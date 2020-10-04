@@ -15,9 +15,8 @@
                 #_"checkouts/helix/src"
                 #_"checkouts/devcards/src"]
 
- :dependencies [[borkdude/dynaload "0.1.0"]
-                [metosin/malli "0.0.1-SNAPSHOT"]
-               [clj-kondo "2020.07.26"
+ :dependencies [[metosin/malli "0.0.1-20200924.063109-27"]
+                [clj-kondo "2020.09.09"
                  :exclusions [org.clojure/clojure]]
                 [cljs-bean "1.6.0"]
                 [lilactown/helix "0.0.13" :exclusions [cljs-bean]]
@@ -110,7 +109,7 @@
                 [me.raynes/fs                  "1.4.6"]
                 [garden                        "1.3.10"]
                 [com.rpl/specter    "1.1.3"]
-                [meander/epsilon "0.0.492"]
+                [meander/epsilon "0.0.508"]
                 [kitchen-async "0.1.0-SNAPSHOT"]
                 [bb-utils "0.1.0-SNAPSHOT"]
                 [com.maitria/packthread "0.1.10"]
