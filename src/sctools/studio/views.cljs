@@ -475,17 +475,16 @@
              :open true}
      ($ prefs-dialog-content {& props})))
 
-(defnc job-infos-view [{:keys [context filters prefs]}]
-  ;; (def vctx context)
-  (def vresults (:results context))
+(defnc job-infos-view [{:keys [state filters prefs]}]
+  (def vresults (:results state))
   (d/div {:class '[w-full h-full pt-4
                    flex flex-col items-start justify-start space-y-2]}
-    (let [args (use-memo [context]
-                 (collect-args (:results context)))]
+    (let [args (use-memo [state]
+                 (collect-args (:results state)))]
       ($ filter-header-view {:args args :filters filters}))
     (r/as-element [job-infos-table])
     (when (:showing prefs)
-      ($ prefs-dialog {:prefs prefs & context}))))
+      ($ prefs-dialog {:prefs prefs & state}))))
 
 (defnc job-detail-view-impl [{:keys [state filters prefs]}]
   (j/let [^:js {:keys [project spider from_id to_id]} (useParams)
@@ -508,10 +507,10 @@
 
     (cond
       (fsm/matches state :fetching)
-      ($ loading-view {& (:context state)})
+      ($ loading-view {& state})
 
       (fsm/matches state :fetched)
-      ($ job-infos-view {:context (:context state)
+      ($ job-infos-view {:state state
                          :filters filters
                          :prefs prefs})
 

@@ -23,7 +23,7 @@
  :studio/state.results
  :<- [:studio/state]
  (fn [state]
-   (get-in state [:context :results])))
+   (:results state)))
 
 (defn matches-filter? [{:keys [filtering k v]} info]
   (or (not filtering)

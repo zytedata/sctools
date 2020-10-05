@@ -11,16 +11,15 @@
 (def T_Results
   [:map-of string? T_Result])
 
-(def T_Context
+(def T_State
   [:map
+   [:_state [:or
+             keyword?
+             [:vector keyword?]]]
    [:from :int]
    [:spider :string]
    [:to :int]
    [:results T_Results]])
-
-(def T_State
-  [:map
-   [:context T_Context]])
 
 (def T_Recents
   [:sequential
