@@ -8,7 +8,7 @@
             [sctools.studio.cache :refer [get-cached-info cache-job-info]]
             [sctools.studio.utils :refer [get-job-number]]
             [statecharts.core :as fsm :refer [assign]]
-            [statecharts.integrations.re-frame :as fsm.rf]))
+            [statecharts.integrations.re-frame :as fsm.rf :refer [with-epoch]]))
 
 (def studio-path [(rf/path :studio)])
 (def studio-state-path [(rf/path [:studio :state])])
@@ -19,7 +19,7 @@
 
 (def concurrent-fetches 5)
 
-(rf/reg-event-db
+(rf/reg-event-fx
  :studio/fsm-start
  studio-path
  (fn [studio [_ {:keys [spider from to]}]]
@@ -27,12 +27,10 @@
                 (pos? to)
                 (> to from))
      (str "FROM and TO must be positive numbers, and FROM must be greater than TO"))
-   (assoc studio :state
-          (fsm/initialize studio-machine
-                          {:context {:spider spider
-                                     :from from
-                                     :to to
-                                     :results {}}}))))
+   (rf/dispatch [:studio/fsm-init {:context {:spider spider
+                                             :from from
+                                             :to to
+                                             :results {}}}])))
 
 (defn handle-next
   [current from]
@@ -46,19 +44,28 @@
 (defn fetch-one-impl
   [{:keys [spider current from _epoch] :as state}]
   (let [current (handle-next current from)
-        job (str spider "/" current)
-        meta {:epoch _epoch :job job}]
+        job (str spider "/" current)]
     (p/let [info (get-cached-info job)]
       (if info
         (do
           (log/debug :msg (str "using cached info for job " job))
           (js/setTimeout
-           #(rf/dispatch [:studio/fsm-event :success-fetch meta info])
+           #(rf/dispatch [:studio/fsm-event {:type :success-fetch
+                                             :job job} info])
            0))
         (let [fx (api/job-info-request
-                  {:job job
-                   :on-success [:studio/fsm-event :success-fetch meta]
-                   :on-failure [:studio/fsm-event :fail-fetch meta]})]
+                  {:job
+                   job
+
+                   :on-success
+                   [:studio/fsm-event {:type :success-fetch
+                                       :epoch _epoch
+                                       :job job}]
+
+                   :on-failure
+                   [:studio/fsm-event {:type :fail-fetch
+                                       :epoch _epoch
+                                       :job job}]})]
           (log/debug :msg (str "fetching job " job))
           (fsm.rf/call-fx fx))))
     (assoc state :current current)))
@@ -87,9 +94,8 @@
 (defn current-job [{:keys [spider current] :as _state}]
   (str spider "/" current))
 
-(defn on-fetched [state {:keys [data meta]}]
-  (let [job (:job meta)
-        info {:success true :info data}]
+(defn on-fetched [state {:keys [data job] :as _event}]
+  (let [info {:success true :info data}]
     (log/debug :msg (str "fetched " job))
     (when (#{"finished" "deleted"} (get data "state"))
       (cache-job-info job data))
@@ -97,9 +103,8 @@
         (assoc-in [:results job] info)
         (assoc :spider-name (get data "spider")))))
 
-(defn on-fetch-failed [state {:keys [data meta]}]
-  (let [job (:job meta)
-        info {:success false :error data}]
+(defn on-fetch-failed [state {:keys [data job]}]
+  (let [info {:success false :error data}]
     (log/debug :msg (str "failed to fetch " job) :error data)
     (assoc-in state [:results job] info)))
 
@@ -124,6 +129,8 @@
         :initial :fetching
         :context nil
         :integrations {:re-frame {:path studio-state-path
+                                  :epoch? true
+                                  :initialize-event :studio/fsm-init
                                   :transition-event :studio/fsm-event}}
         :states
         {:fetching {:entry (assign #'fetch-one)
