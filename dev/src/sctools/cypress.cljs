@@ -1,6 +1,6 @@
 (ns sctools.cypress
   (:require [applied-science.js-interop :as j]
-            [bb-utils.clojure :refer [prog1]]
+            [bb.clojure :refer [prog1]]
             ["./cy_utils"
              :as cy
              :refer [clickByText fillInput clearInput wait

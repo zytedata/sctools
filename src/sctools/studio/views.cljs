@@ -22,7 +22,7 @@
              :refer
              [Route Switch useParams useRouteMatch]]
             [applied-science.js-interop :as j]
-            [bb-utils.clojure :refer [cond*]]
+            [bb.clojure :refer [cond*]]
             [clojure.string :as str]
             [helix.core :as hx :refer [$ defnc]]
             [helix.dom :as d]

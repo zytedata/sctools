@@ -1,5 +1,5 @@
 (ns sctools.foo
-  (:require [bb-utils.clojure :refer [if-let* cond* when-let* when-some* if-some*]]))
+  (:require [bb.clojure :refer [if-let* cond* when-let* when-some* if-some*]]))
 
 (comment
   #_(if-let* [a 1

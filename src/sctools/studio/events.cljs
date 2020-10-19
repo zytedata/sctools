@@ -1,5 +1,5 @@
 (ns sctools.studio.events
-  (:require [bb-utils.clojure :refer [prog1]]
+  (:require [bb.clojure :refer [prog1]]
             [clojure.string :as str]
             [linked.core :as linked]
             [re-frame.core :as rf]
