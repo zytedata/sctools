@@ -5,7 +5,10 @@
             [helix.dom :as d]
             [helix.hooks :as hooks]))
 
-(defn use-window-height []
+(defn use-window-height
+  "Triggers re-render on window height updates (for instance after user
+  resizes the window)."
+  []
   (let [[height set-height] (hooks/use-state nil)]
     (hooks/use-effect :once
       (let [listener-key
