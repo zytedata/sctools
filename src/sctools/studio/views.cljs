@@ -30,6 +30,7 @@
             [re-frame.core :as rf]
             [reagent.core :as r]
             [sctools.app.layout :as layout]
+            [sctools.utils.hooks :refer [use-window-height]]
             sctools.studio.events
             sctools.studio.machine
             sctools.studio.subs
@@ -268,20 +269,38 @@
                                    (str "col-" (name id))
                                    "col-stat")}})))))
 
+(defn get-el-available-height [el]
+  (let [screen-height (j/get-in js/document [:documentElement :clientHeight])
+        el-top (-> el
+                   (j/call :getBoundingClientRect)
+                   (j/get :top))]
+    (max (- screen-height el-top) 100)))
+
+(defn adjust-el-height [el]
+  (j/assoc-in! el [:style :height] (str (get-el-available-height el) "px")))
+
 (defnc job-infos-table-impl [{:keys [sorts headers infos]}]
-  (d/div {:class '[w-full h-full overflow-y-auto]}
-    ($ Paper
-      ($ Table {:stickyHeader true
-                :data-cy "infos-table"
-                :size "small"}
-         ($ jobs-table-header {:headers headers
-                               :sorts sorts
-                               :job-count (count infos)})
-         ($ TableBody
-           (for [[job info] infos]
-             ($ job-row {:job job
-                         :key job
-                         :info info})))))))
+  (let [ref (hooks/use-ref nil)]
+    (use-window-height)
+    (hooks/use-layout-effect :always
+      #_(js/console.log @ref)
+      (j/assoc! js/window :v1 @ref)
+      (when-let [el @ref]
+        (adjust-el-height el)))
+    (d/div {:class '[h-full w-full flex flex-col]
+            :ref ref}
+      ($ Paper {:className "job-infos-table-parent flex flex-col overflow-auto"}
+         ($ Table {:stickyHeader true
+                   :data-cy "infos-table"
+                   :size "small"}
+            ($ jobs-table-header {:headers headers
+                                  :sorts sorts
+                                  :job-count (count infos)})
+            ($ TableBody
+              (for [[job info] infos]
+                ($ job-row {:job job
+                            :key job
+                            :info info}))))))))
 
 (defn job-infos-table []
   (let [headers @(rf/subscribe [:studio/table.headers])

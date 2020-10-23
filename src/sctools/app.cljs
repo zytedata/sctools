@@ -22,9 +22,7 @@
 
 (defn app-ui []
   [:> theme-provider
-   (if @(rf/subscribe [:app/booted])
-     [app-view]
-     [bootstrap-view])])
+     [app-view]])
 
 (defn protected-app-ui []
   [error-capturer [app-ui]])

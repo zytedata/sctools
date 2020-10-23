@@ -26,6 +26,7 @@
             [sctools.routes :refer [AuthRoute PrivateRoute
                                     list-item-link is-auth-done]]
             [sctools.init :refer [init-view]]
+            [sctools.dev :refer [dev-view]]
             [sctools.theme :refer [theme]]
             [sctools.studio.views :refer [jobs-studio-view]]))
 
@@ -124,11 +125,6 @@
   #p (useParams)
   "Hello debug")
 
-(defnc dev-view [props]
-  #p props
-  #p (useParams)
-  "Hello dev")
-
 (defnc home-view-impl [{:keys [drawer-open auth-done]}]
   ($ HashRouter
     (d/div {:class '[flex-grow]}
@@ -153,11 +149,18 @@
                  ($ index-view)))))
       ($ side-bar {:drawer-open drawer-open}))))
 
+(defn bootstrap-view []
+  [:div {:class '[w-full h-full
+                  flex flex-row items-center justify-center]}
+    ($ CircularProgress {:size "10em"})])
+
 (defn home-view []
-  (let [drawer-open @(rf/subscribe [:layout/drawer-open])
-        auth-done (is-auth-done)]
-    ($ home-view-impl {:drawer-open drawer-open
-                       :auth-done auth-done})))
+  (if-not @(rf/subscribe [:app/booted])
+    [bootstrap-view]
+    (let [drawer-open @(rf/subscribe [:layout/drawer-open])
+          auth-done (is-auth-done)]
+      ($ home-view-impl {:drawer-open drawer-open
+                         :auth-done auth-done}))))
 
 (defn app-view []
   (if ^boolean goog.DEBUG
@@ -168,8 +171,3 @@
         ($ Route {:path "/"}
            (r/as-element [home-view]))))
     [home-view]))
-
-(defn bootstrap-view []
-  [:div {:class '[w-full h-full
-                  flex flex-row items-center justify-center]}
-    ($ CircularProgress {:size "10em"})])
