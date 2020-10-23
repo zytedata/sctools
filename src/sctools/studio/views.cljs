@@ -283,24 +283,23 @@
   (let [ref (hooks/use-ref nil)]
     (use-window-height)
     (hooks/use-layout-effect :always
-      #_(js/console.log @ref)
-      (j/assoc! js/window :v1 @ref)
       (when-let [el @ref]
+        ;; for overflow-scroll to work properly the parent element
+        ;; must have a deterministic height value
         (adjust-el-height el)))
-    (d/div {:class '[h-full w-full flex flex-col]
+    (d/div {:class '[w-full overflow-scroll]
             :ref ref}
-      ($ Paper {:className "job-infos-table-parent flex flex-col overflow-auto"}
-         ($ Table {:stickyHeader true
-                   :data-cy "infos-table"
-                   :size "small"}
-            ($ jobs-table-header {:headers headers
-                                  :sorts sorts
-                                  :job-count (count infos)})
-            ($ TableBody
-              (for [[job info] infos]
-                ($ job-row {:job job
-                            :key job
-                            :info info}))))))))
+      ($ Table {:stickyHeader true
+                :data-cy "infos-table"
+                :size "small"}
+         ($ jobs-table-header {:headers headers
+                               :sorts sorts
+                               :job-count (count infos)})
+         ($ TableBody
+           (for [[job info] infos]
+             ($ job-row {:job job
+                         :key job
+                         :info info})))))))
 
 (defn job-infos-table []
   (let [headers @(rf/subscribe [:studio/table.headers])
@@ -465,7 +464,8 @@
         (d/i {:data-cy "close-preference-dialog"
               :class '[text-2xl fas fa-times-circle cursor-pointer]
               :on-click toggle-prefs-dialog}))
-      (d/div {:class '[w-full h-full overflow-hidden
+      (d/div {:class '[w-full h-full
+                       overflow-hidden
                        flex flex-col]}
         ($ Tabs {:orientation "horizontal"
                  :value tab

@@ -9,10 +9,6 @@ html {
     @apply overflow-hidden;
 }
 
-#app {
-    @apply w-full h-full flex flex-col;
-}
-
 .x-drawer {
     @apply fixed top-0 left-0 h-full bg-white;
     @apply border-r;
