@@ -12,8 +12,10 @@
             ["@material-ui/core/Typography" :default Typography]
             ["@material-ui/core/CircularProgress" :default CircularProgress]
             ["react" :as react]
-            ["react-router-dom" :refer [HashRouter NavLink Redirect
-                                        Route Switch useParams useHistory]]
+            ["react-router-dom"
+             :refer
+             [BrowserRouter HashRouter NavLink Redirect
+              Route Switch useParams useHistory]]
             [applied-science.js-interop :as j]
             [helix.core :as hx :refer [$ defnc <>]]
             [emotion.core :refer [defstyled]]
@@ -122,35 +124,50 @@
   #p (useParams)
   "Hello debug")
 
+(defnc dev-view [props]
+  #p props
+  #p (useParams)
+  "Hello dev")
+
 (defnc home-view-impl [{:keys [drawer-open auth-done]}]
   ($ HashRouter
     (d/div {:class '[flex-grow]}
-           ($ main-area {:drawer-open drawer-open}
-              ($ Switch
-                 ($ Route {:path "/debug"}
-                    ($ debug-view))
-                 ($ AuthRoute {:path "/init"
-                               :component init-view})
-                 ($ PrivateRoute {:path "/"}
-                    ($ Route {:path "/settings"}
-                       ($ settings-view))
-                    ($ Route {:path "/studio"}
-                       ($ jobs-studio-view))
-                    (when ^boolean goog.DEBUG
-                      ($ Route {:path "/init2"}
-                         ($ init-view)))
-                    (when ^boolean goog.DEBUG
-                      ($ Route {:path "/:foo+"}
-                         ($ foo-view)))
-                    ($ Route {:path "/"}
-                       ($ index-view)))))
-           ($ side-bar {:drawer-open drawer-open}))))
+      ($ main-area {:drawer-open drawer-open}
+         ($ Switch
+           ($ Route {:path "/debug"}
+              ($ debug-view))
+           ($ AuthRoute {:path "/init"
+                         :component init-view})
+           ($ PrivateRoute {:path "/"}
+              ($ Route {:path "/settings"}
+                 ($ settings-view))
+              ($ Route {:path "/studio"}
+                 ($ jobs-studio-view))
+              (when ^boolean goog.DEBUG
+                ($ Route {:path "/init2"}
+                   ($ init-view)))
+              (when ^boolean goog.DEBUG
+                ($ Route {:path "/:foo+"}
+                   ($ foo-view)))
+              ($ Route {:path "/"}
+                 ($ index-view)))))
+      ($ side-bar {:drawer-open drawer-open}))))
 
 (defn home-view []
   (let [drawer-open @(rf/subscribe [:layout/drawer-open])
         auth-done (is-auth-done)]
     ($ home-view-impl {:drawer-open drawer-open
                        :auth-done auth-done})))
+
+(defn app-view []
+  (if ^boolean goog.DEBUG
+    ($ BrowserRouter
+      ($ Switch
+        ($ Route {:path "/dev.html"}
+           ($ dev-view))
+        ($ Route {:path "/"}
+           (r/as-element [home-view]))))
+    [home-view]))
 
 (defn bootstrap-view []
   [:div {:class '[w-full h-full

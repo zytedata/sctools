@@ -2,7 +2,7 @@
   (:require ["moment" :as moment]
             [applied-science.js-interop :as j]
             [sctools.app.fixes]
-            [sctools.home :refer [bootstrap-view home-view]]
+            [sctools.home :refer [bootstrap-view app-view]]
             [sctools.app.logging :refer [start-logging]]
             [sctools.app.error-boundary :refer [error-capturer inc-epoch]]
             ;; for side effects
@@ -23,7 +23,7 @@
 (defn app-ui []
   [:> theme-provider
    (if @(rf/subscribe [:app/booted])
-     [home-view]
+     [app-view]
      [bootstrap-view])])
 
 (defn protected-app-ui []

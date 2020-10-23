@@ -70,8 +70,8 @@
                 [net.cgrand/macrovich "0.2.1"]
                 [postmortem "0.4.0"
                  :exclusions [net.cgrand/macrovich]]
-                [vvvvalvalval/scope-capture "0.3.3-s1"
-                 :exclusions [org.clojure/clojure]]
+                ;; [vvvvalvalval/scope-capture "0.3.3-s1"
+                ;;  :exclusions [org.clojure/clojure]]
                 [datascript "1.0.1"]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;

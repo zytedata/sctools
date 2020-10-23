@@ -5,7 +5,6 @@
             ["@material-ui/core/ListItemText" :default ListItemText]
             ["react" :as react]
             [applied-science.js-interop :as j]
-            [sc.api]
             [postmortem.core :as pm]
             [postmortem.instrument :as pi]
             [postmortem.xforms :as xf]
@@ -53,10 +52,6 @@
   (if-not (is-auth-done)
     ($ Route {& props})
     ($ Redirect {:to (get-auth-back-path)})))
-
-#_(defn sc-foo [a b]
-  (sc.api/spy
-   (+ a b)))
 
 (defn foo [a b]
   (pm/dump :foo)
