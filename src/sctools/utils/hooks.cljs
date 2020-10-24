@@ -16,3 +16,14 @@
                                 #(set-height (j/get js/window :innerHeight)))]
         #(goog.events/unlistenByKey listener-key)))))
 
+(defn add-window-height-watcher
+  "Register a callback to run when the window height changes. Returns a
+  function that unregisters the event listener, suitable to be used in
+  a use-effect hook."
+  [f]
+  (let [listener-key
+        (goog.events/listen js/window "resize" (fn []
+                                                 (f)
+                                                 nil
+                                                 ))]
+    #(goog.events/unlistenByKey listener-key)))

@@ -30,7 +30,7 @@
             [re-frame.core :as rf]
             [reagent.core :as r]
             [sctools.app.layout :as layout]
-            [sctools.utils.hooks :refer [use-window-height]]
+            [sctools.utils.hooks :refer [add-window-height-watcher]]
             sctools.studio.events
             sctools.studio.machine
             sctools.studio.subs
@@ -281,12 +281,13 @@
 
 (defnc job-infos-table-impl [{:keys [sorts headers infos]}]
   (let [ref (hooks/use-ref nil)]
-    (use-window-height)
-    (hooks/use-layout-effect :always
-      (when-let [el @ref]
-        ;; for overflow-scroll to work properly the parent element
-        ;; must have a deterministic height value
-        (adjust-el-height el)))
+    (hooks/use-effect :once
+      (add-window-height-watcher
+       (fn []
+         (when-let [el @ref]
+           ;; for overflow-scroll to work properly the parent element
+           ;; must have a deterministic height value
+           (adjust-el-height el)))))
     (d/div {:class '[w-full overflow-scroll]
             :ref ref}
       ($ Table {:stickyHeader true
