@@ -110,7 +110,7 @@
      ;; push/replace state later.
       (rf/dispatch [:app/set-history history])))
   (d/div {:class (cond-> '[x-main-area md:x-ml-240px
-                           absolute h-full]
+                           h-screen]
                    drawer-open
                    (conj 'x-drawer-open))}
     (r/as-element [top-bar])
