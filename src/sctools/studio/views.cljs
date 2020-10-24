@@ -30,7 +30,6 @@
             [re-frame.core :as rf]
             [reagent.core :as r]
             [sctools.app.layout :as layout]
-            [sctools.utils.hooks :refer [add-window-height-watcher]]
             sctools.studio.events
             sctools.studio.machine
             sctools.studio.subs
@@ -240,7 +239,7 @@
   ($ tooltip
     {:title title}
     ($ Typography {:variant "subtitle1"}
-       (truncate-left title 10))))
+       (truncate-left title 30))))
 
 (defnc jobs-table-header [{:keys [headers job-count]}]
   ($ TableHead
@@ -280,27 +279,18 @@
   (j/assoc-in! el [:style :height] (str (get-el-available-height el) "px")))
 
 (defnc job-infos-table-impl [{:keys [sorts headers infos]}]
-  (let [ref (hooks/use-ref nil)]
-    (hooks/use-effect :once
-      (add-window-height-watcher
-       (fn []
-         (when-let [el @ref]
-           ;; for overflow-scroll to work properly the parent element
-           ;; must have a deterministic height value
-           (adjust-el-height el)))))
-    (d/div {:class '[w-full overflow-scroll]
-            :ref ref}
-      ($ Table {:stickyHeader true
-                :data-cy "infos-table"
-                :size "small"}
-         ($ jobs-table-header {:headers headers
-                               :sorts sorts
-                               :job-count (count infos)})
-         ($ TableBody
-           (for [[job info] infos]
-             ($ job-row {:job job
-                         :key job
-                         :info info})))))))
+  (d/div {:class '[overflow-scroll]}
+    ($ Table {:stickyHeader true
+              :data-cy "infos-table"
+              :size "small"}
+       ($ jobs-table-header {:headers headers
+                             :sorts sorts
+                             :job-count (count infos)})
+       ($ TableBody
+         (for [[job info] infos]
+           ($ job-row {:job job
+                       :key job
+                       :info info}))))))
 
 (defn job-infos-table []
   (let [headers @(rf/subscribe [:studio/table.headers])
@@ -498,7 +488,7 @@
 (defnc job-infos-view [{:keys [state filters prefs]}]
   (def vresults (:results state))
   (d/div {:class '[w-full h-full pt-4
-                   flex flex-col items-start justify-start space-y-2]}
+                   flex flex-col justify-start space-y-2]}
     (let [args (use-memo [state]
                  (collect-args (:results state)))]
       ($ filter-header-view {:args args :filters filters}))

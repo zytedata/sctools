@@ -15,6 +15,10 @@ html {
     @apply x-w-240px;
 }
 
+.x-main-area {
+    width: calc(100% - 240px);
+}
+
 @screen lt-md {
     .x-drawer {
         z-index: 10;
@@ -25,6 +29,7 @@ html {
     }
 
     .x-main-area {
+        @apply w-full;
         &.x-drawer-open {
             @apply x-ml-240px;
         }
@@ -49,9 +54,3 @@ html {
         background-color: white;
     }
 }
-
-/* #studio-main { */
-/*     @apply justify-start items-start mx-auto pt-20; */
-/*     /\* border: 1px solid red; *\/ */
-/*     max-width: 400px; */
-/* } */

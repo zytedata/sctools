@@ -109,7 +109,8 @@
      ;; Capture the history object into the db so we can call
      ;; push/replace state later.
       (rf/dispatch [:app/set-history history])))
-  (d/div {:class (cond-> '[x-main-area md:x-ml-240px relative]
+  (d/div {:class (cond-> '[x-main-area md:x-ml-240px
+                           absolute h-full]
                    drawer-open
                    (conj 'x-drawer-open))}
     (r/as-element [top-bar])
