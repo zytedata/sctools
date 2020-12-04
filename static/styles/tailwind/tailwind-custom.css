@@ -54,3 +54,38 @@ html {
         background-color: white;
     }
 }
+
+.dev {
+    &.top-container {
+        /* height: 30vh; */
+        /* height: 100%; */
+        /* width: 100%; */
+        /* position: absolute; */
+        /* overflow: scroll; */
+        /* overflow: visible; */
+        /* overflow-x: auto; */
+        /* overflow: auto; */
+        /* @apply relative; */
+        @apply absolute;
+        /* @apply flex flex-col; */
+        @apply w-full h-full;
+        /* width: 500px; */
+        /* height: 500px; */
+    }
+
+    .header {
+        @apply bg-blue-300 border rounded;
+    }
+
+    .direct-container {
+        /* height: 10vh; */
+        /* overflow: visible; */
+        @apply overflow-scroll;
+        @apply h-full;
+        /* @apply w-full; */
+    }
+
+    .line {
+        white-space: nowrap;
+    }
+}

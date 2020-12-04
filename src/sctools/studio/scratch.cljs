@@ -1,5 +1,6 @@
 (ns sctools.studio.scratch
   (:require [re-frame.core :as rf]
+            [meander.epsilon :as me]
             [medley.core :as m]
             [linked.core :as linked]
             [com.rpl.specter :as sp]
@@ -30,3 +31,10 @@
 (->> d1
      (m/filter-vals :success)
      )
+
+(def infos @(rf/subscribe [:studio/state.results]))
+(-> infos first)
+(reduce + (me/search infos
+   (me/scan [_ {:success true
+                :info {"items" ?items}}])
+   ?items))

@@ -74,8 +74,8 @@
     (>= from-id to-id)
     "from job ID must be less than to job ID"
 
-    (> (- to-id from-id) 500)
-    "At most 500 jobs to show."
+    (> (- to-id from-id) 5000)
+    "At most 5000 jobs to show."
 
     :else
     nil))

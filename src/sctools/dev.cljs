@@ -1,13 +1,13 @@
 (ns sctools.dev
   (:require [re-frame.core :as rf]
+            [clojure.string :as str]
             [reagent.core :as r]
             [helix.core :as hx :refer [defnc $]]
             [helix.dom :as d]))
 
-(defnc dev-view [props]
-  (hx/<>
-    (d/div {:class '[sticky bg-blue-300 border rounded]
-            :style {:min-height "100px"}}
+#_(defnc dev-view [props]
+  (d/div {:class "dev top-container"}
+    (d/div {:class '[sticky bg-blue-300 border rounded]}
       "This is header")
     (d/div {:class '[w-full h-full border-red-500 border overflow-scroll
                      flex flex-col
@@ -28,4 +28,15 @@
                    ;; :style {:z-index (- 100 i)}
                    }
              (str "hello " i (when sticky ", sticky")))))
-       (range 30)))))
+       (range 100)))))
+
+(defnc dev-view [props]
+  (d/div {:class "dev top-container"}
+    (d/div {:class "header"}
+      "This is header")
+    (d/div {:class "direct-container"}
+      (mapv
+       (fn [i]
+         (d/div {:class "line"}
+           (str/join ", " (repeat 20 (str "hello " i)))))
+       (range 100)))))
