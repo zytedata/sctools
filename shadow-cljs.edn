@@ -16,19 +16,19 @@
                 #_"checkouts/devcards/src"]
 
  :dependencies [[metosin/malli "0.2.1"]
-                [clj-kondo "2020.11.07"
+                [clj-kondo "2020.12.12"
                  :exclusions [org.clojure/clojure]]
                 [cljs-bean "1.6.0"]
                 [lilactown/helix "0.0.13" :exclusions [cljs-bean]]
                 [emotion-cljs "0.1.2"]
-                [reagent "0.10.0" :exclusions [[cljsjs/react]
+                [reagent "1.0.0" :exclusions [[cljsjs/react]
                                                [cljsjs/react-dom]
                                                [cljsjs/create-react-class]]]
                 [re-frame "1.1.2" :exclusions [[cljsjs/react]
                                                [cljsjs/react-dom]
                                                [cljsjs/create-react-class]]]
                 [day8.re-frame/async-flow-fx "0.1.0"]
-                [day8.re-frame/http-fx "0.2.1"]
+                [day8.re-frame/http-fx "0.2.2"]
                 [day8.re-frame/test "0.1.5" :exclusions [[re-frame]]]
                 [clj-statecharts "0.0.1-SNAPSHOT"]
                 [frankiesardo/linked "1.3.0"]
@@ -44,7 +44,7 @@
                 [lambdaisland/kaocha "1.0.732"]
                 [lambdaisland/kaocha-cljs2 "0.0.35"]
                 [binaryage/devtools "1.0.2"]
-                [re-frisk-remote    "1.3.4"]
+                [re-frisk-remote    "1.3.5"]
                 [bdoc/devcards "0.2.7-SNAPSHOT"
                  :exclusions [[cljsjs/react]
                               [org.clojure/core.async]
@@ -63,16 +63,16 @@
                 [applied-science/js-interop "0.2.7"]
                 [binaryage/oops     "0.7.0"]
                 [zprint "1.0.2"]
-                [metosin/reitit "0.5.10"]
+                [metosin/reitit "0.5.11"]
                 [hashp "0.2.0"]
-                [philoskim/debux "0.7.7"]
+                [philoskim/debux "0.7.8"]
                 [lambdaisland/uri "1.4.54"]
                 [net.cgrand/macrovich "0.2.1"]
                 [postmortem "0.4.0"
                  :exclusions [net.cgrand/macrovich]]
                 ;; [vvvvalvalval/scope-capture "0.3.3-s1"
                 ;;  :exclusions [org.clojure/clojure]]
-                [datascript "1.0.1"]
+                [datascript "1.0.3"]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
                 ;; Logging
@@ -108,7 +108,7 @@
                 [me.raynes/fs                  "1.4.6"]
                 [garden                        "1.3.10"]
                 [com.rpl/specter    "1.1.3"]
-                [meander/epsilon "0.0.543"]
+                [meander/epsilon "0.0.588"]
                 [kitchen-async "0.1.0-SNAPSHOT"]
                 [bb "0.1.0-SNAPSHOT"]
                 [com.maitria/packthread "0.1.10"]
