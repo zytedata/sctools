@@ -33,11 +33,12 @@
             sctools.studio.events
             sctools.studio.machine
             sctools.studio.subs
+            [sctools.studio.chart :refer [job-chart-view]]
             [sctools.studio.utils
              :refer
              [get-job-number get-spider info-keys info-titles is-job-valid?]]
             [sctools.utils.rf-utils :as rfu :refer [use-atom]]
-            [sctools.widgets.common :refer [error-msg tooltip]]
+            [sctools.widgets.common :refer [error-msg tooltip popover]]
             [statecharts.core :as fsm]))
 
 (defnc job-input [{:keys [job cb-event input-name label]}]
@@ -193,38 +194,70 @@
                   #(rf/dispatch [:studio/prefs.toggle-column id]))
         on-sort #(rf/dispatch [:studio/sorts.enable {:id id :stat? stat?}])
         on-reverse-sort #(rf/dispatch [:studio/sorts.reverse])
-        on-clear-sort #(rf/dispatch [:studio/sorts.clear])]
+        on-clear-sort #(rf/dispatch [:studio/sorts.clear])
+        [anchor-el set-anchor-el] (use-state nil)
+        close-popover #(set-anchor-el nil)
+        ;; close-popover identityj
+        goto-chart #(rf/dispatch [:studio/chart.show {:id id :stat? stat?}])]
     ($ TableCell {:align "left"
                   & cell-attrs}
        (d/div {:class '[group
-                        flex flex-row justify-between items-center]}
-         (d/div {:class '[flex flex-row justify-start items-center
-                          space-x-1]}
+                        flex flex-row justify-between items-center
+                        ;; border-2 border-red-50
+                        ]
+               :onMouseEnter #(set-anchor-el (j/get % :currentTarget))
+               :onMouseLeave close-popover}
+         (d/div {:class '[flex flex-row justify-between items-center space-x-1]}
            title
-           (if sorting
+           (when sorting
              (hx/<>
-              ($ tooltip {:title "Click to reverse sort"}
-                 (d/i {:data-cy "sorted-col"
-                       :class (conj '[fas cursor-pointer p-1 border-2
-                                      text-xs
-                                      border-gray-700 shadow]
-                                    (if (= sorting :descending)
-                                      'fa-sort-amount-down
-                                      'fa-sort-amount-up))
-                       :on-click on-reverse-sort}))
-              ($ tooltip {:title "Clear sorting"}
-                 (d/i {:data-cy "clear-sorting"
-                       :class '[invisible group-hover:visible
-                                pl-2
-                                fal fa-times-circle
-                                cursor-pointer]
-                       :on-click on-clear-sort})))
-             ($ tooltip {:title "Sort with this column"}
-                (d/i {:data-cy "sort-col"
-                      :class '[invisible group-hover:visible
-                               fas fa-sort-amount-up
-                               cursor-pointer]
-                      :on-click on-sort})))
+              (d/i {:class (conj '[fas cursor-pointer p-1 border-2
+                                   text-xs
+                                   border-gray-700 shadow]
+                                 (if (= sorting :descending)
+                                   'fa-sort-amount-down
+                                   'fa-sort-amount-up))})))
+           (when anchor-el
+             ($ popover {:anchorEl anchor-el
+                         :data-cy "delete-doc-dialog"
+                         :onClose close-popover
+                         :anchorOrigin (j/lit {:horizontal :left
+                                               :vertical   :top})}
+                (d/div {:on-mouse-leave close-popover
+                        :class '[p-4 space-x-2
+                                 flex flex-row justify-start items-center]}
+                  title
+
+                  (if sorting
+                    (hx/<>
+                     ($ tooltip {:title "Click to reverse sort"}
+                        (d/i {:data-cy "sorted-col"
+                              :class (conj '[fas cursor-pointer p-1 border-2
+                                             text-xs
+                                             border-gray-700 shadow]
+                                           (if (= sorting :descending)
+                                             'fa-sort-amount-down
+                                             'fa-sort-amount-up))
+                              :on-click on-reverse-sort}))
+                     ($ tooltip {:title "Clear sorting"}
+                        (d/i {:data-cy "clear-sorting"
+                              :class '[fal fa-times-circle
+                                       hover:text-blue-300
+                                       cursor-pointer]
+                              :on-click on-clear-sort})))
+                    ($ tooltip {:title "Sort with this column"}
+                       (d/i {:data-cy "sort-col"
+                             :class '[fas fa-sort-amount-up
+                                      hover:text-blue-300
+                                      cursor-pointer]
+                             :on-click on-sort})))
+                  ($ tooltip {:title "Visualize"}
+                     (d/i {:data-cy "visualize-col"
+                           :class '[fas fa-chart-bar hover:text-blue-500
+                                    cursor-pointer]
+                           :on-click goto-chart})))))
+
+
            #_($ tooltip {:title "Hide this column"}
                 (d/i {:class '[invisible group-hover:visible
                                fal fa-times-circle
@@ -534,6 +567,7 @@
         prefs @(rf/subscribe [:studio/prefs])]
     ($ job-detail-view-impl {:state state :filters filters :prefs prefs})))
 
+
 (defnc jobs-studio-view []
   (use-effect :once
     (rf/dispatch-sync [:studio/init]))
@@ -544,6 +578,11 @@
          (str path
               "/job/:project/:spider/:from_id/_/:to_id")}
         (r/as-element [job-detail-view]))
+      ($ Route
+        {:path
+         (str path
+              "/chart/:project/:spider/:from_id/_/:to_id")}
+        (r/as-element [job-chart-view]))
       ($ Route {:path path}
          (r/as-element [job-input-view])))))
 

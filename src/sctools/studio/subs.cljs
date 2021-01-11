@@ -107,3 +107,16 @@
               :sorting (get-sorting sorts k true)
               :title k
               :stat? true}))))
+(rf/reg-sub
+ :studio/chart.col-data
+ :<- [:studio/state.results]
+ :<- [:studio/filters]
+ :<- [:studio/prefs]
+ (fn [[results filters prefs]]
+   (let [filterfn (partial matches-filter? filters)]
+     (->> (me/search results
+            {?job {:success true
+                   :info (me/pred filterfn ?info)}}
+
+            {:job ?job
+             :data (get ?info "items")})))))

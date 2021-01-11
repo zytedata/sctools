@@ -21,7 +21,8 @@
                 [cljs-bean "1.6.0"]
                 [lilactown/helix "0.0.13" :exclusions [cljs-bean]]
                 [emotion-cljs "0.1.2"]
-                [reagent "1.0.0" :exclusions [[cljsjs/react]
+                ;; re-frame-10x generates compile warnings with reagent 1.0     
+                [reagent "0.10.0" :exclusions [[cljsjs/react]
                                                [cljsjs/react-dom]
                                                [cljsjs/create-react-class]]]
                 [re-frame "1.1.2" :exclusions [[cljsjs/react]

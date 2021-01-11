@@ -1,6 +1,7 @@
 (ns sctools.widgets.common
   (:require ["@material-ui/core/Tooltip" :default Tooltip]
             ["@material-ui/core/Typography" :default Typography]
+            ["@material-ui/core/Popover" :default Popover]
             [helix.core :as hx :refer [defnc $]]
             [helix.dom :as d]))
 
@@ -37,3 +38,6 @@
                    title)]
     ($ Tooltip {:title content}
        children)))
+
+(defnc popover [props]
+  ($ Popover {:open true & props}))

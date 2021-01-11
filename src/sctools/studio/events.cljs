@@ -95,6 +95,11 @@
         to (get-job-number to)]
     (rf/dispatch [:app/push-state (str "/studio/job/" from "/_/" to)])))
 
+(defn nav-to-chart [from to]
+  (let [spider (get-spider from)
+        to (get-job-number to)]
+    (rf/dispatch [:app/push-state (str "/studio/chart/" from "/_/" to)])))
+
 (rf/reg-event-db
  :studio/submit
  studio-path
@@ -187,3 +192,12 @@
  sorts-path
  (fn [sorts]
    (update-in sorts [:col :descending?] not)))
+
+(rf/reg-event-db
+ :studio/chart.show
+ studio-path
+ (fn [{:keys [from to] :as studio} [_ {:keys [id stat?]}]]
+   (assert (and (is-job-valid? from)
+                (is-job-valid? to)))
+   (nav-to-chart from to)
+   studio))
