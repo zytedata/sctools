@@ -16,11 +16,11 @@
                 #_"checkouts/devcards/src"]
 
  :dependencies [[metosin/malli "0.2.1"]
-                [clj-kondo "2020.12.12"
+                #_[clj-kondo "2020.12.12"
                  :exclusions [org.clojure/clojure]]
                 [cljs-bean "1.6.0"]
                 [lilactown/helix "0.0.13" :exclusions [cljs-bean]]
-                [emotion-cljs "0.1.2"]
+                [emotion-cljs "0.1.3"]
                 ;; re-frame-10x generates compile warnings with reagent 1.0     
                 [reagent "0.10.0" :exclusions [[cljsjs/react]
                                                [cljsjs/react-dom]
@@ -45,7 +45,7 @@
                 [lambdaisland/kaocha "1.0.732"]
                 [lambdaisland/kaocha-cljs2 "0.0.35"]
                 [binaryage/devtools "1.0.2"]
-                [re-frisk-remote    "1.3.5"]
+                [re-frisk-remote    "1.3.8"]
                 [bdoc/devcards "0.2.7-SNAPSHOT"
                  :exclusions [[cljsjs/react]
                               [org.clojure/core.async]
@@ -63,13 +63,13 @@
                 [mvxcvi/alphabase "2.1.0"]
                 [applied-science/js-interop "0.2.7"]
                 [binaryage/oops     "0.7.0"]
-                [zprint "1.0.2"]
+                [zprint "1.1.1"]
                 [metosin/reitit "0.5.11"]
                 [hashp "0.2.0"]
                 [philoskim/debux "0.7.8"]
                 [lambdaisland/uri "1.4.54"]
                 [net.cgrand/macrovich "0.2.1"]
-                [postmortem "0.4.0"
+                [postmortem "0.4.1"
                  :exclusions [net.cgrand/macrovich]]
                 ;; [vvvvalvalval/scope-capture "0.3.3-s1"
                 ;;  :exclusions [org.clojure/clojure]]
@@ -86,8 +86,8 @@
                 ;; cljs logging
                 [lambdaisland/glogi "1.0.74"]
 
-                [cljc.java-time "0.1.11"]
-                [tick "0.4.27-alpha"]
+                [cljc.java-time "0.1.15"]
+                [tick "0.4.29-alpha"]
                 [thheller/shadow-cljsjs "0.0.21"]
 
                 ;; http server
@@ -119,7 +119,7 @@
                 [hiccup             "1.0.5"]
 
                 [refactor-nrepl "2.5.0"]
-                [cider/cider-nrepl "0.25.5"]
+                [cider/cider-nrepl "0.25.8"]
                 [org.tcrawley/dynapath "1.1.0"]
                 [com.cemerick/pomegranate "1.1.0"]]
 
