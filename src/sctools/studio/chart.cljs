@@ -34,9 +34,6 @@
             sctools.studio.events
             sctools.studio.machine
             sctools.studio.subs
-            [sctools.studio.utils
-             :refer
-             [get-job-number get-spider info-keys info-titles is-job-valid?]]
             [sctools.utils.rf-utils :as rfu :refer [use-atom]]
             [sctools.widgets.common :refer [error-msg tooltip popover]]
             [statecharts.core :as fsm]))
@@ -45,25 +42,44 @@
   (j/lit
    {:data {:name :jobdata}
     :mark :line
-    :width 800
-    :height 600
     :encoding {:x {:field :job
                    :type :ordinal
                    :title "Job"
                    :axis {:labelAngle 45
                           :titleFontSize 14
-                          :titlePadding 20}}
-               :y {:field :data
-                   :title "Items"
-                   :scale {:zero false}
-                   :axis {:titleFontSize 14
-                          :titleAngle 0
-                          :titlePadding 20
-                          :format "~s"}
-                   :type :quantitative}}}))
+                          :titlePadding 20}}}
+
+    :layer [{:encoding {:y {:field :data
+                            :title "Items"
+                            :scale {:zero false}
+                            :axis {:format "~s"
+                                   :titleFontSize 14
+                                   :titleAngle 0
+                                   :titlePadding 30}
+                            :type :quantitative}}
+             :layer
+             [{:mark :line}
+              {:transform [{:filter {:selection :hover}}]
+               :mark :point}]}
+
+            {:mark :rule
+             :encoding {:opacity {:condition {:value 0.5 :selection :hover}
+                                  :value 0}
+                        :tooltip
+                        [{:field :job :type :ordinal :title "Job"}
+                         {:field :data :type :quantitative :title "Items"}]}
+
+             :selection {:hover {:type :single
+                                 :fields [:job]
+                                 :nearest true
+                                 :on :mouseover
+                                 :empty :none
+                                 :clear :mouseout}}}]
+    }))
 
 (defnc job-chart-view-impl [{:keys [chart-data]}]
-  (d/div {:class '[flex flex-col w-full h-full]}
+  (def vdata chart-data)
+  (d/div {:class '[flex flex-col w-full h-full overflow-scroll]}
     (d/div {:class '[mt-8 flex flex-col items-center justify-center]}
       #_(for [{:keys [job data]} chart-data]
         (d/div {:key job
@@ -72,7 +88,9 @@
           (d/div data)))
       (let [spec (create-vega-spec)
             data (j/lit {:jobdata (clj->js chart-data)})]
-        ($ VegaLite {:spec spec :data data})
+        ($ VegaLite {:spec spec :data data
+                     :width 900
+                     :height 600})
         #_(d/div {:class '[chart-container]
                 :ref container-el})))))
 
