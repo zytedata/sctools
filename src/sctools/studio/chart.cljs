@@ -59,15 +59,24 @@
                             :type :quantitative}}
              :layer
              [{:mark :line}
-              {:transform [{:filter {:selection :hover}}]
-               :mark :point}]}
+              ;; Use transform+filter would result in endless console errors
+              ;; like here: https://github.com/vega/vega-lite/issues/6266
+              ;;
+              ;;   {:transform [{:filter {:selection :hover}}]
+              ;;    :mark :point}
+              {:mark :point
+               :encoding {:opacity {:condition {:value 1 :selection :hover}
+                                    :value 0}}
+               }]}
 
             {:mark :rule
              :encoding {:opacity {:condition {:value 0.5 :selection :hover}
                                   :value 0}
+                        :color {:value "rgb(116,144,181)"}
                         :tooltip
                         [{:field :job :type :ordinal :title "Job"}
-                         {:field :data :type :quantitative :title "Items"}]}
+                         {:field :data :type :quantitative :title "Items"}]
+                        }
 
              :selection {:hover {:type :single
                                  :fields [:job]
@@ -81,20 +90,14 @@
   (def vdata chart-data)
   (d/div {:class '[flex flex-col w-full h-full overflow-scroll]}
     (d/div {:class '[mt-8 flex flex-col items-center justify-center]}
-      #_(for [{:keys [job data]} chart-data]
-        (d/div {:key job
-                :class '[flex flex-row]}
-          (d/div job)
-          (d/div data)))
       (let [spec (create-vega-spec)
             data (j/lit {:jobdata (clj->js chart-data)})]
-        ($ VegaLite {:spec spec :data data
-                     :width 900
-                     :height 600})
-        #_(d/div {:class '[chart-container]
-                :ref container-el})))))
+        ($ VegaLite {:spec spec
+                     :data data
+                     :renderer "svg"
+                     :width "container"
+                     :height 700})))))
 
 (defn job-chart-view []
   (let [chart-data @(rf/subscribe [:studio/chart.col-data])]
-    "Hello chart2!"
     ($ job-chart-view-impl {:chart-data chart-data})))

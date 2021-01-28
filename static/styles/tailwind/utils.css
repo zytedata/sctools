@@ -1,23 +1,21 @@
 @variants first, focus, hover, responsive {
-
-.x-h-48px {
+  .x-h-48px {
     min-height: 48px;
-}
+  }
 
-.x-h-64px {
+  .x-h-64px {
     min-height: 64px;
-}
+  }
 
-.x-w-240px {
+  .x-w-240px {
     width: 240px;
-}
+  }
 
-.x-max-w-400px {
-    max-width:400px;
-}
+  .x-max-w-400px {
+    max-width: 400px;
+  }
 
-.x-ml-240px {
+  .x-ml-240px {
     margin-left: 240px;
-}
-
+  }
 }
