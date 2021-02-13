@@ -34,11 +34,14 @@
             sctools.studio.events
             sctools.studio.machine
             sctools.studio.subs
+            [sctools.studio.utils :refer [get-descriptive-name]]
+            [sctools.utils.hooks :refer [use-query]]
+            [sctools.utils.transit-utils :as transit]
             [sctools.utils.rf-utils :as rfu :refer [use-atom]]
             [sctools.widgets.common :refer [error-msg tooltip popover]]
             [statecharts.core :as fsm]))
 
-(defn create-vega-spec []
+(defn create-vega-spec [data-name]
   (j/lit
    {:data {:name :jobdata}
     :mark :line
@@ -50,11 +53,11 @@
                           :titlePadding 20}}}
 
     :layer [{:encoding {:y {:field :data
-                            :title "Items"
+                            :title data-name
                             :scale {:zero false}
                             :axis {:format "~s"
                                    :titleFontSize 14
-                                   :titleAngle 0
+                                   ;; :titleAngle 90
                                    :titlePadding 30}
                             :type :quantitative}}
              :layer
@@ -74,9 +77,9 @@
                                   :value 0}
                         :color {:value "rgb(116,144,181)"}
                         :tooltip
-                        [{:field :job :type :ordinal :title "Job"}
-                         {:field :data :type :quantitative :title "Items"}]
-                        }
+                        [{:field :job :type :ordinal  :title "Job"}
+                         {:field :ts  :type :temporal :title "Date" :format "%Y/%m/%d %H:%M:%S"}
+                         {:field :data :type :quantitative :title data-name}]}
 
              :selection {:hover {:type :single
                                  :fields [:job]
@@ -86,11 +89,18 @@
                                  :clear :mouseout}}}]
     }))
 
-(defnc job-chart-view-impl [{:keys [chart-data]}]
+(defn get-chart-query []
+  (-> (use-query)
+      :q
+      (js/decodeURIComponent)
+      (js/JSON.parse)
+      (transit/read-transit)))
+
+(defnc job-chart-view-impl [{:keys [chart-data id stat?]}]
   (def vdata chart-data)
   (d/div {:class '[flex flex-col w-full h-full overflow-scroll]}
     (d/div {:class '[mt-8 flex flex-col items-center justify-center]}
-      (let [spec (create-vega-spec)
+      (let [spec (create-vega-spec (get-descriptive-name id))
             data (j/lit {:jobdata (clj->js chart-data)})]
         ($ VegaLite {:spec spec
                      :data data
@@ -98,6 +108,14 @@
                      :width "container"
                      :height 700})))))
 
-(defn job-chart-view []
-  (let [chart-data @(rf/subscribe [:studio/chart.col-data])]
-    ($ job-chart-view-impl {:chart-data chart-data})))
+(defn job-chart-view-data-wrapper [id stat?]
+  (let [chart-data @(rf/subscribe [:studio/chart.col-data {:id id :stat? stat?}])]
+    ($ job-chart-view-impl {:chart-data chart-data
+                            :id id
+                            :stat? stat?})))
+
+(defnc job-chart-view []
+  ;; we have to use a native class component since we want to use the use-query
+  ;; hook here.
+  (let [{:keys [id stat?]} (get-chart-query)]
+    (r/as-element [job-chart-view-data-wrapper id stat?])))

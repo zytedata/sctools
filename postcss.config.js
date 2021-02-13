@@ -3,7 +3,14 @@ module.exports = {
       require('postcss-import'),
       require('tailwindcss'),
       require('postcss-nested'),
-      require('postcss-preset-env')({stage: 1}),
+      require('postcss-preset-env')({
+        stage: 1,
+        // Fix a bug
+        // https://github.com/nuxt-community/tailwindcss-module/issues/79#issuecomment-609693459
+        features: {
+            'focus-within-pseudo-class': false,
+        },
+      }),
       process.env.NODE_ENV === 'prod' && require('@fullhuman/postcss-purgecss')({
         content: [
           './resources/app/**/*.html',

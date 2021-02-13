@@ -1,6 +1,8 @@
 (ns sctools.utils.hooks
   (:require [helix.core :as hx :refer [defnc $]]
             [applied-science.js-interop :as j]
+            [medley.core :as m]
+            ["react-router-dom" :refer [useLocation]]
             [goog.events]
             [helix.dom :as d]
             [helix.hooks :as hooks]))
@@ -27,3 +29,9 @@
                                                  nil
                                                  ))]
     #(goog.events/unlistenByKey listener-key)))
+
+(defn use-query []
+  (->> (js/URLSearchParams. (j/get (useLocation) :search))
+       (map vec)
+       (into {})
+       (m/map-keys keyword)))

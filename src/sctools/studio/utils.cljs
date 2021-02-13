@@ -112,3 +112,7 @@
       (trans info)
       (as-> (get info (name k)) v
         [v (trans v)]))))
+
+(defn get-descriptive-name [k]
+  (some-> (get info-attrs k)
+          :title))

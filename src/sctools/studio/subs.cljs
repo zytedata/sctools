@@ -112,11 +112,17 @@
  :<- [:studio/state.results]
  :<- [:studio/filters]
  :<- [:studio/prefs]
- (fn [[results filters prefs]]
-   (let [filterfn (partial matches-filter? filters)]
+ (fn [[results filters prefs] [_ {:keys [id stat?]}]]
+   ;; #p (first results)
+   (let [id (name id)
+         filterfn (partial matches-filter? filters)
+         datafn (if stat?
+                  #(get-in % ["scrapystats" id])
+                  #(get % id))]
      (->> (me/search results
             {?job {:success true
                    :info (me/pred filterfn ?info)}}
 
             {:job ?job
-             :data (get ?info "items")})))))
+             :ts  (get ?info "pending_time")
+             :data (datafn ?info)})))))

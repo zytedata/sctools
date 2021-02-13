@@ -25,6 +25,7 @@
             [bb.clojure :refer [cond*]]
             [clojure.string :as str]
             [helix.core :as hx :refer [$ defnc]]
+            [medley.core :as m]
             [helix.dom :as d]
             [helix.hooks :as hooks :refer [use-effect use-memo use-state]]
             [re-frame.core :as rf]
@@ -582,7 +583,7 @@
         {:path
          (str path
               "/chart/:project/:spider/:from_id/_/:to_id")}
-        (r/as-element [job-chart-view]))
+        ($ job-chart-view))
       ($ Route {:path path}
          (r/as-element [job-input-view])))))
 

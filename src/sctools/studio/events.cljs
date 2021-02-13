@@ -2,7 +2,9 @@
   (:require [bb.clojure :refer [prog1]]
             [clojure.string :as str]
             [linked.core :as linked]
+            [sctools.utils.transit-utils :as transit]
             [re-frame.core :as rf]
+            [sctools.utils.uri :refer [add-query]]
             [sctools.studio.utils :refer [info-displays]]
             [sctools.utils.local-storage :as local-storage]))
 
@@ -95,10 +97,15 @@
         to (get-job-number to)]
     (rf/dispatch [:app/push-state (str "/studio/job/" from "/_/" to)])))
 
-(defn nav-to-chart [from to]
+(defn nav-to-chart [from to params]
   (let [spider (get-spider from)
         to (get-job-number to)]
-    (rf/dispatch [:app/push-state (str "/studio/chart/" from "/_/" to)])))
+    (rf/dispatch
+     [:app/push-state
+      (add-query (str "/studio/chart/" from "/_/" to)
+                 {:q (-> params
+                         transit/write-transit
+                         js/JSON.stringify)})])))
 
 (rf/reg-event-db
  :studio/submit
@@ -199,5 +206,5 @@
  (fn [{:keys [from to] :as studio} [_ {:keys [id stat?]}]]
    (assert (and (is-job-valid? from)
                 (is-job-valid? to)))
-   (nav-to-chart from to)
+   (nav-to-chart from to {:id id :stat? stat?})
    studio))
