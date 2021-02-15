@@ -138,3 +138,37 @@ describe('sort by stats', () => {
     assertIndicatorExist('th[data-cy=col-stat]', false)
   })
 })
+
+let checkChart = () => {
+  cy.get('.vega-embed svg').should('exist')
+  cy.get('svg').contains('Items').should('exist')
+  cy.get('svg path[transform]', {timeout: 1000})
+    .should('exist')
+}
+
+describe('chart by column', () => {
+  it('chart by one column', () => {
+    cy.get('th[data-cy=col-items]').trigger('mouseover')
+    cy.get('[data-cy=visualize-col]').click()
+    cy.hash().should('contains', '#/studio/chart/')
+    checkChart()
+  })
+
+
+  it.skip('visit chart url directly', () => {
+    cy.visit('/')
+    cy.reload()
+    cy.visit('#/studio/chart/1/1/1/_/3?q=%2522%255B%255C%2522%255E%2520%255C%2522%252C%255C%2522~%253Aid%255C%2522%252C%255C%2522~%253Aitems%255C%2522%252C%255C%2522~%253Astat%253F%255C%2522%252Cnull%255D%2522')
+    checkChart()
+  })
+})
+
+describe('chart by stat', () => {
+  it('chart by one column', () => {
+    addStat(200)
+    cy.get('th[data-cy=col-stat]').trigger('mouseover')
+    cy.get('[data-cy=visualize-col]').click()
+    cy.hash().should('contains', '#/studio/chart/')
+    cy.get('.vega-embed svg').should('exist')
+  })
+})
