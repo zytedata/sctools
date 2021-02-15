@@ -212,7 +212,8 @@
            title
            (when sorting
              (hx/<>
-              (d/i {:class (conj '[fas cursor-pointer p-1 border-2
+              (d/i {:data-cy "sort-indicator"
+                    :class (conj '[fas cursor-pointer p-1 border-2
                                    text-xs
                                    border-gray-700 shadow]
                                  (if (= sorting :descending)
@@ -256,14 +257,7 @@
                      (d/i {:data-cy "visualize-col"
                            :class '[fas fa-chart-bar hover:text-blue-500
                                     cursor-pointer]
-                           :on-click goto-chart})))))
-
-
-           #_($ tooltip {:title "Hide this column"}
-                (d/i {:class '[invisible group-hover:visible
-                               fal fa-times-circle
-                               cursor-pointer]
-                      :on-click on-hide})))))))
+                           :on-click goto-chart}))))))))))
 
 (defnc column-header-title [{:keys [title]}]
   ($ Typography {:variant "subtitle1"}

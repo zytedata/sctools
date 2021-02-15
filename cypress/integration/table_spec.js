@@ -15,6 +15,12 @@ let assertJobs = jobs => {
       })
 }
 
+let assertIndicatorExist = (parent, exist) => {
+  return cy.get(parent)
+           .find('[data-cy=sort-indicator]')
+           .should(exist ? 'exist' : 'not.exist')
+}
+
 describe('sort jobs', () => {
   it('sorts by job id by default', () => {
     cy.visit('#/studio/job/1/1/1/_/20')
@@ -24,22 +30,22 @@ describe('sort jobs', () => {
   })
 
   it('sorts by one column', () => {
-    cy.get('th[data-cy=col-items]').find('[data-cy=sort-col]').click({force: true})
-    // indicator change
-    cy.get('th[data-cy=col-items]').find('[data-cy=sorted-col]').should('exist')
+    cy.get('th[data-cy=col-items]').trigger('mouseover')
+    cy.get('[data-cy=sort-col]').click()
+    assertIndicatorExist('th[data-cy=col-items]', true)
 
     // data rows change
     assertJobs(['1/1/2', '1/1/1', '1/1/3'])
 
     // reverse
-    cy.get('th[data-cy=col-items]').find('[data-cy=sorted-col]').click()
+    cy.get('th[data-cy=col-items]').trigger('mouseover', {force: true})
+    cy.get('[data-cy=sorted-col]').click()
     assertJobs(['1/1/3', '1/1/1', '1/1/2'])
 
     // clear sorting
-    cy.get('th[data-cy=col-items]')
-      .find('[data-cy=clear-sorting]')
-      .click({force: true})
+    cy.get('[data-cy=clear-sorting]').click()
     assertJobs(['1/1/1', '1/1/2', '1/1/3'])
+    assertIndicatorExist('th[data-cy=col-items]', false)
   })
 
 })
@@ -114,21 +120,21 @@ describe('show/hide stats', () => {
 describe('sort by stats', () => {
   it('sort by one stat column', () => {
     addStat('200')
-    cy.get('th[data-cy=col-stat]').find('[data-cy=sort-col]').click({force: true})
-    // indicator change
-    cy.get('th[data-cy=col-stat]').find('[data-cy=sorted-col]').should('exist')
+    cy.get('th[data-cy=col-stat]').trigger('mouseover')
+    cy.get('[data-cy=sort-col]').click()
+    assertIndicatorExist('th[data-cy=col-stat]', true)
 
     // data rows change
     assertJobs(['1/1/3', '1/1/1', '1/1/2'])
 
     // reverse
-    cy.get('th[data-cy=col-stat]').find('[data-cy=sorted-col]').click()
+    cy.get('th[data-cy=col-stat]').trigger('mouseover', {force: true})
+    cy.get('[data-cy=sorted-col]').click()
     assertJobs(['1/1/2', '1/1/1', '1/1/3'])
 
     // clear sorting
-    cy.get('th[data-cy=col-stat]')
-      .find('[data-cy=clear-sorting]')
-      .click({force: true})
+    cy.get('[data-cy=clear-sorting]').click()
     assertJobs(['1/1/1', '1/1/2', '1/1/3'])
+    assertIndicatorExist('th[data-cy=col-stat]', false)
   })
 })
