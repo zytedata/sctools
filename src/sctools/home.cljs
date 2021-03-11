@@ -117,13 +117,9 @@
     children))
 
 (defnc foo-view [props]
-  #p props
-  #p (useParams)
   "Hello foo")
 
 (defnc debug-view [props]
-  #p props
-  #p (useParams)
   "Hello debug")
 
 (defnc home-view-impl [{:keys [drawer-open auth-done]}]
