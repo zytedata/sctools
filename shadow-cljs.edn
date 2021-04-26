@@ -19,12 +19,12 @@
                 ;; Fix shadow-cljs warnings about sci
                 ;; https://github.com/borkdude/sci/issues/499
                 [borkdude/sci "0.2.4"]
-                [metosin/malli "0.3.0"]
+                [metosin/malli "0.4.0"]
                 #_[clj-kondo "2020.12.12"
                  :exclusions [org.clojure/clojure]]
-                [cljs-bean "1.6.0"]
-                [lilactown/helix "0.0.14" :exclusions [cljs-bean]]
-                [emotion-cljs "0.1.3"]
+                [cljs-bean "1.7.0"]
+                [lilactown/helix "0.1.0" :exclusions [cljs-bean]]
+                [emotion-cljs "0.1.5"]
                 ;; re-frame-10x generates compile warnings with reagent 1.0
                 [reagent "1.0.0" :exclusions [[cljsjs/react]
                                                [cljsjs/react-dom]
@@ -48,8 +48,8 @@
 
                 [lambdaisland/kaocha "1.0.829"]
                 [lambdaisland/kaocha-cljs2 "0.0.35"]
-                [binaryage/devtools "1.0.2"]
-                [re-frisk-remote    "1.3.12"]
+                [binaryage/devtools "1.0.3"]
+                [re-frisk-remote    "1.5.0"]
                 [bdoc/devcards "0.2.7-SNAPSHOT"
                  :exclusions [[cljsjs/react]
                               [org.clojure/core.async]
@@ -57,7 +57,7 @@
                               [cljsjs/create-react-class]]]
                 ;; [day8.re-frame/tracing "0.5.3"]
                 [bdoc.re-frame/tracing "1.0.0-SNAPSHOT"]
-                [day8.re-frame/re-frame-10x "1.0.1"
+                [day8.re-frame/re-frame-10x "1.0.2"
                  :exclusions [[zprint]
                               [binaryage/devtools]]]
 
@@ -66,32 +66,32 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
                 [mvxcvi/alphabase "2.1.0"]
                 [applied-science/js-interop "0.2.7"]
-                [binaryage/oops     "0.7.0"]
+                [binaryage/oops     "0.7.1"]
                 [zprint "1.1.1"]
-                [metosin/reitit "0.5.12"]
+                [metosin/reitit "0.5.13"]
                 [hashp "0.2.1"]
                 [philoskim/debux "0.7.9"]
                 [lambdaisland/uri "1.4.54"]
                 [net.cgrand/macrovich "0.2.1"]
-                [postmortem "0.4.1"
+                [postmortem "0.5.0"
                  :exclusions [net.cgrand/macrovich]]
                 ;; [vvvvalvalval/scope-capture "0.3.3-s1"
                 ;;  :exclusions [org.clojure/clojure]]
-                [datascript "1.0.7"]
+                [datascript "1.1.0"]
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
                 ;; Logging
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;
                 [org.clojure/tools.logging "1.1.0"]
                 [org.slf4j/slf4j-api "1.7.30"]
-                [org.apache.logging.log4j/log4j-api "2.14.0"]
-                [org.apache.logging.log4j/log4j-core "2.14.0"]
-                [org.apache.logging.log4j/log4j-slf4j-impl "2.14.0"]
+                [org.apache.logging.log4j/log4j-api "2.14.1"]
+                [org.apache.logging.log4j/log4j-core "2.14.1"]
+                [org.apache.logging.log4j/log4j-slf4j-impl "2.14.1"]
                 ;; cljs logging
-                [lambdaisland/glogi "1.0.83"]
+                [lambdaisland/glogi "1.0.106"]
 
-                [cljc.java-time "0.1.15"]
-                [tick "0.4.30-alpha"]
+                [cljc.java-time "0.1.16"]
+                [tick "0.4.31-alpha"]
                 [thheller/shadow-cljsjs "0.0.21"]
 
                 ;; http server
@@ -123,7 +123,7 @@
                 [hiccup             "1.0.5"]
 
                 [refactor-nrepl "2.5.1"]
-                [cider/cider-nrepl "0.25.9"]
+                [cider/cider-nrepl "0.26.0"]
                 [org.tcrawley/dynapath "1.1.0"]
                 [com.cemerick/pomegranate "1.1.0"]]
 
