@@ -1,5 +1,5 @@
-import { clickByText, fillInput, clearInput, stubJobsInfoResponse} from './utils.js'
-import { setupStudioTest, range, JOBS_URL } from './test_utils.js'
+import { clickByText, fillInput } from './utils'
+import { setupStudioTest, JOBS_URL } from './test_utils'
 
 beforeEach(setupStudioTest)
 

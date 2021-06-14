@@ -6,7 +6,7 @@ beforeEach(() => {
   cy.server()
 })
 
-function stubAPIKeyRequest(status) {
+function stubAPIKeyRequest(status: number) {
   cy.route({
     method: 'GET',
     url: `https://jobq.scrapinghub.com/?apikey=${API_KEY}`,

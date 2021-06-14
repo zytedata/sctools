@@ -24,9 +24,17 @@
 // -- This will overwrite an existing command --
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
+
+declare namespace Cypress {
+  interface Chainable {
+    clearJobInfoCache(): void
+  }
+}
+
 Cypress.Commands.add('clearJobInfoCache', () => {
   // visit an empty page so we can release the indexed db;
   return new Cypress.Promise(async (resolve, reject) => {
+    // @ts-ignore
     let dbs = await indexedDB.databases();
     let found = false;
 

@@ -57,6 +57,6 @@ export let setupStudioTest = () => {
   stubJobsInfoResponse()
 }
 
-export let range = (x, start = 0) => {
+export let range = (x: number, start = 0) => {
   return Array.from({length: x}, (_, i) => i + start);
 }

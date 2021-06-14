@@ -20,6 +20,7 @@
   "devDependencies": {
     "@fullhuman/postcss-purgecss": "^4.0.0",
     "@testing-library/react": "^10.0.4",
+    "@types/debug": "^4.1.5",
     "autoprefixer": "^9.7.6",
     "create-react-class": "^15.6.3",
     "cssnano": "^4.1.10",
@@ -38,6 +39,7 @@
     "source-map-support": "^0.5.13",
     "stylelint": "^13.6.1",
     "tailwindcss": "^2.0.0",
+    "typescript": "^4.3.2",
     "ws": "^7.1.2"
   },
   "dependencies": {

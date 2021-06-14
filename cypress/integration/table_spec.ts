@@ -1,5 +1,5 @@
-import { clickByText, fillInput, clearInput, stubJobsInfoResponse } from './utils.js'
-import { setupStudioTest, range, JOBS_URL } from './test_utils.js'
+import { clickByText  } from './utils'
+import { setupStudioTest, range, JOBS_URL } from './test_utils'
 
 beforeEach(() => {
   setupStudioTest()
@@ -7,7 +7,7 @@ beforeEach(() => {
   cy.wait(['@jobs/1', '@jobs/2', '@jobs/3'])
 })
 
-let assertJobs = jobs => {
+let assertJobs = (jobs: string[]) => {
     cy.get("a[data-cy=job]")
       .should(links => {
         const _jobs = Array.from(links).map(link => Cypress.$(link).text())
@@ -15,7 +15,7 @@ let assertJobs = jobs => {
       })
 }
 
-let assertIndicatorExist = (parent, exist) => {
+let assertIndicatorExist = (parent: string, exist: boolean) => {
   return cy.get(parent)
            .find('[data-cy=sort-indicator]')
            .should(exist ? 'exist' : 'not.exist')
@@ -50,13 +50,13 @@ describe('sort jobs', () => {
 
 })
 
-let assertColumn = (col, exist) => {
+let assertColumn = (col: string, exist: boolean) => {
   cy.get(`th[data-cy^=col-`)
     .contains(col)
     .should(exist ? 'exist' : 'not.exist')
 }
 
-let withDialogOpen = f => {
+let withDialogOpen = (f: Function) => {
   cy.get('[data-cy=show-studio-preference]').click()
 
   f()
@@ -82,7 +82,7 @@ describe('show/hide columns', () => {
   })
 })
 
-let addStat = stat => {
+let addStat = (stat: string) => {
   assertColumn(stat, false)
   withDialogOpen(() => {
     clickByText('stats to display')
@@ -92,7 +92,7 @@ let addStat = stat => {
   assertColumn(stat, true)
 }
 
-let removeStat = stat => {
+let removeStat = (stat: string) => {
   assertColumn(stat, true)
   withDialogOpen(() => {
     clickByText('stats to display')
@@ -165,7 +165,7 @@ describe('chart by column', () => {
 
 describe('chart by stat', () => {
   it('chart by one column', () => {
-    addStat(200)
+    addStat('200')
     cy.get('th[data-cy=col-stat]').trigger('mouseover')
     cy.get('[data-cy=visualize-col]').click()
     cy.hash().should('contains', '#/studio/chart/')
