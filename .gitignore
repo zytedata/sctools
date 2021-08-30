@@ -31,3 +31,4 @@ pom.xml.asc
 /release
 /docs
 .clj-kondo/hooks
+**/.cpcache/

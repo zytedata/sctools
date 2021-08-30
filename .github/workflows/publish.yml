@@ -19,13 +19,18 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - name: Git checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
         with:
           fetch-depth: 1
           submodules: 'true'
 
+      - name: Install clojure tools
+        uses: DeLaGuardo/setup-clojure@3.5
+        with:
+          cli: 1.10.3.943
+
       - name: Cache node deps
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         id: cache-node-deps
         with:
           path: ./node_modules
@@ -37,7 +42,7 @@ jobs:
           yarn install
 
       - name: Cache shadow-cljs deps
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         id: cache-shadow-cljs-deps
         with:
           path: ~/.m2/repository
@@ -67,11 +72,11 @@ jobs:
           scripts/copy_release_files.sh
 
       - name: Cache cypress binary
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         id: cache-cypress-binary
         with:
           path: /home/runner/.cache/Cypress
-          key: cypress-5.1.0
+          key: cypress-8.2.0
 
       - name: Install cypress binary
         if: steps.cache-cypress-binary.outputs.cache-hit != 'true'

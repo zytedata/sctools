@@ -59,5 +59,5 @@ wait_for_shadow_cljs_server() {
 
 cd $PROJ_DIR
 rm -f $shadow_cljs_pidfile
-yarn shadow-cljs server &
+yarn cljs server &
 wait_for_shadow_cljs_server
