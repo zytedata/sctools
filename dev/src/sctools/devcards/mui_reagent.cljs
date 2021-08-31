@@ -3,7 +3,7 @@
             [reagent.dom :as rdom]
             ;; Scoped names require Cljs 1.10.439
             ["@material-ui/core" :as mui]
-            ["@material-ui/core/styles" :refer [createMuiTheme withStyles]]
+            ["@material-ui/core/styles" :refer [createTheme withStyles]]
             ["@material-ui/core/colors" :as mui-colors]
             ["@material-ui/icons" :as mui-icons]
             [helix.core :as hx :refer [defnc $]]
@@ -62,7 +62,7 @@
 ;; Example
 
 (def custom-theme
-  (createMuiTheme
+  (createTheme
     #js {:palette #js {:primary #js {:main (gobj/get (.-red ^js/Mui.Colors mui-colors) 100)}}}))
 
 (defn custom-styles [^js/Mui.Theme theme]

@@ -1,6 +1,6 @@
 (ns sctools.theme
   (:require ["@material-ui/core/styles"
-             :refer [createMuiTheme ThemeProvider StylesProvider]]
+             :refer [createTheme ThemeProvider StylesProvider]]
             [applied-science.js-interop :as j]
             [clojure.string :as str]
             [helix.core :as hx :refer [defnc $]]))
@@ -34,7 +34,7 @@
     "\"Noto Color Emoji\""]))
 
 (def theme
-  (createMuiTheme
+  (createTheme
    (j/lit {:palette {:primary {:main "rgba(63, 81, 181, 0.8)"
                                :contrastText "white"}}
            :breakpoints breakpoints

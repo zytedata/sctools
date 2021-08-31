@@ -142,7 +142,7 @@ describe('sort by stats', () => {
 let checkChart = () => {
   cy.get('.vega-embed svg').should('exist')
   cy.get('svg').contains('Items').should('exist')
-  cy.get('svg path[transform]', {timeout: 1000})
+  cy.get('svg path[transform]')
     .should('exist')
 }
 
@@ -155,7 +155,7 @@ describe('chart by column', () => {
   })
 
 
-  it.only('visit chart url directly', () => {
+  it('visit chart url directly', () => {
     cy.visit('/')
     cy.reload()
     cy.visit('#/studio/chart/1/1/1/_/3?q=%2522%255B%255C%2522%255E%2520%255C%2522%252C%255C%2522~%253Aid%255C%2522%252C%255C%2522~%253Aitems%255C%2522%252C%255C%2522~%253Astat%253F%255C%2522%252Cnull%255D%2522')

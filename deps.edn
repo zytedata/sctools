@@ -66,6 +66,8 @@
   lambdaisland/uri                          {:mvn/version "1.4.70"}
   lilactown/helix                           {:mvn/version "0.1.1"
                                              :exclusions  [cljs-bean/cljs-bean]}
+  metasoarous/oz                            {:mvn/version "1.6.0-alpha34"}
+  aerial.hanami/aerial.hanami               {:mvn/version "0.12.7"}
   me.raynes/fs                              {:mvn/version "1.4.6"}
   meander/epsilon                           {:mvn/version "0.0.650"}
   medley/medley                             {:mvn/version "1.3.0"}

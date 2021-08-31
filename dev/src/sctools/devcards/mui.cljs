@@ -4,7 +4,7 @@
             [reagent.dom :as rdom]
             ;; Scoped names require Cljs 1.10.439
             ["@material-ui/core/Button" :default Button]
-            ["@material-ui/core/styles" :refer [createMuiTheme ThemeProvider]]
+            ["@material-ui/core/styles" :refer [createTheme ThemeProvider]]
             ["@material-ui/lab/Timeline" :default Timeline]
             ["@material-ui/lab/TimelineItem" :default TimelineItem]
             ["@material-ui/lab/TimelineSeparator" :default TimelineSeparator]

@@ -556,12 +556,17 @@
       ($ error-view)
       )))
 
-(defn job-detail-view []
+(defn job-detail-view [{:keys [done-view]}]
   (let [state @(rf/subscribe [:studio/state])
         filters @(rf/subscribe [:studio/filters])
         prefs @(rf/subscribe [:studio/prefs])]
-    ($ job-detail-view-impl {:state state :filters filters :prefs prefs})))
+    (if (and done-view
+             (fsm/matches state :fetched))
+      done-view
+      ($ job-detail-view-impl {:state state :filters filters :prefs prefs}))))
 
+(defn fetch-or-chart-view []
+  [job-detail-view {:done-view [job-chart-view]}])
 
 (defnc jobs-studio-view []
   (use-effect :once
@@ -577,7 +582,7 @@
         {:path
          (str path
               "/chart/:project/:spider/:from_id/_/:to_id")}
-        ($ job-chart-view))
+        (r/as-element [fetch-or-chart-view]))
       ($ Route {:path path}
          (r/as-element [job-input-view])))))
 
@@ -586,6 +591,9 @@
   (keys vresults)
   (tap> @(rf/subscribe [:studio]))
   (-> @(rf/subscribe [:studio]) :recents)
+  (-> @(rf/subscribe [:studio]) :state keys)
+  (-> @(rf/subscribe [:studio]) :state (fsm/matches :fetched))
+  (-> @(rf/subscribe [:studio/chart.width]))
   (collect-args vresults)
 
   ())

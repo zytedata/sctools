@@ -9,6 +9,7 @@
             [sctools.utils.local-storage :as local-storage]))
 
 (def studio-path [(rf/path :studio)])
+(def chart-path [(rf/path :studio :chart)])
 (def filters-path [(rf/path :studio :filters)])
 (def prefs-path [(rf/path :studio :prefs)])
 (def sorts-path [(rf/path :studio :sorts)])
@@ -208,3 +209,14 @@
                 (is-job-valid? to)))
    (nav-to-chart from to {:id id :stat? stat?})
    studio))
+
+(rf/reg-event-db
+  :studio/chart.width-update
+  chart-path
+  (fn [chart [_ window-width]]
+    (assoc chart :width (-> (or (some-> window-width
+                                        (- 400))
+                                0)
+                            (max 300)
+                            (min 1500)))
+    ))

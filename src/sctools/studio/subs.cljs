@@ -12,6 +12,7 @@
 (quick-sub :studio/filters)
 (quick-sub :studio/prefs)
 (quick-sub :studio/sorts)
+(quick-sub :studio/chart)
 
 (rf/reg-sub
  :studio/jobs
@@ -126,3 +127,9 @@
             {:job ?job
              :ts  (get ?info "pending_time")
              :data (datafn ?info)})))))
+
+(rf/reg-sub
+  :studio/chart.width
+  :<- [:studio/chart]
+  (fn [chart]
+    (:width chart)))
