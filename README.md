@@ -2,6 +2,18 @@ Analyze your jobs on scrapy cloud.
 
 The tool is hosted on Github Pages: https://lucywang000.github.io/sctools/
 
+Table of Contents
+=================
+
+* [Screenshots](#screenshots)
+   * [Display multiple jobs stats as a table](#display-multiple-jobs-stats-as-a-table)
+   * [Sort jobs by some metric](#sort-jobs-by-some-metric)
+   * [Filter jobs by spider args](#filter-jobs-by-spider-args)
+   * [Customize which stats to show](#customize-which-stats-to-show)
+   * [Select which scrapy stats to show](#select-which-scrapy-stats-to-show)
+   * [Visualizing the Jobs stats](#visualizing-the-jobs-stats)
+* [License](#license)
+
 # Screenshots
 
 ## Display multiple jobs stats as a table
@@ -33,8 +45,7 @@ Number of items crawled over time:
 ![Crawled Items Chart](screenshots/chart.png)
 
 
-
-## License
+# License
 
 Copyright © 2021 Lucy Wang
 
