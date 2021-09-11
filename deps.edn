@@ -61,10 +61,10 @@
   io.pedestal/pedestal.service              {:mvn/version "0.5.9"}
   kitchen-async/kitchen-async               {:mvn/version "0.1.0-SNAPSHOT"}
   lambdaisland/glogi                        {:mvn/version "1.0.106"}
-  lambdaisland/kaocha                       {:mvn/version "1.0.861"}
+  lambdaisland/kaocha                       {:mvn/version "1.0.887"}
   lambdaisland/kaocha-cljs2                 {:mvn/version "0.0.35"}
-  lambdaisland/uri                          {:mvn/version "1.4.70"}
-  lilactown/helix                           {:mvn/version "0.1.1"
+  lambdaisland/uri                          {:mvn/version "1.4.74"}
+  lilactown/helix                           {:mvn/version "0.1.2"
                                              :exclusions  [cljs-bean/cljs-bean]}
   metasoarous/oz                            {:mvn/version "1.6.0-alpha34"}
   aerial.hanami/aerial.hanami               {:mvn/version "0.12.7"}
@@ -73,8 +73,8 @@
   medley/medley                             {:mvn/version "1.3.0"}
   metosin/malli                             {:mvn/version "0.6.1"}
 
-  com.crypticbutter/snoop                   {:git/url "https://github.com/lucywang000/snoop"
-                                             :sha "3cd6d0e051ceca44935b76f76c885c32fecc941e"}
+  com.crypticbutter/snoop                   {:git/url "https://github.com/CrypticButter/snoop"
+                                             :sha "9421f7c8d07aafa0679b9409013ffae112c9ab47"}
 
   metosin/reitit                            {:mvn/version "0.5.15"}
   mvxcvi/alphabase                          {:mvn/version "2.1.0"}
@@ -126,7 +126,7 @@
   :dev {}
 
   :shadow-cljs
-  {:extra-deps {thheller/shadow-cljs {:mvn/version "2.15.6"}}
+  {:extra-deps {thheller/shadow-cljs {:mvn/version "2.15.9"}}
    :main-opts  ["-m" "shadow.cljs.devtools.cli"]}
 
   }}

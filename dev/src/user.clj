@@ -1,6 +1,5 @@
 (ns user
-  (:require [shadow.cljs.devtools.api :as shadow]
-            [clojure.string :as str]
+  (:require [clojure.string :as str]
             [clojure.java.io :as io]
             [sctools.server :as server]
             [hashp.core]
@@ -9,21 +8,6 @@
             [debux.cs.clog]
             [debux.cs.clogn]
             [debux.cs.util]))
-
-(defn watch! []
-  (shadow/watch :app)
-  (shadow/nrepl-select :app))
-
-(defn watch-uitest! []
-  (shadow/watch :uitest)
-  #_(shadow/nrepl-select :uitest))
-
-(defn watch-test! []
-  (shadow/watch :test))
-
-(defn stop-watch-uitest! []
-  (shadow/stop-worker :uitest))
-
 (defmacro load-test-key []
   (when-some [keyfile (io/resource "sctools_api_key.edn")]
     (read-string (slurp keyfile))))
