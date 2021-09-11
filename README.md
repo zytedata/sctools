@@ -28,6 +28,8 @@ The tool is hosted on Github Pages: https://lucywang000.github.io/sctools/
 
 ## Visualizing the Jobs stats
 
+Number of items crawled over time:
+
 ![Crawled Items Chart](screenshots/chart.png)
 
 
