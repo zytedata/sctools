@@ -38,7 +38,7 @@ Table of Contents
 ![Stats](screenshots/stats.png)
 
 
-## Visualizing the Jobs stats
+## Visualizing the jobs stats
 
 Number of items crawled over time:
 
