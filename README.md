@@ -1,6 +1,6 @@
 Analyze your jobs on scrapy cloud.
 
-The tool is hosted on Github Pages: https://lucywang000.github.io/sctools/
+The tool is hosted on Github Pages: https://zytedata.github.io/sctools/
 
 Table of Contents
 =================

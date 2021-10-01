@@ -5,7 +5,7 @@ set -x
 
 # ./copy_release_files.sh
 
-git remote set-url origin https://github.com/lucywang000/sctools.git
+git remote set-url origin https://github.com/zytedata/sctools.git
 git fetch origin master
 # create a new clear branch
 

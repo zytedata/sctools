@@ -74,7 +74,7 @@
                             (d/i {:class '[fas fa-caret-right]}))
                     (d/span title)))))
        ($ Button {:color "inherit"}
-          (d/a {:href "https://github.com/lucywang000/sctools"
+          (d/a {:href "https://github.com/zytedata/sctools"
                 :target "_blank"}
                "About")))))
 
