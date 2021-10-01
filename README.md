@@ -1,4 +1,4 @@
-Analyze your jobs on scrapy cloud.
+Analyze your jobs on Scrapy Cloud.
 
 The tool is hosted on Github Pages: https://zytedata.github.io/sctools/
 
