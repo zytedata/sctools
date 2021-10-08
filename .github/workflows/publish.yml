@@ -29,6 +29,11 @@ jobs:
         with:
           cli: 1.10.3.943
 
+      - name: Install PNPM
+        uses: pnpm/action-setup@v2.0.1
+        with:
+          version: 6.16.1
+
       - name: Cache node deps
         uses: actions/cache@v2
         id: cache-node-deps
@@ -39,7 +44,7 @@ jobs:
       - name: Fetch node deps
         if: steps.cache-node-deps.outputs.cache-hit != 'true'
         run: |
-          yarn install
+          pnpm install --shamefully-hoist
 
       - name: Cache shadow-cljs deps
         uses: actions/cache@v2
