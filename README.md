@@ -44,6 +44,34 @@ Number of items crawled over time:
 
 ![Crawled Items Chart](screenshots/chart.png)
 
+# Development Guide
+
+## Install pnpm
+
+```
+curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm
+```
+
+## Install clojure
+
+Follow this [document](https://clojure.org/guides/getting_started#_clojure_installer_and_cli_tools).
+
+## Launch the dev server
+
+```
+yarn watch
+```
+
+It could take a when running for the first time.
+
+In another terminal:
+
+```
+yarn watch-css
+```
+
+Now visit http://127.0.0.1:3345 in a web browser.
+
 
 # License
 

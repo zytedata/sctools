@@ -53,15 +53,6 @@ jobs:
           path: ~/.m2/repository
           key: maven-${{ hashFiles('shadow-cljs.edn') }}-v2
 
-      # - name: Install Latest malli
-      #   run: |
-      #     mkdir -p checkouts
-      #     pushd checkouts
-      #       git clone https://github.com/metosin/malli.git
-      #       cd malli
-      #       git reset --hard a5bd5806d25fadb2f0025361189a641f50988df9
-      #     popd
-
       - name: Launch shadow-cljs
         run: |
           scripts/launch_shadow_cljs.sh
