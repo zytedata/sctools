@@ -4,8 +4,11 @@ set -e
 set -x
 
 # ./copy_release_files.sh
+#
 
-git remote set-url origin https://github.com/zytedata/sctools.git
+owner=${1:-zytedata}
+
+git remote set-url origin https://github.com/$owner/sctools.git
 git fetch origin master
 # create a new clear branch
 

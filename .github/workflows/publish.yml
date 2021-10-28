@@ -82,7 +82,7 @@ jobs:
       - name: Run Cypress Test
         run: |
           cy_key="${{ secrets.CYPRESS_KEY }}"
-          if [[ cy_key != "" ]]; then
+          if [[ $cy_key != "" ]]; then
             run_args="--record --key ${{ secrets.CYPRESS_KEY }}"
           fi
           CYPRESS_BASE_URL=http://127.0.0.1:13345 yarn cypress run $run_args
@@ -95,4 +95,4 @@ jobs:
           login lucywang000
           password ${{ secrets.GITHUB_TOKEN }}
           EOF
-          ./scripts/publish.sh
+          ./scripts/publish.sh ${{ github.repository_owner }}
