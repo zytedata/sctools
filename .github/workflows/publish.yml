@@ -81,7 +81,10 @@ jobs:
 
       - name: Run Cypress Test
         run: |
-          run_args="--record --key ${{ secrets.CYPRESS_KEY }}"
+          cy_key="${{ secrets.CYPRESS_KEY }}"
+          if [[ cy_key != "" ]]; then
+            run_args="--record --key ${{ secrets.CYPRESS_KEY }}"
+          fi
           CYPRESS_BASE_URL=http://127.0.0.1:13345 yarn cypress run $run_args
 
       - name: Deploy to GitHub Pages
