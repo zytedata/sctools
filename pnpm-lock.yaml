@@ -2,6 +2,7 @@ lockfileVersion: 5.3
 
 overrides:
   vega-dataflow: ^5.7.4
+  vega-expression: ^5.0.0
 
 specifiers:
   '@emotion/core': ^11.0.0
@@ -6113,12 +6114,6 @@ packages:
     resolution: {integrity: sha512-Gls93/+7tEJGE3kUuUnxrBIxtvaNeF01VIFB2Q2Of2hBIBvtHX74jcAdDtkh5UhhoYGD8Q1J30P5cqEBEwtPoQ==}
     dev: false
 
-  /vega-expression/4.0.1:
-    resolution: {integrity: sha512-ZrDj0hP8NmrCpdLFf7Rd/xMUHGoSYsAOTaYp7uXZ2dkEH5x0uPy5laECMc8TiQvL8W+8IrN2HAWCMRthTSRe2Q==}
-    dependencies:
-      vega-util: 1.16.1
-    dev: false
-
   /vega-expression/5.0.0:
     resolution: {integrity: sha512-y5+c2frq0tGwJ7vYXzZcfVcIRF/QGfhf2e+bV1Z0iQs+M2lI1II1GPDdmOcMKimpoCVp/D61KUJDIGE1DSmk2w==}
     dependencies:
@@ -6210,7 +6205,7 @@ packages:
       tslib: 2.3.1
       vega: 5.21.0
       vega-event-selector: 2.0.6
-      vega-expression: 4.0.1
+      vega-expression: 5.0.0
       vega-util: 1.16.1
       yargs: 17.1.1
     dev: false

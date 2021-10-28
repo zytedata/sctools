@@ -76,6 +76,7 @@
     "xregexp": "^5.1.0"
   },
   "resolutions": {
-    "vega-dataflow": "^5.7.4"
+    "vega-dataflow": "^5.7.4",
+    "vega-expression": "^5.0.0"
   }
 }
