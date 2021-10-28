@@ -72,7 +72,7 @@ jobs:
         id: cache-cypress-binary
         with:
           path: /home/runner/.cache/Cypress
-          key: cypress-8.2.0
+          key: cypress-8.7.0
 
       - name: Install cypress binary
         if: steps.cache-cypress-binary.outputs.cache-hit != 'true'
