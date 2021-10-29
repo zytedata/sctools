@@ -65,7 +65,6 @@ jobs:
       - name: Build
         run: |
           yarn release
-          scripts/copy_release_files.sh
 
       - name: Cache cypress binary
         uses: actions/cache@v2
