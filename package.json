@@ -80,5 +80,8 @@
     "vega-embed": "6.19.1",
     "vega-event-selector": "^3.0.0",
     "vega-util": "^1.17.0"
+  },
+  "@comment": {
+    "vega-embed": "6.20.0 not working with shadow, error: cannot find iterator.js"
   }
 }
