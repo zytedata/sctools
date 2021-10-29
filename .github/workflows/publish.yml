@@ -65,14 +65,13 @@ jobs:
       - name: Build
         run: |
           yarn release
-          scripts/copy_release_files.sh
 
       - name: Cache cypress binary
         uses: actions/cache@v2
         id: cache-cypress-binary
         with:
           path: /home/runner/.cache/Cypress
-          key: cypress-8.2.0
+          key: cypress-8.7.0
 
       - name: Install cypress binary
         if: steps.cache-cypress-binary.outputs.cache-hit != 'true'
@@ -81,7 +80,10 @@ jobs:
 
       - name: Run Cypress Test
         run: |
-          run_args="--record --key ${{ secrets.CYPRESS_KEY }}"
+          cy_key="${{ secrets.CYPRESS_KEY }}"
+          if [[ $cy_key != "" ]]; then
+            run_args="--record --key ${{ secrets.CYPRESS_KEY }}"
+          fi
           CYPRESS_BASE_URL=http://127.0.0.1:13345 yarn cypress run $run_args
 
       - name: Deploy to GitHub Pages

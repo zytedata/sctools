@@ -56,6 +56,7 @@
                  "/sctools/static/dev/js"
 
                  :compiler-options {:devcards true
+                                    :output-feature-set      :es2018
                                     :infer-externs false}}
 
                 :release
@@ -74,7 +75,7 @@
                   :infer-externs           true
                   :source-map              true
                   :source-map-detail-level :all
-                  :output-feature-set      :es8
+                  :output-feature-set      :es2018
                   :pretty-print            true
                   :pseudo-names            true
                   }}
