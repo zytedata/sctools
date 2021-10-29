@@ -95,4 +95,4 @@ jobs:
           login lucywang000
           password ${{ secrets.GITHUB_TOKEN }}
           EOF
-          ./scripts/publish.sh ${{ github.repository_owner }}
+          ./scripts/publish.sh
