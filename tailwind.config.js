@@ -287,6 +287,13 @@ let colors = {
 }
 
 module.exports = {
+  mode: 'jit',
+  purge: [
+    './resources/app/**/*.html',
+    '.shadow-cljs/builds/_tailwind.tmp.cljs~',
+    './src/**/*.cljs',
+    './dev/**/*.cljs',
+  ],
   future: {
     removeDeprecatedGapUtilities: true,
     purgeLayersByDefault: true,

@@ -1,4 +1,4 @@
-@variants first, focus, hover, responsive {
+@layer utilities {
   .x-h-48px {
     min-height: 48px;
   }
@@ -18,4 +18,5 @@
   .x-ml-240px {
     margin-left: 240px;
   }
+
 }
