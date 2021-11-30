@@ -59,7 +59,7 @@ Follow this [document](https://clojure.org/guides/getting_started#_clojure_insta
 ## Launch the dev server
 
 ```
-yarn watch
+pnpm watch
 ```
 
 It could take a when running for the first time.
@@ -67,7 +67,7 @@ It could take a when running for the first time.
 In another terminal:
 
 ```
-yarn watch-css
+pnpm watch-css
 ```
 
 Now visit http://127.0.0.1:3345 in a web browser.
