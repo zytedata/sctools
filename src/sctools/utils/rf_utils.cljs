@@ -6,7 +6,7 @@
 (defn quick-sub
   ([k]
    (quick-sub k nil))
-  ([k & {:keys [default]}]
+  ([k default]
    (let [parent (-> k namespace keyword)
          child (-> k name keyword)]
      (rf/reg-sub

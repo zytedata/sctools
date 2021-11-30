@@ -53,3 +53,8 @@
  (fn [{:keys [history] :as app}  [_ path]]
    (j/call history :replace path)
    app))
+
+(comment
+  (-> @re-frame.db/app-db
+      :app)
+  ())
