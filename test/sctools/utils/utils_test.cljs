@@ -3,3 +3,6 @@
 
 (deftest foo
   (is (= 1 1)))
+
+(deftest bar
+  (is (= [1 2] [1 2])))

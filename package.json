@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "cljs": "clojure -A:shadow-cljs -M:shadow-cljs",
-    "watch": "yarn cljs watch --debug :app",
+    "watch": "yarn cljs watch --debug :app :test",
     "test": "yarn cljs compile :test",
     "ci-build": "yarn cljs release :ci",
     "ci-test": "karma start --single-run",

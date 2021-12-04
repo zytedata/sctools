@@ -85,6 +85,37 @@
                  {:init-fn
                   sctools.app/main}}}
 
+          :test {:target :browser-test
+                 :closure-defines {malli.registry/type "custom"}
+                 :ns-regexp "sctools.*-test$"
+
+                 :test-dir "resources/app/sctools/static/dev/jstest"
+
+                 :autorun false
+
+                 :compiler-options
+                 {:output-feature-set :es2018
+                  :infer-externs false
+                  :external-config {:crypticbutter.snoop {}}}
+
+                 :devtools
+                 {:http-port
+                  28103
+
+                  :http-root
+                  "resources/app/sctools/static/dev/jstest"
+
+                  ;; resolves to classpath:app so it could locate static files in
+                  ;; `resources/app/sctools/static/...`
+                  :http-resource-root "app"
+
+                  :preloads [devtools.preload
+                             debux.common.util
+                             debux.cs.util
+                             shadow-test-utils.pretty-diff
+                             hashp.core]}}
+
+
           ;; 1. compile to advanced mode;
           ;; 2. loaded in browser to override some methods:
           ;; let script = document.createElement('script'); script.src = "/static/dev/js/browser/main.js";  document.body.append(script)

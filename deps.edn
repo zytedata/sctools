@@ -16,6 +16,7 @@
   ;; "checkouts/malli/src"
   #_"checkouts/helix/src"
   #_"checkouts/devcards/src"
+  "checkouts/shadow-test-utils/src"
   ]
 
  :deps
@@ -28,6 +29,11 @@
     org.clojure/core.async
     cljsjs/react-dom
     cljsjs/create-react-class]}
+
+  org.clojars.lucywang000/shadow-test-utils {:mvn/version "0.0.2"
+                                             :exclusions [com.rpl/specter
+                                                          meander/epsilon
+                                                          applied-science.js-interop]}
 
   bdoc.re-frame/tracing           {:mvn/version "1.0.0-SNAPSHOT"}
   binaryage/devtools              {:mvn/version "1.0.4"}
