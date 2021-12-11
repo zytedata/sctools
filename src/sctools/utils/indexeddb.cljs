@@ -1,5 +1,6 @@
 (ns sctools.utils.indexeddb
   (:require ["idb" :refer [openDB deleteDB wrap unwrap]]
+            [bb.clojure :as bb]
             [cognitect.transit :as t]
             [applied-science.js-interop :as j]
             [kitchen-async.promise :as p]))
@@ -37,6 +38,16 @@
       (j/call store :put (write-transit v) (str k))
       (j/get tx :done))))
 
+(defn delete-item [db-name store-name k]
+  (check-key k)
+  (let [db (get @dbs db-name)
+        tx (j/call db :transaction store-name "readwrite")
+        store (j/call tx :objectStore store-name)]
+    (p/try
+      ;; value is before key!
+      (j/call store :delete (str k))
+      (j/get tx :done))))
+
 (defn get-item
   ([db-name store-name k]
    (get-item db-name store-name k nil))
@@ -50,6 +61,15 @@
          (if v
            (read-transit v)
            not-found))))))
+
+;; TODO: add tests
+(defn clear-store
+  [db-name store-name]
+  (bb/when-let* [db (get @dbs db-name)
+                 tx (j/call db :transaction store-name "readwrite")
+                 store (j/call tx :objectStore store-name)]
+    (p/try
+      (j/call store :clear))))
 
 (defn close-all-dbs []
   (doseq [[k db] @dbs]
@@ -67,7 +87,10 @@
                                (j/call db :createObjectStore "store1"))}))
   (set-item "test1" "store1" :foo :bar)
   (p/let [k :foo
-          v (get-item "test1" "store1" :foo)]
+          v (get-item "test1" "store1" k)]
     (println [k v]))
+  (p/do
+    (clear-store "test1" "store1")
+    (println "cleared!"))
   (write-transit "true")
   ())

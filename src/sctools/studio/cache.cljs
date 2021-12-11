@@ -47,6 +47,12 @@
   (when-not @icache-disable?
     (idb/set-item icache-db icache-store job {:info info})))
 
+(defn clear-cache []
+  (when-not @icache-disable?
+    (p/do
+      (open-icache)
+      (idb/clear-store icache-db icache-store))))
+
 (comment
 
   (def C (cache/lru-cache-factory {:a 1, :b 2} :threshold 2))

@@ -28,6 +28,7 @@
             [sctools.init :refer [init-view]]
             [sctools.dev :refer [dev-view]]
             [sctools.theme :refer [theme]]
+            [sctools.settings :refer [settings-view]]
             [sctools.studio.views :refer [jobs-studio-view]]))
 
 (defstyled HomeDiv :div
@@ -41,18 +42,6 @@
        ($ NavLink {:to "/studio"}
           "Go to the Jobs Studio"))))
 
-(defnc settings-child []
-  (let [id (j/get (useParams) :id)]
-    (d/div "Hello Nested Route " id)))
-
-(defnc settings-view []
-  (d/div
-    ($ Switch
-       ($ Route {:path "/settings/:id"}
-          ($ settings-child)))
-    (d/div
-     {:class '[h-full w-full flex flex-col items-center justify-start]}
-     "Hello Settings")))
 
 (defnc top-bar-impl [{:keys [title]}]
   ($ AppBar {:position "static"}
@@ -133,7 +122,7 @@
                          :component init-view})
            ($ PrivateRoute {:path "/"}
               ($ Route {:path "/settings"}
-                 ($ settings-view))
+                 (r/as-element [settings-view]))
               ($ Route {:path "/studio"}
                  ($ jobs-studio-view))
               (when ^boolean goog.DEBUG
