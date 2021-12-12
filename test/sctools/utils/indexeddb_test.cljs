@@ -7,7 +7,7 @@
 (def test-db-name "testdb1")
 (def test-store-name "teststore1")
 
-(deftest ^:focus idb-test
+(deftest idb-test
   (async
     done
     (p/let [db (idb/open-db test-db-name 1
