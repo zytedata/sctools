@@ -57,6 +57,8 @@ jobs:
         run: |
           scripts/launch_shadow_cljs.sh
 
+      # TODO: ci build&test could be run in parallel to yarn release&cypress
+      # test, which could save some time.
       - name: Run CLJS Tests
         run: |
           yarn ci-build
