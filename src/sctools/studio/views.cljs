@@ -39,6 +39,7 @@
              :refer
              [get-job-number get-spider info-keys info-titles is-job-valid?]]
             [sctools.utils.rf-utils :as rfu :refer [use-atom]]
+            [sctools.utils.string-utils :refer [truncate-left]]
             [sctools.widgets.common :refer [error-msg tooltip popover]]
             [statecharts.core :as fsm]))
 
@@ -165,12 +166,6 @@
 
 (defn toggle-prefs-dialog []
   (rf/dispatch [:studio/prefs.toggle-dlg]))
-
-(defn truncate-left [s n]
-  (let [len (count s)]
-    (if (<= len n)
-      s
-      (str "..." (j/call s :slice 0 (- len n 3))))))
 
 (defnc job-row [{:keys [job info]}]
   ($ TableRow {:data-cy "infos-row"}
