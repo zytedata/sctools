@@ -28,6 +28,22 @@ describe('load jobs', () => {
     }
   })
 
+  it('clear job stats cache', () => {
+    cy.visit('/#/studio/job/1/1/1/_/3')
+    cy.wait(['@jobs/1', '@jobs/2', '@jobs/3'])
+    cy.get("tr[data-cy=infos-row]").should('has.length', 3)
+
+    cy.visit('/#/settings')
+    cy.get('[data-cy=cache-clear-btn]').click()
+    cy.get('[data-cy=cache-clear-success]')
+
+    // Must reload to reset the in-memory cache
+    cy.reload()
+    cy.visit('/#/studio/job/1/1/1/_/3')
+    cy.wait(['@jobs/1', '@jobs/2', '@jobs/3'])
+    cy.get("tr[data-cy=infos-row]").should('has.length', 3)
+  })
+
   // This case must be the last one in the whole file, otherise any
   // test case comes after it would fail for no good reason.
   it('cache job status', done => {

@@ -2,6 +2,8 @@
   (:require
    ["@material-ui/core/Button" :default Button]
    ["@material-ui/core/CircularProgress" :default CircularProgress]
+   ["@material-ui/lab/Alert" :default Alert]
+   [helix.hooks :as hooks :refer [use-effect]]
    [applied-science.js-interop :as j]
    [helix.core :as hx :refer [$ defnc]]
    [helix.dom :as d]
@@ -24,20 +26,26 @@
 (def cache-settings-path [(rf/path :settings :cache)])
 
 (rf/reg-event-db
+ :settings/cache.init
+ cache-settings-path
+ (fn [cache]
+   (assoc cache :clearing false :cleared false)))
+
+(rf/reg-event-db
  :settings/cache.clear
  cache-settings-path
  (fn [cache]
    (p/do
      (clear-cache)
-     (asleep 2000)
+     ;; (asleep 200)
      (rf/dispatch [:settings/cache.cleared]))
-   (assoc cache :clearing true)))
+   (assoc cache :clearing true :cleared false)))
 
 (rf/reg-event-db
  :settings/cache.cleared
  cache-settings-path
  (fn [cache]
-   (assoc cache :clearing false)))
+   (assoc cache :clearing false :cleared true)))
 
 (db-sub :settings)
 (quick-sub :settings/cache)
@@ -45,6 +53,8 @@
 (defnc settings-view-impl
   [{:keys [cache]}]
   (layout/set-title "Settings")
+  (use-effect :once
+    (rf/dispatch-sync [:settings/cache.init]))
   (d/div
     ($ Switch
        ($ Route {:path "/settings/:id"}
@@ -56,6 +66,7 @@
         (d/hr)
         ($ Button {:color "primary"
                    :variant "contained"
+                   :data-cy "cache-clear-btn"
                    :onClick (fn []
                               (rf/dispatch [:settings/cache.clear]))
                    :size "medium"
@@ -71,6 +82,10 @@
                                    }))))
         (d/div {:class "text-gray-700"}
           "click this button to clear cached job stats in the browser")
+        (when (:cleared cache)
+          ($ Alert {:severity "success"
+                    :data-cy "cache-clear-success"}
+            "Cache is cleared"))
         ))))
 
 (defn settings-view []
