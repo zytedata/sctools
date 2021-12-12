@@ -62,7 +62,7 @@ Follow this [document](https://clojure.org/guides/getting_started#_clojure_insta
 pnpm watch
 ```
 
-It could take a when running for the first time.
+It could take a while running for the first time.
 
 In another terminal:
 
