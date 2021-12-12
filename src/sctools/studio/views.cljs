@@ -170,7 +170,7 @@
   (let [len (count s)]
     (if (<= len n)
       s
-      (str "..." (j/call s :slice (- len n 3))))))
+      (str "..." (j/call s :slice 0 (- len n 3))))))
 
 (defnc job-row [{:keys [job info]}]
   ($ TableRow {:data-cy "infos-row"}
@@ -307,7 +307,7 @@
   (j/assoc-in! el [:style :height] (str (get-el-available-height el) "px")))
 
 (defnc job-infos-table-impl [{:keys [sorts headers infos]}]
-  (d/div {:class '[overflow-scroll]}
+  (d/div {:class '[overflow-y-scroll]}
     ($ Table {:stickyHeader true
               :data-cy "infos-table"
               :size "small"}
@@ -515,8 +515,7 @@
 
 (defnc job-infos-view [{:keys [state filters prefs]}]
   (def vresults (:results state))
-  (d/div {:class '[w-full h-full pt-4
-                   flex flex-col justify-start space-y-2]}
+  (d/div {:class "w-full h-[calc(100%-56px)] pt-4 flex flex-col justify-start space-y-2"}
     (let [args (use-memo [state]
                  (collect-args (:results state)))]
       ($ filter-header-view {:args args :filters filters}))
