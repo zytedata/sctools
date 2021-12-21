@@ -287,8 +287,7 @@ let colors = {
 }
 
 module.exports = {
-  mode: 'jit',
-  purge: [
+  content: [
     './resources/app/**/*.html',
     '.shadow-cljs/builds/_tailwind.tmp.cljs~',
     './src/**/*.cljs',
