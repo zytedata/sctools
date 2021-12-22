@@ -299,7 +299,7 @@ module.exports = {
   },
   theme: {
     extend: {
-      colors: colors,
+      // colors: colors,
       spacing: {
         '2px': '2px',
         '84': '21rem',
@@ -340,5 +340,8 @@ module.exports = {
   plugins: [
     // require('@tailwindcss/custom-forms'),
     // require('@tailwindcss/ui'),
-  ]
+  ],
+  corePlugins: {
+    // preflight: false,
+  }
 }

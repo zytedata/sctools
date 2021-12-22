@@ -55,7 +55,7 @@
        ($ Typography {:variant "h6"
                       :className "flex flex-row flex-grow items-center"}
           (d/div {:id "title-anchor"
-                  :class '[whitespace-pre-wrap space-x-4]}
+                  :class '[whitespace-pre-wrap space-x-4 #_text-zinc-300]}
                  (d/span "SC Tools")
                  (when title
                    (<>

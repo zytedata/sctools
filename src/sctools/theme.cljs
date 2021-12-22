@@ -43,6 +43,6 @@
 (defnc theme-provider [{:keys [children]}]
   ;; Make sure tailwindcss rules comes later than mui's runtime styles
   ;; so it could have higher specificity.
-  ($ StylesProvider {:injectFirst true}
+  ($ StylesProvider {:injectFirst false}
     ($ ThemeProvider {:theme theme}
        children)))
