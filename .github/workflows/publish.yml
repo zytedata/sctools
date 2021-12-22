@@ -73,7 +73,7 @@ jobs:
         id: cache-cypress-binary
         with:
           path: /home/runner/.cache/Cypress
-          key: cypress-8.7.0
+          key: cypress-${{ hashFiles('package.json') }}
 
       - name: Install cypress binary
         if: steps.cache-cypress-binary.outputs.cache-hit != 'true'
