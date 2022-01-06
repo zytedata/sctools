@@ -47,7 +47,7 @@ specifiers:
   react-spring: ^9.3.2
   react-transition-group: ^4.4.2
   react-vega: ^7.4.4
-  shadow-cljs: 2.16.9
+  shadow-cljs: 2.16.12
   source-map-support: ^0.5.21
   stack-trace: 1.0.0-pre1
   stacktrace-js: 2.0.2
@@ -111,7 +111,7 @@ devDependencies:
   postcss-nested: 5.0.6_postcss@8.4.5
   postcss-preset-env: 7.0.2_postcss@8.4.5
   puppeteer: 13.0.0
-  shadow-cljs: 2.16.9
+  shadow-cljs: 2.16.12
   source-map-support: 0.5.21
   stylelint: 14.1.0
   tailwindcss: 3.0.7_16a290f6d0e3717bf6d2667234aebd30
@@ -5215,8 +5215,8 @@ packages:
     resolution: {integrity: sha512-XmeffAZHv8z7451kzeq9oKh8fh278Ak+UIOGGrapyqrFBB773xN8vMQ3O7J7TYLnb9BUwcqadKkmgaq7q6fhZg==}
     dev: true
 
-  /shadow-cljs/2.16.9:
-    resolution: {integrity: sha512-Z6exIrFT1twuX7a63xiNWmebLCr1sH6BufTz0oQw72KuC9iCpTG/bbRc59pC868eSDD7X2F6dNoUaaFOacWWSg==}
+  /shadow-cljs/2.16.12:
+    resolution: {integrity: sha512-6JqOhN5X3n0IkxA/gSUcZ1lImwcW1LmpgzlaBDOC/u/pIysdNm0tiOxpOTEnExl9nKZBS/EYS7bXIIInywPJUA==}
     engines: {node: '>=6.0.0'}
     hasBin: true
     dependencies:
