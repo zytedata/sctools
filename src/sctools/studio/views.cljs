@@ -363,7 +363,7 @@
                          :getOptionLabel (fn [v]
                                            (if (str/blank? v)
                                              ""
-                                             (str v " (" (get vcounts v) ")")))
+                                             (str v " (" (get vcounts v) " jobs)")))
                          :className "w-full flex-grow"
                          :value (or v "")
                          :onChange
