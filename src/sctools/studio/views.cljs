@@ -39,6 +39,7 @@
              :refer
              [get-job-number get-spider info-keys info-titles is-job-valid?]]
             [sctools.utils.rf-utils :as rfu :refer [use-atom]]
+            [sctools.studio.reorder :as drag]
             [sctools.utils.string-utils :refer [truncate-left]]
             [sctools.widgets.common :refer [error-msg tooltip popover]]
             [statecharts.core :as fsm]))
@@ -167,7 +168,8 @@
 (defn toggle-prefs-dialog []
   (rf/dispatch [:studio/prefs.toggle-dlg]))
 
-(defnc job-row [{:keys [job info]}]
+(defnc job-row [{:keys [job info drag]}]
+    ;; #p info
   ($ TableRow {:data-cy "infos-row"}
      ($ TableCell {:align "left"}
         ($ Link {:href (job-url job)
@@ -175,33 +177,55 @@
                  :data-cy "job"
                  :rel "noreferrer"
                  :target "_blank"} (truncate-left job 15)))
-     (for [[k [_ v]] info]
+     (for [[k [_ v]] info
+           :let [drag-key k]]
        ($ TableCell {:key k
                      :align "left"
+                     :onDragEnter #(drag/on-drag-enter % drag-key)
+                     :onDragLeave #(drag/on-drag-leave % drag-key)
+                     :onDragOver (fn [ev]
+                                   (j/call ev :preventDefault))
+                     :onDrop #(drag/on-drop % drag-key)
                      :className (when (= k :spider_args)
                                   "whitespace-pre-line")
                      & (when (keyword? k)
                          {:data-cy (str "job-" (name k))})}
           (str v)))))
 
-(defnc header-cell [{:keys [title id stat? sorting cell-attrs]}]
+(defnc header-cell [{:keys [title id stat? sorting cell-attrs drag]}]
+    ;; #p drag
   (let [on-hide (if stat?
                   #(rf/dispatch [:studio/prefs.remove-stat id])
                   #(rf/dispatch [:studio/prefs.toggle-column id]))
+        drag-source (:source drag)
+        drag-target (:target drag)
+        drag-key id
+        is-drag-source? (= drag-key drag-source)
+        is-drop-target? (= drag-key drag-target)
         on-sort #(rf/dispatch [:studio/sorts.enable {:id id :stat? stat?}])
         on-reverse-sort #(rf/dispatch [:studio/sorts.reverse])
         on-clear-sort #(rf/dispatch [:studio/sorts.clear])
         [anchor-el set-anchor-el] (use-state nil)
         close-popover #(set-anchor-el nil)
-        ;; close-popover identityj
         goto-chart #(rf/dispatch [:studio/chart.show {:id id :stat? stat?}])]
     ($ TableCell {:align "left"
-                  & cell-attrs}
-       (d/div {:class '[group
-                        flex flex-row justify-between items-center
-                        ;; border-2 border-red-50
-                        ]
-               :onMouseEnter #(set-anchor-el (j/get % :currentTarget))
+                  :draggable true
+                  :onDragStart #(drag/on-drag-start % drag-key)
+                  :onDragEnd #(drag/on-drag-end % drag-key)
+                  :onDragEnter #(drag/on-drag-enter % drag-key)
+                  :onDragLeave #(drag/on-drag-leave % drag-key)
+                  :onDragOver (fn [ev]
+                                (j/call ev :preventDefault))
+                  :onDrop #(drag/on-drop % drag-key)
+                  & (merge cell-attrs
+                           (when is-drop-target?
+                             {:className "border-l-4 border-purple-500 x-child-pointer-events-none"}))}
+       (d/div {:class (cond-> '[group
+                                flex flex-row justify-between items-center]
+                        is-drag-source?
+                        (concat #_'[border-2 border-red-50]))
+               :onMouseEnter (when-not drag-source
+                               #(set-anchor-el (j/get % :currentTarget)))
                :onMouseLeave close-popover}
          (d/div {:class '[flex flex-row justify-between items-center space-x-1]}
            title
@@ -217,9 +241,17 @@
            (when anchor-el
              ($ popover {:anchorEl anchor-el
                          :data-cy "delete-doc-dialog"
+                         :draggable true
+                         :onDragStart #(drag/on-drag-start % drag-key)
+                         :onDragEnd #(drag/on-drag-end % drag-key)
                          :onClose close-popover
                          :anchorOrigin (j/lit {:horizontal :left
-                                               :vertical   :top})}
+                                               :vertical   :top})
+
+                         & (when is-drag-source?
+                             is-drag-source?
+                             {:className "pointer-events-none"})
+                         }
                 (d/div {:on-mouse-leave close-popover
                         :class '[p-4 space-x-2
                                  flex flex-row justify-start items-center]}
@@ -264,7 +296,7 @@
     ($ Typography {:variant "subtitle1"}
        (truncate-left title 30))))
 
-(defnc jobs-table-header [{:keys [headers job-count]}]
+(defnc jobs-table-header [{:keys [headers job-count drag]}]
   ($ TableHead
     ($ TableRow
       ($ TableCell {:align "left"
@@ -287,6 +319,7 @@
            :stat? stat?
            :sorting sorting
            :title title
+           :drag drag
            :cell-attrs {:data-cy (if (keyword? id)
                                    (str "col-" (name id))
                                    "col-stat")}})))))
@@ -301,27 +334,32 @@
 (defn adjust-el-height [el]
   (j/assoc-in! el [:style :height] (str (get-el-available-height el) "px")))
 
-(defnc job-infos-table-impl [{:keys [sorts headers infos]}]
+(defnc job-infos-table-impl [{:keys [sorts headers infos drag]}]
   (d/div {:class '[overflow-y-scroll]}
     ($ Table {:stickyHeader true
               :data-cy "infos-table"
               :size "small"}
        ($ jobs-table-header {:headers headers
                              :sorts sorts
+                             :drag drag
                              :job-count (count infos)})
        ($ TableBody
          (for [[job info] infos]
            ($ job-row {:job job
                        :key job
+                       :drag drag
                        :info info}))))))
 
 (defn job-infos-table []
   (let [headers @(rf/subscribe [:studio/table.headers])
         sorts @(rf/subscribe [:studio/sorts])
-        infos @(rf/subscribe [:studio/table.rows])]
+        infos @(rf/subscribe [:studio/table.rows])
+        drag @(rf/subscribe [:studio/drag])]
+    ;; #p infos
     ($ job-infos-table-impl {:headers headers
                              :sorts sorts
-                             :infos infos})))
+                             :infos infos
+                             :drag drag})))
 
 (defn render-input-func [label & [auto-focus]]
   (fn [params]
@@ -518,6 +556,13 @@
     (when (:showing prefs)
       ($ prefs-dialog {:prefs prefs & state}))))
 
+(defn has-cache? [from_ to_ spider_]
+  (when-let [{:keys [_state from to spider]} @(rf/subscribe [:studio/state])]
+    (and _state
+         (= from from_)
+         (= to to_)
+         (= spider spider_))))
+
 (defnc job-detail-view-impl [{:keys [state filters prefs]}]
   (j/let [^:js {:keys [project spider from_id to_id]} (useParams)
           from (str project "/" spider "/" from_id)
@@ -532,10 +577,13 @@
       (when (empty? @(rf/subscribe [:studio/jobs]))
         (rf/dispatch [:studio/update-jobs [from to]]))
 
-      (when-not (some-> @(rf/subscribe [:studio/state]) :value)
-        (rf/dispatch [:studio/fsm-start {:spider (get-spider from)
-                                         :from (get-job-number from)
-                                         :to (get-job-number to)}])))
+      (let [spider (get-spider from)
+            from (get-job-number from)
+            to (get-job-number to)]
+        (when-not (has-cache? from to spider)
+          (rf/dispatch [:studio/fsm-start {:spider spider
+                                           :from from
+                                           :to to}]))))
 
     (cond
       (fsm/matches state :fetching)
@@ -554,10 +602,14 @@
   (let [state @(rf/subscribe [:studio/state])
         filters @(rf/subscribe [:studio/filters])
         prefs @(rf/subscribe [:studio/prefs])]
+    ;; #p (:_state state)
+    ;; #p drag
     (if (and done-view
              (fsm/matches state :fetched))
       done-view
-      ($ job-detail-view-impl {:state state :filters filters :prefs prefs}))))
+      ($ job-detail-view-impl {:state state
+                               :filters filters
+                               :prefs prefs}))))
 
 (defn fetch-or-chart-view []
   [job-detail-view {:done-view [job-chart-view]}])
@@ -582,8 +634,12 @@
 
 
 (comment
+  (def vresults {})
   (keys vresults)
   (tap> @(rf/subscribe [:studio]))
+  (-> @(rf/subscribe [:studio])
+      keys)
+  @(rf/subscribe [:studio/prefs])
   (-> @(rf/subscribe [:studio]) :recents)
   (-> @(rf/subscribe [:studio]) :state keys)
   (-> @(rf/subscribe [:studio]) :state (fsm/matches :fetched))

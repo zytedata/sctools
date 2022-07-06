@@ -4,7 +4,9 @@
             [meander.epsilon :as me]
             [com.rpl.specter :as sp]
             [sctools.studio.utils :refer [info-keys info-titles format-info-field]]
-            [sctools.utils.rf-utils :as rfu :refer [db-sub quick-sub]]))
+            [sctools.utils.rf-utils :as rfu :refer [db-sub quick-sub]]
+            [sctools.studio.reorder :refer [apply-ordering]]
+            [medley.core :as m]))
 
 (db-sub :studio)
 (quick-sub :studio/state)
@@ -33,8 +35,9 @@
       (= (get-in info ["spider_args" (name k)])
          v)))
 
-;; return a map of k => [orig value, display value]
-(defn format-info [info {:keys [columns stats]}]
+;; return a linked map of k => [orig value, display value].
+(defn format-info
+  [info {:keys [columns stats ordering]}]
   ;; (def info columns)
   ;; (def columns columns)
   ;; (def stats columns)
@@ -45,6 +48,9 @@
                (for [k    stats
                      :let [v (get-in info ["scrapystats" k])]]
                  [k [v (or v "N/A")]]))
+       ;; TODO: this is O(N) where N = number of rows (because it sorts within
+       ;; each row). We shall maket this O(1) by sorting in one go globally.
+       (apply-ordering ordering first)
        (into (linked/map))))
 
 
@@ -97,17 +103,19 @@
  :studio/table.headers
  :<- [:studio/prefs]
  :<- [:studio/sorts]
- (fn [[{:keys [columns stats]} sorts]]
-   (concat (for [[k title] (map vector info-keys info-titles)
-                 :when (get columns k)]
-             {:id k
-              :sorting (get-sorting sorts k false)
-              :title title})
-           (for [k stats]
-             {:id k
-              :sorting (get-sorting sorts k true)
-              :title k
-              :stat? true}))))
+ (fn [[{:keys [columns stats ordering]} sorts]]
+   (->> (concat (for [[k title] (map vector info-keys info-titles)
+                  :when (get columns k)]
+              {:id k
+               :sorting (get-sorting sorts k false)
+               :title title})
+            (for [k stats]
+              {:id k
+               :sorting (get-sorting sorts k true)
+               :title k
+               :stat? true}))
+        (apply-ordering ordering :id))))
+
 (rf/reg-sub
  :studio/chart.col-data
  :<- [:studio/state.results]

@@ -19,4 +19,8 @@
     margin-left: 240px;
   }
 
+  .x-child-pointer-events-none * {
+    @apply pointer-events-none;
+  }
+
 }

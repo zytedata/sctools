@@ -80,6 +80,8 @@
 
   com.crypticbutter/snoop                   {:git/url "https://github.com/CrypticButter/snoop"
                                              :sha "3d6448d46ea7cfa272f8fec6bdcd8f3657a5a115"}
+  dom-top/dom-top                           {:git/url "https://github.com/lucywang000/dom-top"
+                                             :sha "8ac613be5996c355874ab95c0fbd1cbbba52d9f1"}
 
   metosin/reitit                            {:mvn/version "0.5.18"}
   mvxcvi/alphabase                          {:mvn/version "2.1.1"}

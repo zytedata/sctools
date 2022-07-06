@@ -38,7 +38,10 @@
   [:map
    [:showing boolean?]
    [:columns [:map-of :keyword boolean?]]
-   [:stats [:sequential :string]]])
+   [:stats [:sequential :string]]
+   [:ordering [:map-of
+               [:or [:string :keyword]]
+               :int]]])
 
 (def T_SortRow
   [:map
