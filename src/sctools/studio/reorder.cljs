@@ -65,14 +65,14 @@
     (concat cols stats)))
 
 (defn find-index [coll x]
-  (let [max-i (dec (count coll))]
-    (loopr [i 0]
-           [v coll]
-           (if (= v x)
-             i
-             (if (= i max-i)
-               nil
-               (recur (inc i)))))))
+  (loopr [i 0]
+         [v coll]
+         (if (= v x)
+           i
+           (recur (inc i)))
+         (if (= i (count coll))
+           nil
+           i)))
 
 (defn reorder-columns
   "Make sure `source` is in front of `target`"
