@@ -49,7 +49,7 @@ Number of items crawled over time:
 ## Install pnpm
 
 ```
-curl -f https://get.pnpm.io/v6.16.js | node - add --global pnpm
+curl -fsSL https://get.pnpm.io/install.sh | sh -
 ```
 
 ## Install clojure
