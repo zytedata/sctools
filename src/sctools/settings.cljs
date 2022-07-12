@@ -26,10 +26,16 @@
 (def cache-settings-path [(rf/path :settings :cache)])
 
 (rf/reg-event-db
- :settings/cache.init
- cache-settings-path
- (fn [cache]
-   (assoc cache :clearing false :cleared false)))
+ :settings/init
+ settings-path
+ (fn [settings]
+   ;; #p :settings/init
+   (-> settings
+       (assoc :cache
+               {:clearing false
+                :cleared false})
+       (assoc :ordering {:clearing false
+                         :cleared false}))))
 
 (rf/reg-event-db
  :settings/cache.clear
@@ -42,6 +48,13 @@
    (assoc cache :clearing true :cleared false)))
 
 (rf/reg-event-db
+ :settings/ordering.clear
+ (fn [{:keys [settings studio] :as db}]
+   (let [settings (assoc-in settings [:ordering :cleared] true)
+         studio (update studio :prefs dissoc :ordering)]
+     (assoc db :settings settings :studio studio))))
+
+(rf/reg-event-db
  :settings/cache.cleared
  cache-settings-path
  (fn [cache]
@@ -49,12 +62,13 @@
 
 (db-sub :settings)
 (quick-sub :settings/cache)
+(quick-sub :settings/ordering)
 
 (defnc settings-view-impl
-  [{:keys [cache]}]
+  [{:keys [cache ordering]}]
   (layout/set-title "Settings")
   (use-effect :once
-    (rf/dispatch-sync [:settings/cache.init]))
+    (rf/dispatch-sync [:settings/init]))
   (d/div
     ($ Switch
        ($ Route {:path "/settings/:id"}
@@ -86,12 +100,42 @@
           ($ Alert {:severity "success"
                     :data-cy "cache-clear-success"}
             "Cache is cleared"))
+        ))
+    (d/div {:class '[design-paper py-4 px-8 h-full w-full]}
+      (d/div {:class '[design-paper-inner py-4 px-8 flex flex-col justify-start w-full border rounded space-y-3]}
+        (d/div {:class '[design-title text-2xl font-semibold text-left #_border w-full]}
+          "Reset Column Ordering")
+        (d/hr)
+        ($ Button {:color "primary"
+                   :variant "contained"
+                   :data-cy "ordering-clear-btn"
+                   :onClick (fn []
+                              (rf/dispatch [:settings/ordering.clear]))
+                   :size "medium"
+                   :className "w-60"
+                   & (when (:clearing ordering)
+                       {:disabled true})}
+          (d/div {:class '[flex flex-row space-x-4 items-center justify-between]}
+            (d/span "Reset Column Ordering")
+            (when (:clearing ordering)
+              ($ CircularProgress {:size "1em"
+                                   :color "primary"
+                                   ;; :className "text-green-100"
+                                   }))))
+        (d/div {:class "text-gray-700"}
+          "click this button to reset the ordering of columns")
+        (when (:cleared ordering)
+          ($ Alert {:severity "success"
+                    :data-cy "ordering-clear-success"}
+            "Columns ordering has been reset"))
         ))))
 
 (defn settings-view []
-  (let [cache @(rf/subscribe [:settings/cache])]
-    ($ settings-view-impl {:cache cache})))
+  (let [cache @(rf/subscribe [:settings/cache])
+        ordering @(rf/subscribe [:settings/ordering])]
+    ($ settings-view-impl {:cache cache :ordering ordering})))
 
 (comment
   @(rf/subscribe [:settings/cache])
+  @(rf/subscribe [:settings])
   ())
