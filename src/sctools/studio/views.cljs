@@ -240,7 +240,6 @@
                                    'fa-sort-amount-up))})))
            (when anchor-el
              ($ popover {:anchorEl anchor-el
-                         :data-cy "delete-doc-dialog"
                          :draggable true
                          :onDragStart #(drag/on-drag-start % drag-key)
                          :onDragEnd #(drag/on-drag-end % drag-key)
@@ -253,6 +252,7 @@
                              {:className "pointer-events-none"})
                          }
                 (d/div {:on-mouse-leave close-popover
+                        :data-cy "sctools-col-popover"
                         :class '[p-4 space-x-2
                                  flex flex-row justify-start items-center]}
                   title

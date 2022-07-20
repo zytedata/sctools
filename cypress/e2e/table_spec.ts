@@ -1,10 +1,14 @@
 import { clickByText  } from './utils'
 import { setupStudioTest, range, JOBS_URL } from './test_utils'
 
-beforeEach(() => {
-  setupStudioTest()
+const visitJobsURL = () => {
   cy.visit(JOBS_URL)
   cy.wait(['@jobs/1', '@jobs/2', '@jobs/3'])
+}
+
+beforeEach(() => {
+  setupStudioTest()
+  visitJobsURL()
 })
 
 let assertJobs = (jobs: string[]) => {
@@ -171,4 +175,38 @@ describe('chart by stat', () => {
     cy.hash().should('contains', '#/studio/chart/')
     cy.get('.vega-embed svg').should('exist')
   })
+})
+
+
+describe('drag & drop to reorder columns', () => {
+  const assertOrdering = (ordering: string[], msg=null) => {
+    cy.get('th[data-cy*=col-]')
+      .then((cols) => {
+        const names = cols.map((_, el) => el.getAttribute('data-cy'))
+        const match = Array.from(names.filter((_, x) => ordering.indexOf(x) >= 0))
+        assert.deepEqual(match, ordering, msg)
+      })
+  }
+  it('reorder a non-stat column', () => {
+    assertOrdering(['col-state', 'col-items']);
+    cy.get('th[data-cy=col-state]').trigger('mouseover');
+    cy.get('[data-cy=sctools-col-popover]').drag('[data-cy=col-pages]', {
+      // This is required to emulate the series of drag and drop related events.
+      force: true,
+    });
+    // Wait for the dnd events to be processed
+    cy.wait(1000);
+    assertOrdering(
+      ['col-items', 'col-state'],
+      'The "state" col shall be moved to be after "items" col by drag and drop'
+    );
+
+    // Clear the ordering in settings
+    cy.visit('/#/settings');
+    cy.get('[data-cy=ordering-clear-btn]').click();
+    cy.get('[data-cy=ordering-clear-success]');
+
+    cy.visit(JOBS_URL);
+    assertOrdering(['col-state', 'col-items'], 'The ordering shall be reset');
+  });
 })

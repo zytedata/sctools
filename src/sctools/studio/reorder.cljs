@@ -93,7 +93,10 @@
  :studio/drag.drop
  (rf/path [:studio])
  (fn [{:keys [drag] :as studio}  [_ k]]
-   (let [{:keys [source target]} drag]
+   (let [{:keys [source target]} drag
+         ;; During cypress tests drag'n'drop is simulated, and there is no
+         ;; `dragenter` even, so the `target` would be nil.
+         target (or target k)]
      (-> studio
          (update :prefs assoc :ordering (reorder-columns (get-ordering) source target))
          (dissoc :drag)))))
