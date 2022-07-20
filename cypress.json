@@ -1,6 +1,0 @@
-{
-  "baseUrl": "http://127.0.0.1:3345",
-  "testFiles": "**/*_spec.ts",
-  "watchForFileChanges": false,
-  "projectId": "4hv8zp"
-}
