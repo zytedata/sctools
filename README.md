@@ -11,6 +11,7 @@ Table of Contents
    * [Filter jobs by spider args](#filter-jobs-by-spider-args)
    * [Customize which stats to show](#customize-which-stats-to-show)
    * [Select which scrapy stats to show](#select-which-scrapy-stats-to-show)
+   * [Reorder the columns by drag and drop](#reorder-the-columns-by-drag-and-drop)
    * [Visualizing the Jobs stats](#visualizing-the-jobs-stats)
 * [License](#license)
 
@@ -36,6 +37,12 @@ Table of Contents
 ## Select which scrapy stats to show
 
 ![Stats](screenshots/stats.png)
+
+## Reorder the columns by drag and drop
+
+Drag and drop to reorder the columns:
+
+![Reorder](screenshots/reorder.gif)
 
 
 ## Visualizing the jobs stats
