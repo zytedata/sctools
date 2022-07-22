@@ -1,4 +1,4 @@
-(ns ^:focus sctools.studio.reorder-test
+(ns sctools.studio.reorder-test
   (:require [clojure.test :refer [deftest is are]]
             [sctools.studio.reorder :refer [reorder-columns]]))
 
