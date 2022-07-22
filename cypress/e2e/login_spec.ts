@@ -2,7 +2,9 @@ const API_KEY = 'ffffffffffffffffffffffffffffffff';
 
 beforeEach(() => {
   cy.visit('/')
-  cy.get('body').type('{ctrl}h')
+  // This doesn't work anymore after cypress 10:
+  // cy.get('body').type('{ctrl}h')
+  cy.realPress(['ControlLeft', 'h'])
   cy.server()
 })
 

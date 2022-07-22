@@ -27,6 +27,7 @@
     "cssnano": "^5.0.14",
     "cypress": "^10.3.1",
     "@4tw/cypress-drag-drop": "^2.2.1",
+    "cypress-real-events": "^1.7.1",
     "karma": "^6.3.9",
     "karma-chrome-launcher": "^3.1.0",
     "karma-cljs-test": "^0.1.0",

@@ -24,6 +24,7 @@ specifiers:
   create-react-class: ^15.7.0
   cssnano: ^5.0.14
   cypress: ^10.3.1
+  cypress-real-events: ^1.7.1
   highlight.js: ^11.3.1
   idb: ^7.0.0
   karma: ^6.3.9
@@ -103,6 +104,7 @@ devDependencies:
   create-react-class: 15.7.0
   cssnano: 5.1.10_postcss@8.4.14
   cypress: 10.3.1
+  cypress-real-events: 1.7.1_cypress@10.3.1
   karma: 6.3.20
   karma-chrome-launcher: 3.1.1
   karma-cljs-test: 0.1.0
@@ -1946,6 +1948,14 @@ packages:
 
   /custom-event/1.0.1:
     resolution: {integrity: sha512-GAj5FOq0Hd+RsCGVJxZuKaIDXDf3h6GQoNEjFgbLLI/trgtavwUbSnZ5pVfg27DVCaWjIohryS0JFwIJyT2cMg==}
+    dev: true
+
+  /cypress-real-events/1.7.1_cypress@10.3.1:
+    resolution: {integrity: sha512-/Bg15RgJ0SYsuXc6lPqH08x19z6j2vmhWN4wXfJqm3z8BTAFiK2MvipZPzxT8Z0jJP0q7kuniWrLIvz/i/8lCQ==}
+    peerDependencies:
+      cypress: ^4.x || ^5.x || ^6.x || ^7.x || ^8.x || ^9.x || ^10.x
+    dependencies:
+      cypress: 10.3.1
     dev: true
 
   /cypress/10.3.1:

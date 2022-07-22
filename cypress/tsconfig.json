@@ -6,7 +6,8 @@
     "types": [
       "cypress",
       "node",
-      "@4tw/cypress-drag-drop"
+      "@4tw/cypress-drag-drop",
+      "cypress-real-events"
     ]
   },
   "include": [
