@@ -209,4 +209,20 @@ describe('drag & drop to reorder columns', () => {
     cy.visit(JOBS_URL);
     assertOrdering(['col-state', 'col-items'], 'The ordering shall be reset');
   });
+
+  it('reorder a stat column', () => {
+    addStat('200')
+    assertOrdering(['col-items', 'col-stat']);
+    cy.get('th[data-cy=col-stat]').trigger('mouseover');
+    cy.get('[data-cy=sctools-col-popover]').drag('[data-cy=col-state]', {
+      // This is required to emulate the series of drag and drop related events.
+      force: true,
+    });
+    // Wait for the dnd events to be processed
+    cy.wait(1000);
+    assertOrdering(
+      ['col-stat', 'col-items'],
+      'The "state" col shall be moved to be after "items" col by drag and drop'
+    );
+  });
 })
