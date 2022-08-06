@@ -2,7 +2,7 @@
   (:require
    ["@mui/material/Button" :default Button]
    ["@mui/material/CircularProgress" :default CircularProgress]
-   ["@mui/lab/Alert" :default Alert]
+   ["@mui/material/Alert" :default Alert]
    [helix.hooks :as hooks :refer [use-effect]]
    [applied-science.js-interop :as j]
    [helix.core :as hx :refer [$ defnc]]
@@ -78,8 +78,7 @@
         (d/div {:class '[design-title text-2xl font-semibold text-left #_border w-full]}
           "Clear Cache")
         (d/hr)
-        ($ Button {:color "primary"
-                   :variant "contained"
+        ($ Button {:variant "contained"
                    :data-cy "cache-clear-btn"
                    :onClick (fn []
                               (rf/dispatch [:settings/cache.clear]))
@@ -91,7 +90,6 @@
             (d/span "Clear cache")
             (when (:clearing cache)
               ($ CircularProgress {:size "1em"
-                                   :color "primary"
                                    ;; :className "text-green-100"
                                    }))))
         (d/div {:class "text-gray-700"}
@@ -106,8 +104,7 @@
         (d/div {:class '[design-title text-2xl font-semibold text-left #_border w-full]}
           "Reset Column Ordering")
         (d/hr)
-        ($ Button {:color "primary"
-                   :variant "contained"
+        ($ Button {:variant "contained"
                    :data-cy "ordering-clear-btn"
                    :onClick (fn []
                               (rf/dispatch [:settings/ordering.clear]))
@@ -119,7 +116,6 @@
             (d/span "Reset Column Ordering")
             (when (:clearing ordering)
               ($ CircularProgress {:size "1em"
-                                   :color "primary"
                                    ;; :className "text-green-100"
                                    }))))
         (d/div {:class "text-gray-700"}

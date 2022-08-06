@@ -22,6 +22,5 @@
   (let [foo 'bg-green-500
         bar 'text-white]
     ($ ThemeProvider {:theme theme}
-    ($ Button {:variant "contained"
-               :color "primary"}
+    ($ Button {:variant "contained"}
        "Hello World"))))

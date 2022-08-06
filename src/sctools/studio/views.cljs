@@ -16,8 +16,8 @@
             ["@mui/material/Tabs" :default Tabs]
             ["@mui/material/TextField" :default TextField]
             ["@mui/material/Typography" :default Typography]
-            ["@mui/lab/Alert" :default Alert]
-            ["@mui/lab/Autocomplete" :default Autocomplete]
+            ["@mui/material/Alert" :default Alert]
+            ["@mui/material/Autocomplete" :default Autocomplete]
             ["react-router-dom"
              :refer
              [Route Switch useParams useRouteMatch]]
@@ -108,7 +108,6 @@
                       :label "To Job"})
         (d/div {:class '[w-full flex flex-row space-x-4 items-start]}
           ($ Button {:className "flex-none"
-                     :color "primary"
                      :onClick
                      (fn []
                        (if-some [error (get-valdiation-error from to)]
@@ -423,8 +422,7 @@
         ($ filters-edit-view {:args args & (select-keys filters [:k :v])})
 
         :else
-        ($ Button {:color "primary"
-                   :onClick #(rf/dispatch [:studio/filters.begin-filter])
+        ($ Button {:onClick #(rf/dispatch [:studio/filters.begin-filter])
                    :variant "contained"}
            (d/div {:class '[space-x-2]}
              (d/i {:class '[fal fa-filter]})
@@ -454,7 +452,6 @@
 (defnc reset-columns-button []
   ($ Button {:className "flex-none"
              :variant "contained"
-             :color "primary"
              :onClick #(rf/dispatch [:studio/prefs.reset])}
      "Reset to defaults"))
 
@@ -510,8 +507,7 @@
                      space-y-4]
             :style {:height "500px"}}
       (d/div {:class '[w-full flex flex-row justify-between items-center]}
-        ($ Typography {:variant "h5"
-                       :color "primary"}
+        ($ Typography {:variant "h5"}
            "Jobs Studio Preferences")
         (d/i {:data-cy "close-preference-dialog"
               :class '[text-2xl fas fa-times-circle cursor-pointer]

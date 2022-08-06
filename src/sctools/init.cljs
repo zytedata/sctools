@@ -3,7 +3,7 @@
             ["@mui/material/CircularProgress" :default CircularProgress]
             ["@mui/material/TextField" :default TextField]
             ["@mui/material/Tooltip" :default Tooltip]
-            ["@mui/lab/Alert" :default Alert]
+            ["@mui/material/Alert" :default Alert]
             ["react" :as react]
             ["react-dom" :as ReactDOM]
             [applied-science.js-interop :as j]
@@ -160,7 +160,6 @@ It would never be sent to any third-party service."))
                                   (r/flush))
                       :label "API Key"})
         ($ Button {:className "flex-none"
-                   :color "primary"
                    :onClick #(rf/dispatch [:init/submit])
                    :variant "contained"
                    :disabled (str/blank? api-key)}

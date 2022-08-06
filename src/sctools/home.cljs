@@ -38,7 +38,7 @@
 (defnc index-view []
   ($ HomeDiv
     {:className "h-full w-full pt-12 flex flex-col items-center justify-start"}
-    ($ Button {:color "primary" :variant "contained"}
+    ($ Button {:variant "contained"}
        ($ NavLink {:to "/studio"}
           "Go to the Jobs Studio"))))
 

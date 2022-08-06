@@ -87,7 +87,6 @@
      {:disable-gutters true}
      [:> mui/Button
       {:variant "contained"
-       :color "primary"
        :class (.-button classes)
        :on-click #(swap! text-state str " foo")}
       "Update value property"
