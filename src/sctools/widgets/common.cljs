@@ -1,7 +1,7 @@
 (ns sctools.widgets.common
-  (:require ["@material-ui/core/Tooltip" :default Tooltip]
-            ["@material-ui/core/Typography" :default Typography]
-            ["@material-ui/core/Popover" :default Popover]
+  (:require ["@mui/material/Tooltip" :default Tooltip]
+            ["@mui/material/Typography" :default Typography]
+            ["@mui/material/Popover" :default Popover]
             [helix.core :as hx :refer [defnc $]]
             [helix.dom :as d]))
 

@@ -1,6 +1,6 @@
 (ns sctools.theme
-  (:require ["@material-ui/core/styles"
-             :refer [createTheme ThemeProvider StylesProvider]]
+  (:require ["@mui/material/styles"
+             :refer [createTheme ThemeProvider StyledEngineProvider]]
             [applied-science.js-interop :as j]
             [clojure.string :as str]
             [helix.core :as hx :refer [defnc $]]))
@@ -43,6 +43,6 @@
 (defnc theme-provider [{:keys [children]}]
   ;; Make sure tailwindcss rules comes later than mui's runtime styles
   ;; so it could have higher specificity.
-  ($ StylesProvider {:injectFirst false}
+  ($ StyledEngineProvider {:injectFirst false}
     ($ ThemeProvider {:theme theme}
        children)))

@@ -1,8 +1,8 @@
 (ns sctools.settings
   (:require
-   ["@material-ui/core/Button" :default Button]
-   ["@material-ui/core/CircularProgress" :default CircularProgress]
-   ["@material-ui/lab/Alert" :default Alert]
+   ["@mui/material/Button" :default Button]
+   ["@mui/material/CircularProgress" :default CircularProgress]
+   ["@mui/lab/Alert" :default Alert]
    [helix.hooks :as hooks :refer [use-effect]]
    [applied-science.js-interop :as j]
    [helix.core :as hx :refer [$ defnc]]

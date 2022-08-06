@@ -1,8 +1,8 @@
 (ns sctools.routes
-  (:require ["@material-ui/core/Icon" :default Icon]
-            ["@material-ui/core/ListItem" :default ListItem]
-            ["@material-ui/core/ListItemIcon" :default ListItemIcon]
-            ["@material-ui/core/ListItemText" :default ListItemText]
+  (:require ["@mui/material/Icon" :default Icon]
+            ["@mui/material/ListItem" :default ListItem]
+            ["@mui/material/ListItemIcon" :default ListItemIcon]
+            ["@mui/material/ListItemText" :default ListItemText]
             ["react" :as react]
             [applied-science.js-interop :as j]
             [postmortem.core :as pm]
