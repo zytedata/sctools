@@ -33,17 +33,17 @@ jobs:
           distribution: 'adopt'
 
       - name: Install clojure tools
-        uses: DeLaGuardo/setup-clojure@3.5
+        uses: DeLaGuardo/setup-clojure@9.5
         with:
           cli: 1.10.3.943
 
       - name: Install PNPM
-        uses: pnpm/action-setup@v2.0.1
+        uses: pnpm/action-setup@v2.2.2
         with:
           version: 6.16.1
 
       - name: Cache node deps
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         id: cache-node-deps
         with:
           path: ./node_modules
