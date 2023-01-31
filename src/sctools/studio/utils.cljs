@@ -41,7 +41,9 @@
                     (moment finished_time)
                     (moment))
                   (.diff (moment running_time)))]
-    [delta (readable-time-delta (/ delta 1000))]))
+    [delta
+     (readable-time-delta (/ delta 1000))
+     (/ delta (* 60 1000))]))
 
 (def counter-trans
   (fnil str 0))

@@ -123,11 +123,16 @@
  :<- [:studio/prefs]
  (fn [[results filters prefs] [_ {:keys [id stat?]}]]
    ;; #p (first results)
-   (let [id (name id)
-         filterfn (partial matches-filter? filters)
+   (let [filterfn (partial matches-filter? filters)
          datafn (if stat?
                   #(get-in % ["scrapystats" id])
-                  #(get % id))]
+                  (fn [info]
+                    (let [v (format-info-field info id)
+                          vparts (count v)]
+                      (case vparts
+                        3 (nth v 2)
+                        2 (nth v 1)
+                        (nth v 0)))))]
      (->> (me/search results
             {?job {:success true
                    :info (me/pred filterfn ?info)}}
@@ -141,3 +146,13 @@
   :<- [:studio/chart]
   (fn [chart]
     (:width chart)))
+
+(comment
+  (->> @(rf/subscribe [:studio/state.results])
+      vals
+      (map :info)
+      (map #(format-info-field % :runtime)))
+
+  @(rf/subscribe [:studio/chart.col-data {:id :runtime}])
+
+  :end-comment)
