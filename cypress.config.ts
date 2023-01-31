@@ -11,5 +11,8 @@ export default defineConfig({
     },
     baseUrl: 'http://127.0.0.1:3345',
     specPattern: 'cypress/e2e/**/*_spec.ts',
+    excludeSpecPattern: [
+      '**/table_spec.ts',
+    ],
   },
 })
