@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - name: Git checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 1
           submodules: 'true'
@@ -33,12 +33,12 @@ jobs:
           distribution: 'adopt'
 
       - name: Install clojure tools
-        uses: DeLaGuardo/setup-clojure@9.5
+        uses: DeLaGuardo/setup-clojure@10.1
         with:
           cli: 1.10.3.943
 
       - name: Install PNPM
-        uses: pnpm/action-setup@v2.2.2
+        uses: pnpm/action-setup@v2.2.4
         with:
           version: 6.16.1
 
