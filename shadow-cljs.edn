@@ -2,8 +2,7 @@
  :jvm-opts ["-Xmx4g"]
  :nrepl {:port       3344
          :cider      true
-         :init-ns    user
-         :middleware [refactor-nrepl.middleware/wrap-refactor]}
+         :init-ns    user}
 
  :http {:port 3346}
 

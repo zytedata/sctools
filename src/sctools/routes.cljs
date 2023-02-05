@@ -5,9 +5,6 @@
             ["@mui/material/ListItemText" :default ListItemText]
             ["react" :as react]
             [applied-science.js-interop :as j]
-            [postmortem.core :as pm]
-            [postmortem.instrument :as pi]
-            [postmortem.xforms :as xf]
             ["react-router-dom"
              :refer [NavLink Redirect Route Switch
                      useRouteMatch useParams useHistory]]
@@ -58,9 +55,6 @@
   (+ a b))
 
 (comment
-
-  (pi/instrument `foo {:xform (xf/take-last 2)})
-  (pi/unstrument `foo)
 
   (foo 1 2)
 
