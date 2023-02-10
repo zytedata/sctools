@@ -40,7 +40,7 @@
   binaryage/oops                  {:mvn/version "0.7.2"}
   borkdude/sci                    {:mvn/version "0.2.7"}
   cheshire/cheshire               {:mvn/version "5.11.0"}
-  cider/cider-nrepl               {:mvn/version "0.29.0"}
+  cider/cider-nrepl               {:mvn/version "0.30.0"}
   clj-statecharts/clj-statecharts {:mvn/version "0.1.7"}
   cljc.java-time/cljc.java-time   {:mvn/version "0.1.18"}
   cljs-bean/cljs-bean             {:mvn/version "1.9.0"}
@@ -67,7 +67,7 @@
   io.pedestal/pedestal.service              {:mvn/version "0.5.10"}
   kitchen-async/kitchen-async               {:mvn/version "0.1.0-SNAPSHOT"}
   lambdaisland/glogi                        {:mvn/version "1.2.164"}
-  lambdaisland/kaocha                       {:mvn/version "1.76.1230"}
+  lambdaisland/kaocha                       {:mvn/version "1.77.1236"}
   lambdaisland/kaocha-cljs2                 {:mvn/version "0.1.58"}
   lambdaisland/uri                          {:mvn/version "1.13.95"}
   lilactown/helix                           {:mvn/version "0.1.9"
@@ -111,7 +111,7 @@
 
   re-frisk-remote/re-frisk-remote {:mvn/version "1.6.0"}
   reagent/reagent
-  {:mvn/version "1.1.1"
+  {:mvn/version "1.2.0"
    :exclusions  [cljsjs/react cljsjs/react-dom cljsjs/create-react-class]}
 
   redux/redux                     {:mvn/version "0.1.4"}
