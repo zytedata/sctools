@@ -174,7 +174,7 @@
 
 (defn job-url
   [job]
-  (str "https://app.scrapinghub.com/p/" job))
+  (str "https://app.zyte.com/p/" job))
 
 (defn toggle-prefs-dialog
   []

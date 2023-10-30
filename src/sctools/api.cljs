@@ -1,7 +1,7 @@
 (ns sctools.api
   (:require [sctools.http :as http]))
 
-(def dash-url "https://app.scrapinghub.com")
+(def dash-url "https://app.zyte.com")
 (def jobq-url "https://jobq.scrapinghub.com")
 (def hs-url "https://storage.scrapinghub.com")
 
